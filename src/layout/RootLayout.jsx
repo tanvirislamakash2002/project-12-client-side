@@ -7,14 +7,14 @@ import { ToastContainer } from 'react-toastify';
 const RootLayout = () => {
     return (
         <div>
-            <header>
+            <header className=''>
                 <Navbar></Navbar>
             </header>
             <main className='min-h-[calc(100vh-337px)]'>
                 <Outlet></Outlet>
                 <ToastContainer />
             </main>
-            <footer>
+            <footer className='bg-amber-600'>
                 <Footer></Footer>
             </footer>
         </div>
