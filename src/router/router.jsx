@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
 import AddDonation from "../pages/Dashboard/Restaurant/AddDonation";
+import DashboardLayout from "../layout/DashboardLayout";
 import PrivateRoute from "../routes/PrivateRoute";
 
 export const router = createBrowserRouter([
@@ -17,12 +18,7 @@ export const router = createBrowserRouter([
                 index: true,
                 element: <Home></Home>
             },
-            {
-                path: 'addDonation',
-                element: <PrivateRoute>
-                    <AddDonation></AddDonation>
-                </PrivateRoute>
-            }
+
         ]
     },
     {
@@ -37,6 +33,18 @@ export const router = createBrowserRouter([
                 path: 'register',
                 element: <Register></Register>
             },
+        ]
+    },
+    {
+        path: "/dashboard",
+        element: <PrivateRoute>
+            <DashboardLayout></DashboardLayout>
+        </PrivateRoute>,
+        children: [
+            {
+                path: 'addDonation',
+                element: <AddDonation></AddDonation>
+            }
         ]
     },
 ]);

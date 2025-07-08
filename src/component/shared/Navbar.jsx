@@ -31,8 +31,12 @@ const Navbar = () => {
 
     const navLinks = <>
         <li><NavLink to='/'>Home</NavLink></li>
-        <li><NavLink to='/addDonation'>Add Donation</NavLink></li>
-        <li><NavLink to='/'>Contact Us</NavLink></li>
+        {/* <li><NavLink to='/addDonation'>Add Donation</NavLink></li> */}
+        {user&&
+        <>
+        <li><NavLink to='/dashboard'>Dashboard</NavLink></li>
+        </>
+        }
     </>
     return (
         <div className="navbar max-w-7xl mx-auto">

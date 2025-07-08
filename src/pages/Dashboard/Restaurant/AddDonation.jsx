@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useState } from "react";
 
 const AddDonation = () => {
@@ -11,7 +12,9 @@ const AddDonation = () => {
     reset,
   } = useForm();
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const [imageFile, setImageFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 //   // Food type options
   const foodTypes = [
@@ -26,10 +29,52 @@ const AddDonation = () => {
   ];
 
   const onSubmit = async (data) => {
-    // setIsSubmitting(true);
+    setIsSubmitting(true);
     console.log(data)
-    
+    try {
+    //   Upload image if exists
+    //   let imageUrl = "";
+    //   if (imageFile) {
+    //     const formData = new FormData();
+    //     formData.append("image", imageFile);
+        
+        // const uploadRes = await axiosSecure.post("/upload", formData);
+        // imageUrl = uploadRes.data.url;
+    //   }
 
+      const donationData = {
+        ...data,
+        restaurantName: user.displayName,
+        restaurantEmail: user.email,
+        // image: imageUrl,
+        status: "Pending",
+        createdAt: new Date().toISOString(),
+      };
+
+    //   Save to database
+      const res = await axiosSecure.post("/add-donation", donationData);
+      console.log('what', res)
+      if (res.data.insertedId) {
+        Swal.fire({
+          title: "Success!",
+          text: "Your donation has been submitted for approval.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        reset();
+        setImageFile(null);
+      }
+    } 
+    catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: error.message,
+        icon: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -153,12 +198,20 @@ const AddDonation = () => {
             <label className="label">
               <span className="label-text">Food Image</span>
             </label>
-            <input
+            {/* <input
               type="file"
               accept="image/*"
               onChange={(e) => setImageFile(e.target.files[0])}
               className="file-input file-input-bordered w-full"
+            /> */}
+                        <input
+              {...register("image", { required: "image is required" })}
+              className="input input-bordered w-full"
+              placeholder="e.g., image of the donation"
             />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
+            )}
           </div>
 
           {/* Restaurant Info (readonly) */}
@@ -188,7 +241,20 @@ const AddDonation = () => {
 
         {/* Submit Button */}
         <div className="text-center">
-
+          {/* <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <div className=" flex items-center">
+                <span className="loading loading-spinner"></span>
+              <span className="ml-2">adding donation</span>
+              </div>
+            ) : (
+              "Add Donation"
+            )}
+          </button> */}
           <button className="btn btn-primary">Add donation</button>
         </div>
       </form>
