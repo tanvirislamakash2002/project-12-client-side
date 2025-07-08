@@ -1,10 +1,14 @@
 import React from 'react';
 import { Outlet } from 'react-router';
+import Logo from '../component/shared/Logo';
 
 const AuthLayout = () => {
     return (
-        <div className=' flex items-center h-screen'>
-            <Outlet></Outlet>
+        <div className="">
+            <Logo></Logo>
+            <div className=' flex items-center h-screen'>
+                <Outlet></Outlet>
+            </div>
         </div>
     );
 };

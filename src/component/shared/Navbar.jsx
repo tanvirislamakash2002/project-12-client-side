@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
+import Logo from './Logo';
 
 const Navbar = () => {
 
@@ -30,7 +31,7 @@ const Navbar = () => {
 
     const navLinks = <>
         <li><NavLink to='/'>Home</NavLink></li>
-        <li><NavLink to='/'>About Us</NavLink></li>
+        <li><NavLink to='/addDonation'>Add Donation</NavLink></li>
         <li><NavLink to='/'>Contact Us</NavLink></li>
     </>
     return (
@@ -47,7 +48,7 @@ const Navbar = () => {
 
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">Charity</a>
+                <Logo></Logo>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
