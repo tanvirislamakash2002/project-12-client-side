@@ -8,6 +8,7 @@ import Register from "../pages/Authentication/Register";
 import AddDonation from "../pages/Dashboard/Restaurant/AddDonation";
 import DashboardLayout from "../layout/DashboardLayout";
 import PrivateRoute from "../routes/PrivateRoute";
+import MyDonation from "../pages/Dashboard/Restaurant/MyDonation";
 
 export const router = createBrowserRouter([
     {
@@ -44,7 +45,11 @@ export const router = createBrowserRouter([
             {
                 path: 'addDonation',
                 element: <AddDonation></AddDonation>
-            }
+            },
+            {
+                path: 'myDonations',
+                element: <MyDonation></MyDonation>
+            },
         ]
     },
 ]);

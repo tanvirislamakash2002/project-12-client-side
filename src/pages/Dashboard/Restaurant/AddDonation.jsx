@@ -30,7 +30,6 @@ const AddDonation = () => {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    console.log(data)
     try {
     //   Upload image if exists
     //   let imageUrl = "";
@@ -53,7 +52,7 @@ const AddDonation = () => {
 
     //   Save to database
       const res = await axiosSecure.post("/add-donation", donationData);
-      console.log('what', res)
+      
       if (res.data.insertedId) {
         Swal.fire({
           title: "Success!",
