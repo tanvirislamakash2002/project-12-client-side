@@ -9,6 +9,9 @@ import AddDonation from "../pages/Dashboard/Restaurant/AddDonation";
 import DashboardLayout from "../layout/DashboardLayout";
 import PrivateRoute from "../routes/PrivateRoute";
 import MyDonation from "../pages/Dashboard/Restaurant/MyDonation";
+import RequestCharityRole from "../pages/Dashboard/User/RequestCharityRole";
+import StripeElementsWrapper from "../pages/Dashboard/User/StripeElementsWrapper";
+import ManageRoleRequests from "../pages/Dashboard/Admim/ManageRoleRequests";
 
 export const router = createBrowserRouter([
     {
@@ -49,6 +52,16 @@ export const router = createBrowserRouter([
             {
                 path: 'myDonations',
                 element: <MyDonation></MyDonation>
+            },
+            {
+                path: 'requestCharityRole',
+                element: <StripeElementsWrapper>
+                    <RequestCharityRole></RequestCharityRole>
+                </StripeElementsWrapper>
+            },
+            {
+                path: 'manageRoleRequests',
+                element: <ManageRoleRequests></ManageRoleRequests>
             },
         ]
     },

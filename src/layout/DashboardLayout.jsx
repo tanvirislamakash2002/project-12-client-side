@@ -1,9 +1,18 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes } from 'react-icons/fa'; 
+import { NavLink, Outlet, useNavigate } from 'react-router';
+import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck } from 'react-icons/fa';
 import Logo from '../component/shared/Logo';
+import useAuth from '../hooks/useAuth';
 
 const DashboardLayout = () => {
+    const { signOutUser } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSignOut = () => {
+        signOutUser()
+            .then(() => navigate('/login'))
+            .catch(error => console.error('Logout error:', error));
+    };
     return (
         <div className="drawer lg:drawer-open">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -49,7 +58,7 @@ const DashboardLayout = () => {
                     <Logo></Logo>
                     {/* Sidebar Links */}
                     <li>
-                        <NavLink to="/dashboard">
+                        <NavLink to="/">
                             <FaHome className="inline-block mr-2" />
                             Home
                         </NavLink>
@@ -65,6 +74,18 @@ const DashboardLayout = () => {
                             <FaPlusCircle className="inline-block mr-2" />
                             Add Donation
                         </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/dashboard/requestCharityRole">
+                            <FaUserCheck className="inline-block mr-2" />
+                            Request Charity Role
+                        </NavLink>
+                    </li>
+                    <li className="mt-auto border-t pt-2">
+                        <button onClick={handleSignOut} className="hover:bg-base-300 rounded-lg text-red-600 bg-primary/30">
+                            <FaSignOutAlt className="inline-block mr-2" />
+                            Logout
+                        </button>
                     </li>
                 </ul>
             </div>
