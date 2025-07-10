@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router';
 import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck } from 'react-icons/fa';
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
+import { ToastContainer } from 'react-toastify';
 
 const DashboardLayout = () => {
     const { signOutUser } = useAuth();
@@ -42,6 +43,7 @@ const DashboardLayout = () => {
 
                 {/* Page content */}
                 <Outlet />
+                <ToastContainer />
             </div>
 
             {/* Sidebar */}
@@ -79,6 +81,18 @@ const DashboardLayout = () => {
                         <NavLink to="/dashboard/requestCharityRole">
                             <FaUserCheck className="inline-block mr-2" />
                             Request Charity Role
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/dashboard/manageRoleRequests">
+                            <FaUserCheck className="inline-block mr-2" />
+                            Manage Role Request
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/dashboard/transactionHistory">
+                            <FaUserCheck className="inline-block mr-2" />
+                            Transaction History
                         </NavLink>
                     </li>
                     <li className="mt-auto border-t pt-2">

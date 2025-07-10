@@ -3,12 +3,16 @@ import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const { signInWithGoogle, signInUser } = useAuth()
     const location = useLocation();
     const navigate = useNavigate()
     const from = location.state || '/'
+    const axiosSecure = useAxiosSecure()
+
 
     // signin with google
     const handleSignInWithGoogle = () => {
@@ -24,34 +28,64 @@ const Login = () => {
                 navigate(from)
             })
             .then(error => {
-                console.log(error)
+                // console.log(error)
             })
     }
 
     //login with email and password
 
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => {
-        const { email, password } = data
-        signInUser(email, password)
-            .then(() => {
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "You have successfully logged in",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                navigate(from)
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: `failed to login ${error.message}`,
-                    timer: '1400',
-                    icon: 'success'
-                })
-            })
-    }
+    const onSubmit = async data => {
+        const { email, password } = data;
+
+        try {
+            // 1️⃣ Check MongoDB first
+            const res = await axiosSecure.get(`/check-user-email?email=${email}`);
+            if (!res.data.exists) {
+                return toast.error("Email doesn't exist!");
+                // Swal.fire({
+                //     title: 'Email does not exist in our database',
+                //     icon: 'error',
+                //     timer: 1400
+                // });
+                
+            }
+
+
+            // 2️⃣ If exists, proceed with Firebase login
+            await signInUser(email, password);
+
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "You have successfully logged in",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate(from);
+        } catch (error) {
+            let message = "Login failed";
+
+            if (error.code === 'auth/user-not-found') {
+                message = "Email doesn't exist in Firebase";
+            } else if (
+                error.code === 'auth/wrong-password' ||
+                error.code === 'auth/invalid-credential'
+            ) {
+                message = "Password doesn't match";
+            } else {
+                message = error.message;
+            }
+
+            // Swal.fire({
+            //     title: message,
+            //     icon: 'error',
+            //     timer: 1400
+            // });
+            toast.error(message);
+        }
+    };
+
     return (
 
 

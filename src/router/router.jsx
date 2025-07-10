@@ -12,6 +12,7 @@ import MyDonation from "../pages/Dashboard/Restaurant/MyDonation";
 import RequestCharityRole from "../pages/Dashboard/User/RequestCharityRole";
 import StripeElementsWrapper from "../pages/Dashboard/User/StripeElementsWrapper";
 import ManageRoleRequests from "../pages/Dashboard/Admim/ManageRoleRequests";
+import TransactionHistory from "../pages/Dashboard/TransactionHistory";
 
 export const router = createBrowserRouter([
     {
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
             {
                 path: 'manageRoleRequests',
                 element: <ManageRoleRequests></ManageRoleRequests>
+            },
+            {
+                path: 'transactionHistory',
+                element: <TransactionHistory></TransactionHistory>
             },
         ]
     },

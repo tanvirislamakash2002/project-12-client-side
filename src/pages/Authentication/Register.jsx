@@ -3,39 +3,57 @@ import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const Register = () => {
     const { createUser, updateUser, setUser } = useAuth()
     const location = useLocation()
     const navigate = useNavigate()
     const from = location.state || '/'
+    const axiosSecure = useAxiosSecure()
 
     
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => {
-        const { name, email, photo, password } = data
-        createUser(email, password)
-            .then(userCredential => {
-                const user = userCredential.user
-                updateUser({ displayName: name, photoURL: photo })
-                    .then(() => {
-                        Swal.fire({
-                            title: 'Registration Successful',
-                            timer: '1400',
-                            icon: 'success'
-                        })
-                        setUser({ ...user, displayName: name, photoURL: photo })
-                        navigate(from)
-                    })
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: `failed to register ${error.message}`,
-                    timer: '1400',
-                    icon: 'success'
-                })
-            })
-    }
+const onSubmit = async (data) => {
+  const { name, email, photo, password } = data;
+  
+  try {
+    // 1. Firebase auth
+    const userCredential = await createUser(email, password);
+    
+    // 2. Update Firebase profile
+    await updateUser({ displayName: name, photoURL: photo });
+
+    // 3. Save to MongoDB
+    await axiosSecure.post('/register-user', {
+      name,
+      email,      
+      photoURL: photo
+    });
+
+    // 4. Success flow (keep your existing UI code)
+    Swal.fire({
+      title: 'Registration Successful', 
+      timer: 1400,
+      icon: 'success'
+    });
+    
+    setUser({ 
+      ...userCredential.user, 
+      displayName: name, 
+      photoURL: photo 
+    });
+    
+    navigate(from);
+
+  } catch (error) {
+    Swal.fire({
+      title: 'Registration Failed',
+      text: error.response?.data?.error || error.message,
+      icon: 'error'
+    });
+  }
+};
 
     return (
         <div className="card bg-base-100 w-full mx-auto max-w-sm select-shadow" style={{ perspective: '1000px' }}>
