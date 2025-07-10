@@ -240,7 +240,7 @@ const AddDonation = () => {
 
         {/* Submit Button */}
         <div className="text-center">
-          {/* <button
+          <button
             type="submit"
             className="btn btn-primary"
             disabled={isSubmitting}
@@ -253,8 +253,8 @@ const AddDonation = () => {
             ) : (
               "Add Donation"
             )}
-          </button> */}
-          <button className="btn btn-primary">Add donation</button>
+          </button>
+          {/* <button className="btn btn-primary">Add donation</button> */}
         </div>
       </form>
     </div>

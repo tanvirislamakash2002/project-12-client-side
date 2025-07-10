@@ -95,6 +95,12 @@ const DashboardLayout = () => {
                             Transaction History
                         </NavLink>
                     </li>
+                    <li>
+                        <NavLink to="/dashboard/manageDonations">
+                            <FaUserCheck className="inline-block mr-2" />
+                            Manage Donations
+                        </NavLink>
+                    </li>
                     <li className="mt-auto border-t pt-2">
                         <button onClick={handleSignOut} className="hover:bg-base-300 rounded-lg text-red-600 bg-primary/30">
                             <FaSignOutAlt className="inline-block mr-2" />

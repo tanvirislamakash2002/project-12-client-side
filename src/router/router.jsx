@@ -13,6 +13,10 @@ import RequestCharityRole from "../pages/Dashboard/User/RequestCharityRole";
 import StripeElementsWrapper from "../pages/Dashboard/User/StripeElementsWrapper";
 import ManageRoleRequests from "../pages/Dashboard/Admim/ManageRoleRequests";
 import TransactionHistory from "../pages/Dashboard/TransactionHistory";
+import ManageDonations from "../pages/Dashboard/Admim/ManageDonations";
+import AllDonations from "../pages/AllDonations";
+import DonationDetails from "../pages/DonationDetails";
+import axios from "axios";
 
 export const router = createBrowserRouter([
     {
@@ -22,6 +26,15 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <Home></Home>
+            },
+            {
+                path: 'allDonations',
+                element: <AllDonations></AllDonations>
+            },
+            {
+                path: 'donationDetails/:id',
+                // loader: ({ params }) => axios(`${import.meta.env.VITE_API_URL}/donation/${params.id}`),
+                element: <DonationDetails></DonationDetails>
             },
 
         ]
@@ -67,6 +80,10 @@ export const router = createBrowserRouter([
             {
                 path: 'transactionHistory',
                 element: <TransactionHistory></TransactionHistory>
+            },
+            {
+                path: 'manageDonations',
+                element: <ManageDonations></ManageDonations>
             },
         ]
     },
