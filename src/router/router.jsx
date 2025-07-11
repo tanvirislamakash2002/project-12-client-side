@@ -33,7 +33,6 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'donationDetails/:id',
-                // loader: ({ params }) => axios(`${import.meta.env.VITE_API_URL}/donation/${params.id}`),
                 element: <DonationDetails></DonationDetails>
             },
 

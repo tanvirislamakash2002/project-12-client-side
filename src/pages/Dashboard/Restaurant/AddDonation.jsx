@@ -3,8 +3,12 @@ import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useState } from "react";
+import axios from "axios";
 
 const AddDonation = () => {
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -16,7 +20,7 @@ const AddDonation = () => {
   const [imageFile, setImageFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-//   // Food type options
+  //   // Food type options
   const foodTypes = [
     "Bakery",
     "Produce",
@@ -29,30 +33,28 @@ const AddDonation = () => {
   ];
 
   const onSubmit = async (data) => {
+    if (!imageUrl) {
+      Swal.fire({
+        title: "Image Required",
+        text: "Please upload a food image first.",
+        icon: "warning",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-    //   Upload image if exists
-    //   let imageUrl = "";
-    //   if (imageFile) {
-    //     const formData = new FormData();
-    //     formData.append("image", imageFile);
-        
-        // const uploadRes = await axiosSecure.post("/upload", formData);
-        // imageUrl = uploadRes.data.url;
-    //   }
-
       const donationData = {
         ...data,
         restaurantName: user.displayName,
         restaurantEmail: user.email,
-        // image: imageUrl,
+        image: imageUrl,
         status: "Pending",
         createdAt: new Date().toISOString(),
       };
 
-    //   Save to database
       const res = await axiosSecure.post("/add-donation", donationData);
-      
+
       if (res.data.insertedId) {
         Swal.fire({
           title: "Success!",
@@ -62,10 +64,9 @@ const AddDonation = () => {
           showConfirmButton: false,
         });
         reset();
-        setImageFile(null);
+        setImageUrl('');
       }
-    } 
-    catch (error) {
+    } catch (error) {
       Swal.fire({
         title: "Error",
         text: error.message,
@@ -76,11 +77,42 @@ const AddDonation = () => {
     }
   };
 
+  const handleImageUpload = async (e) => {
+    const image = e.target.files[0];
+    if (!image) return;
+
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    try {
+      const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_payment_Key}`;
+      const res = await axios.post(imageUploadUrl, formData);
+      setImageUrl(res.data.data.url);
+      Swal.fire({
+        title: "Image Uploaded",
+        text: "Image uploaded successfully!",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        title: "Upload Failed",
+        text: err.message,
+        icon: "error",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className="space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-6">
         {/* Heading */}
         <div className="text-center">
           <h2 className="text-3xl font-bold">Add Food Donation</h2>
@@ -90,7 +122,7 @@ const AddDonation = () => {
         {/* Donation Info */}
         <div className="border p-6 rounded-xl shadow-md space-y-6">
           <h3 className="font-semibold text-xl">Food Details</h3>
-          
+
           {/* Donation Title */}
           <div>
             <label className="label">
@@ -195,15 +227,29 @@ const AddDonation = () => {
           {/* Image Upload */}
           <div>
             <label className="label">
-              <span className="label-text">Food Image</span>
+              <span className="label-text">Food Image*</span>
             </label>
-            {/* <input
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="file-input file-input-bordered w-full"
+            />
+            {errors.image && (
+              <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
+            )}
+          </div>
+          {/* <div>
+            <label className="label">
+              <span className="label-text">Food Image</span>
+            </label> */}
+          {/* <input
               type="file"
               accept="image/*"
               onChange={(e) => setImageFile(e.target.files[0])}
               className="file-input file-input-bordered w-full"
             /> */}
-                        <input
+          {/* <input
               {...register("image", { required: "image is required" })}
               className="input input-bordered w-full"
               placeholder="e.g., image of the donation"
@@ -211,7 +257,7 @@ const AddDonation = () => {
             {errors.title && (
               <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
             )}
-          </div>
+          </div> */}
 
           {/* Restaurant Info (readonly) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -243,17 +289,33 @@ const AddDonation = () => {
           <button
             type="submit"
             className="btn btn-primary"
+            disabled={isSubmitting || uploading}
+          >
+            {isSubmitting ? (
+              <div className="flex items-center">
+                <span className="loading loading-spinner"></span>
+                <span className="ml-2">Adding donation...</span>
+              </div>
+            ) : uploading ? (
+              "Uploading image..."
+            ) : (
+              "Add Donation"
+            )}
+          </button>
+          {/* <button
+            type="submit"
+            className="btn btn-primary"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <div className=" flex items-center">
                 <span className="loading loading-spinner"></span>
-              <span className="ml-2">adding donation</span>
+                <span className="ml-2">adding donation</span>
               </div>
             ) : (
               "Add Donation"
             )}
-          </button>
+          </button> */}
           {/* <button className="btn btn-primary">Add donation</button> */}
         </div>
       </form>
