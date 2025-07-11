@@ -3,18 +3,18 @@ import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
 import axios from 'axios';
 import { useState } from 'react';
+import useAxios from '../../hooks/useAxios';
 
 const Register = () => {
   const { createUser, updateUser, setUser } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
   const from = location.state || '/'
-  const axiosSecure = useAxiosSecure()
   const [profilePic, setProfilePic] = useState('')
   const [uploading, setUploading] = useState(false);
+  const axiosInstance = useAxios()
 
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = async (data) => {
@@ -31,7 +31,7 @@ const Register = () => {
       await updateUser(userProfile);
 
       // 3. Save to MongoDB
-      await axiosSecure.post('/register-user', {
+       await axiosInstance.post('/register-user', {
         name,
         email,
         photoURL: profilePic
