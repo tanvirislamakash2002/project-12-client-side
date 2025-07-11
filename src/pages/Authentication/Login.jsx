@@ -5,19 +5,30 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { toast } from 'react-toastify';
+import useAxios from '../../hooks/useAxios';
 
 const Login = () => {
-    const { signInWithGoogle, signInUser } = useAuth()
+    const { signInWithGoogle, signInUser, user } = useAuth()
     const location = useLocation();
     const navigate = useNavigate()
     const from = location.state || '/'
     const axiosSecure = useAxiosSecure()
+    const axiosInstance = useAxios()
 
 
     // signin with google
     const handleSignInWithGoogle = () => {
         signInWithGoogle()
-            .then(() => {
+            .then(async (data) => {
+                const res = await axiosSecure.get(`/check-user-email?email=${data.user.email}`);
+                if (!res.data.exists) {
+                    // return toast.error("Email doesn't exist!");
+                    await axiosInstance.post('/register-user', {
+                        name: data.user.displayName,
+                        email: data.user.email,
+                        photoURL: data.user.photoURL
+                    });
+                }
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -25,6 +36,7 @@ const Login = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+
                 navigate(from)
             })
             .then(error => {
@@ -48,7 +60,7 @@ const Login = () => {
                 //     icon: 'error',
                 //     timer: 1400
                 // });
-                
+
             }
 
 
