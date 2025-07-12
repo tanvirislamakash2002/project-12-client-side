@@ -24,7 +24,7 @@ const RequestCharityRole = () => {
     useEffect(() => {
         const checkExistingRequest = async () => {
             try {
-                const { data } = await axiosSecure.get(`/charity-requests?email=${user.email}`);
+                const { data } = await axiosSecure.get(`/charity-requests-transactions?email=${user.email}`);
                 if (data.some(req => req.status === 'pending' || req.status === 'approved')) {
                     setHasPendingRequest(true);
                 }

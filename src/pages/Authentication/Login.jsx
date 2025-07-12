@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { toast } from 'react-toastify';
 import useAxios from '../../hooks/useAxios';
 
@@ -12,7 +11,6 @@ const Login = () => {
     const location = useLocation();
     const navigate = useNavigate()
     const from = location.state || '/'
-    const axiosSecure = useAxiosSecure()
     const axiosInstance = useAxios()
 
 
@@ -20,7 +18,7 @@ const Login = () => {
     const handleSignInWithGoogle = () => {
         signInWithGoogle()
             .then(async (data) => {
-                const res = await axiosSecure.get(`/check-user-email?email=${data.user.email}`);
+                const res = await axiosInstance.get(`/check-user-email?email=${data.user.email}`);
                 if (!res.data.exists) {
                     // return toast.error("Email doesn't exist!");
                     await axiosInstance.post('/register-user', {
@@ -52,7 +50,7 @@ const Login = () => {
 
         try {
             // 1️⃣ Check MongoDB first
-            const res = await axiosSecure.get(`/check-user-email?email=${email}`);
+            const res = await axiosInstance.get(`/check-user-email?email=${email}`);
             if (!res.data.exists) {
                 return toast.error("Email doesn't exist!");
                 // Swal.fire({

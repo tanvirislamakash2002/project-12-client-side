@@ -14,7 +14,7 @@ const TransactionHistory = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       try {
-        const res = await axiosSecure.get(`/charity-requests?email=${user.email}`);        
+        const res = await axiosSecure.get(`/charity-requests-transactions?email=${user.email}`);        
         return res.data;
       } catch (error) {
         toast.error('Failed to load transaction history');

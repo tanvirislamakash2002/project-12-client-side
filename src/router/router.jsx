@@ -16,7 +16,9 @@ import TransactionHistory from "../pages/Dashboard/TransactionHistory";
 import ManageDonations from "../pages/Dashboard/Admim/ManageDonations";
 import AllDonations from "../pages/AllDonations";
 import DonationDetails from "../pages/DonationDetails";
-import axios from "axios";
+import ManageUsers from "../pages/Dashboard/Admim/ManageUsers";
+import Forbidden from "../pages/Forbidden";
+import AdminRoute from "../routes/AdminRoute";
 
 export const router = createBrowserRouter([
     {
@@ -34,6 +36,10 @@ export const router = createBrowserRouter([
             {
                 path: 'donationDetails/:id',
                 element: <DonationDetails></DonationDetails>
+            },
+            {
+                path: 'forbidden',
+                element: <Forbidden></Forbidden>
             },
 
         ]
@@ -73,17 +79,25 @@ export const router = createBrowserRouter([
                 </StripeElementsWrapper>
             },
             {
-                path: 'manageRoleRequests',
-                element: <ManageRoleRequests></ManageRoleRequests>
-            },
-            {
                 path: 'transactionHistory',
                 element: <TransactionHistory></TransactionHistory>
             },
+            // admin route
+            {
+                path: 'manageRoleRequests',
+                element: <AdminRoute><ManageRoleRequests></ManageRoleRequests></AdminRoute>
+
+            },
             {
                 path: 'manageDonations',
-                element: <ManageDonations></ManageDonations>
+                element: <AdminRoute><ManageDonations></ManageDonations></AdminRoute>
+
             },
+            {
+                path: 'manageUsers',
+                element: <AdminRoute><ManageUsers></ManageUsers></AdminRoute>
+            },
+
         ]
     },
 ]);

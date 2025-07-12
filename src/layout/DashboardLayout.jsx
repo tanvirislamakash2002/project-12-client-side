@@ -1,12 +1,14 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck } from 'react-icons/fa';
+import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt } from 'react-icons/fa';
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
+import useUserRole from '../hooks/useUserRole';
 import { ToastContainer } from 'react-toastify';
 
 const DashboardLayout = () => {
     const { signOutUser } = useAuth();
+    const { role, roleLoading } = useUserRole()
     const navigate = useNavigate();
 
     const handleSignOut = () => {
@@ -84,23 +86,33 @@ const DashboardLayout = () => {
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/dashboard/manageRoleRequests">
-                            <FaUserCheck className="inline-block mr-2" />
-                            Manage Role Request
-                        </NavLink>
-                    </li>
-                    <li>
                         <NavLink to="/dashboard/transactionHistory">
-                            <FaUserCheck className="inline-block mr-2" />
+                            <FaMoneyCheckAlt  className="inline-block mr-2" />
                             Transaction History
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/dashboard/manageDonations">
-                            <FaUserCheck className="inline-block mr-2" />
-                            Manage Donations
-                        </NavLink>
-                    </li>
+                    {!roleLoading&& role==='admin'&&
+                        <>
+                            <li>
+                                <NavLink to="/dashboard/manageDonations">
+                                    <FaUserCheck className="inline-block mr-2" />
+                                    Manage Donations
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/dashboard/manageUsers">
+                                    <FaUsersCog className="inline-block mr-2" />
+                                    Manage Users
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/dashboard/manageRoleRequests">
+                                    <FaUserTag  className="inline-block mr-2" />
+                                    Manage Role Request
+                                </NavLink>
+                            </li>
+                        </>
+                    }
                     <li className="mt-auto border-t pt-2">
                         <button onClick={handleSignOut} className="hover:bg-base-300 rounded-lg text-red-600 bg-primary/30">
                             <FaSignOutAlt className="inline-block mr-2" />

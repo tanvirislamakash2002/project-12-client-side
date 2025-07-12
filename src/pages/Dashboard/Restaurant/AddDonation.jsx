@@ -87,7 +87,7 @@ const AddDonation = () => {
     formData.append("image", image);
 
     try {
-      const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_payment_Key}`;
+      const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`;
       const res = await axios.post(imageUploadUrl, formData);
       setImageUrl(res.data.data.url);
       Swal.fire({
