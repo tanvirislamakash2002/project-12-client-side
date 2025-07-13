@@ -19,6 +19,7 @@ import DonationDetails from "../pages/DonationDetails";
 import ManageUsers from "../pages/Dashboard/Admim/ManageUsers";
 import Forbidden from "../pages/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
+import RestaurantRoute from "../routes/RestaurantRoute";
 
 export const router = createBrowserRouter([
     {
@@ -64,14 +65,16 @@ export const router = createBrowserRouter([
             <DashboardLayout></DashboardLayout>
         </PrivateRoute>,
         children: [
+            // restaurant route
             {
                 path: 'addDonation',
-                element: <AddDonation></AddDonation>
+                element: <RestaurantRoute><AddDonation></AddDonation></RestaurantRoute>
             },
             {
                 path: 'myDonations',
-                element: <MyDonation></MyDonation>
+                element: <RestaurantRoute><MyDonation></MyDonation></RestaurantRoute>
             },
+            // user route
             {
                 path: 'requestCharityRole',
                 element: <StripeElementsWrapper>

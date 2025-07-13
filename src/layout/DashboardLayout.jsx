@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt } from 'react-icons/fa';
+import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd } from 'react-icons/fa';
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
@@ -67,35 +67,47 @@ const DashboardLayout = () => {
                             Home
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/dashboard/myDonations">
-                            <FaHandsHelping className="inline-block mr-2" />
-                            My Donations
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/dashboard/addDonation">
-                            <FaPlusCircle className="inline-block mr-2" />
-                            Add Donation
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/dashboard/requestCharityRole">
-                            <FaUserCheck className="inline-block mr-2" />
-                            Request Charity Role
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/dashboard/transactionHistory">
-                            <FaMoneyCheckAlt  className="inline-block mr-2" />
-                            Transaction History
-                        </NavLink>
-                    </li>
-                    {!roleLoading&& role==='admin'&&
+                    {!roleLoading && role === 'user' &&
+                        <>
+                            <li>
+                                <NavLink to="/dashboard/requestCharityRole">
+                                    <FaUserCheck className="inline-block mr-2" />
+                                    Request Charity Role
+                                </NavLink>
+                            </li>
+                        </>
+                    }
+                    {!roleLoading && (role === 'charity' || role === 'user') &&
+                        (<>
+                            <li>
+                                <NavLink to="/dashboard/transactionHistory">
+                                    <FaMoneyCheckAlt className="inline-block mr-2" />
+                                    Transaction History
+                                </NavLink>
+                            </li>
+                        </>)
+                    }
+                    {!roleLoading && role === 'restaurant' &&
+                        <>
+                            <li>
+                                <NavLink to="/dashboard/myDonations">
+                                    <FaHandsHelping className="inline-block mr-2" />
+                                    My Donations
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/dashboard/addDonation">
+                                    <FaPlusCircle className="inline-block mr-2" />
+                                    Add Donation
+                                </NavLink>
+                            </li>
+                        </>
+                    }
+                    {!roleLoading && role === 'admin' &&
                         <>
                             <li>
                                 <NavLink to="/dashboard/manageDonations">
-                                    <FaUserCheck className="inline-block mr-2" />
+                                    <FaHandHoldingUsd className="inline-block mr-2" />
                                     Manage Donations
                                 </NavLink>
                             </li>
@@ -107,7 +119,7 @@ const DashboardLayout = () => {
                             </li>
                             <li>
                                 <NavLink to="/dashboard/manageRoleRequests">
-                                    <FaUserTag  className="inline-block mr-2" />
+                                    <FaUserTag className="inline-block mr-2" />
                                     Manage Role Request
                                 </NavLink>
                             </li>
