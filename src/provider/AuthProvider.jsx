@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, currentUser => {
             setUser(currentUser)
-            console.log(currentUser)
+            // console.log(currentUser)
             setLoading(false)
         })
         return () => {
@@ -68,9 +68,9 @@ const AuthProvider = ({ children }) => {
         setDarkMode
     }
     return (
-        <AuthContext value={authData}>
+        <AuthContext.Provider value={authData}>
             {children}
-        </AuthContext>
+        </AuthContext.Provider>
     );
 };
 

@@ -8,7 +8,7 @@ import { useState } from 'react';
 import useAxios from '../../hooks/useAxios';
 
 const Register = () => {
-  const { createUser, updateUser, setUser } = useAuth()
+  const { createUser, updateUser } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
   const from = location.state || '/'
@@ -21,7 +21,7 @@ const Register = () => {
     const { name, email, password } = data;
     try {
       // 1. Firebase auth
-      const userCredential = await createUser(email, password);
+      await createUser(email, password);
 
       // 2. Update Firebase profile
       const userProfile = {
@@ -42,12 +42,6 @@ const Register = () => {
         title: 'Registration Successful',
         timer: 1400,
         icon: 'success'
-      });
-
-      setUser({
-        ...userCredential.user,
-        displayName: name,
-        photoURL: profilePic
       });
 
       navigate(from);
