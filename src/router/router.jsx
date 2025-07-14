@@ -20,6 +20,7 @@ import ManageUsers from "../pages/Dashboard/Admim/ManageUsers";
 import Forbidden from "../pages/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
 import RestaurantRoute from "../routes/RestaurantRoute";
+import MyReviews from "../pages/Dashboard/MyReviews";
 
 export const router = createBrowserRouter([
     {
@@ -84,6 +85,10 @@ export const router = createBrowserRouter([
             {
                 path: 'transactionHistory',
                 element: <TransactionHistory></TransactionHistory>
+            },
+            {
+                path: 'myReviews',
+                element: <MyReviews></MyReviews>
             },
             // admin route
             {

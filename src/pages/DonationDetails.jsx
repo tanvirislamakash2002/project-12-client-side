@@ -83,6 +83,7 @@ const DonationDetails = () => {
     await axiosSecure.post('/donation-reviews', {
       donationId: id,
       reviewerName: user.displayName,
+      reviewerEmail: user.email,
       description,
       rating,
       createdAt: new Date(),
@@ -209,7 +210,7 @@ const DonationDetails = () => {
         </Modal>
       )}
 
-      {/* Review Modal */}
+      {/* Reviews Modal */}
       {isReviewModalOpen && (
         <Modal onClose={() => setReviewModalOpen(false)}>
           <form onSubmit={handleReviewSubmit} className="space-y-4">

@@ -85,6 +85,12 @@ const DashboardLayout = () => {
                                     Transaction History
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/dashboard/myReviews">
+                                    <FaMoneyCheckAlt className="inline-block mr-2" />
+                                    My Reviews
+                                </NavLink>
+                            </li>
                         </>)
                     }
                     {!roleLoading && role === 'restaurant' &&
