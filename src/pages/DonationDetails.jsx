@@ -1,15 +1,17 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAuth from '../hooks/useAuth';
 import useAxiosSecure from '../hooks/useAxiosSecure';
 import { toast } from 'react-toastify';
 import Modal from '../component/Modal';
-
+import { useEffect, useState } from 'react';
+import useUserRole from '../hooks/useUserRole';
 
 const DonationDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const { role, roleLoading } = useUserRole();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -35,13 +37,31 @@ const DonationDetails = () => {
     },
   });
 
-  // Save to favorites
-  const saveToFavorites = async () => {
-    await axiosSecure.post('/favorites', {
-      donationId: id,
-      userEmail: user.email,
-    });
-    toast.success('Added to your favorites!');
+
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Fetch favorite status when donation & user are loaded
+  useEffect(() => {
+    if (user?.email && id) {
+      axiosSecure.get(`/favorites/check?userEmail=${user.email}&donationId=${id}`)
+        .then(res => {
+          setIsFavorite(res.data.isFavorite);
+        });
+    }
+  }, [user, id]);
+
+  // Toggle favorite handler
+  const toggleFavorite = async () => {
+    try {
+      const res = await axiosSecure.post('/favorites/toggle', {
+        userEmail: user.email,
+        donationId: id,
+      });
+      setIsFavorite(res.data.isFavorite);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error('Failed to update favorite');
+    }
   };
 
   // Confirm pickup (for charities only)
@@ -123,11 +143,12 @@ const DonationDetails = () => {
       </p>
 
       <div className="flex flex-wrap gap-3 mt-4">
-        <button className="btn btn-outline" onClick={saveToFavorites}>
-          Save to Favorites
+
+        <button className="btn btn-outline" onClick={toggleFavorite}>
+          {isFavorite ? 'Remove from Favorites' : 'Save to Favorites'}
         </button>
 
-        {user?.role === 'charity' && (
+        {!roleLoading && role === 'charity' && (
           <>
             <button className="btn btn-primary" onClick={() => setRequestModalOpen(true)}>
               Request Donation

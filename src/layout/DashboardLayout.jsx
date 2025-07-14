@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd } from 'react-icons/fa';
+import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart } from 'react-icons/fa';
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
@@ -87,8 +87,14 @@ const DashboardLayout = () => {
                             </li>
                             <li>
                                 <NavLink to="/dashboard/myReviews">
-                                    <FaMoneyCheckAlt className="inline-block mr-2" />
+                                    <FaStarHalfAlt className="inline-block mr-2" />
                                     My Reviews
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/dashboard/favorites">
+                                    <FaHeart className="inline-block mr-2" />
+                                    Favorites
                                 </NavLink>
                             </li>
                         </>)

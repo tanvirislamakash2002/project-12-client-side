@@ -21,6 +21,7 @@ import Forbidden from "../pages/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
 import RestaurantRoute from "../routes/RestaurantRoute";
 import MyReviews from "../pages/Dashboard/MyReviews";
+import Favorites from "../pages/Dashboard/Favorites";
 
 export const router = createBrowserRouter([
     {
@@ -89,6 +90,10 @@ export const router = createBrowserRouter([
             {
                 path: 'myReviews',
                 element: <MyReviews></MyReviews>
+            },
+            {
+                path: 'favorites',
+                element: <Favorites></Favorites>
             },
             // admin route
             {
