@@ -72,26 +72,70 @@ const DonationDetails = () => {
   };
 
   // Submit request (charity)
+  // const handleRequestSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const form = e.target;
+  //   const requestDescription = form.requestDescription.value;
+  //   const pickupTime = form.pickupTime.value;
+
+  //   await axiosSecure.post('/donation-requests', {
+  //     donationId: id,
+  //     donationTitle: donation.title,
+  //     restaurantName: donation.restaurantName,
+  //     charityName: user.displayName,
+  //     charityEmail: user.email,
+  //     requestDescription,
+  //     pickupTime,
+  //     status: 'Pending',
+  //   });
+
+  //   toast.success('Request submitted!');
+  //   setRequestModalOpen(false);
+  // };
+  const handleRequestButtonClick = async () => {
+  try {
+    const res = await axiosSecure.get(`/donation-requests/check?donationId=${id}&charityEmail=${user.email}`);
+    if (res.data.hasRequested) {
+      toast.info('You have already requested this donation!');
+      return; // 👈 Do NOT open modal
+    }
+    setRequestModalOpen(true); // ✅ Open modal only if not requested
+  } catch (err) {
+    toast.error('Failed to check request status.');
+  }
+};
+
   const handleRequestSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     const requestDescription = form.requestDescription.value;
     const pickupTime = form.pickupTime.value;
 
-    await axiosSecure.post('/donation-requests', {
-      donationId: id,
-      donationTitle: donation.title,
-      restaurantName: donation.restaurantName,
-      charityName: user.displayName,
-      charityEmail: user.email,
-      requestDescription,
-      pickupTime,
-      status: 'Pending',
-    });
+    try {
+      await axiosSecure.post('/donation-requests', {
+        donationId: id,
+        donationTitle: donation.title,
+        restaurantName: donation.restaurantName,
+        charityName: user.displayName,
+        charityEmail: user.email,
+        requestDescription,
+        pickupTime,
+        status: 'Pending',
+      });
 
-    toast.success('Request submitted!');
-    setRequestModalOpen(false);
+      toast.success('Request submitted!');
+      setRequestModalOpen(false);
+
+    } catch (err) {
+      // ✅ If backend rejected with a custom message
+      if (err.response && err.response.data?.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Failed to submit request!');
+      }
+    }
   };
+
 
   // Submit review (user/charity)
   const handleReviewSubmit = async (e) => {
@@ -150,7 +194,7 @@ const DonationDetails = () => {
 
         {!roleLoading && role === 'charity' && (
           <>
-            <button className="btn btn-primary" onClick={() => setRequestModalOpen(true)}>
+            <button className="btn btn-primary" onClick={handleRequestButtonClick}>
               Request Donation
             </button>
 

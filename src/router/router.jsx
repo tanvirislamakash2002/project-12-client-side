@@ -22,6 +22,7 @@ import AdminRoute from "../routes/AdminRoute";
 import RestaurantRoute from "../routes/RestaurantRoute";
 import MyReviews from "../pages/Dashboard/MyReviews";
 import Favorites from "../pages/Dashboard/Favorites";
+import MyRequests from "../pages/Dashboard/Charity/MyRequests";
 
 export const router = createBrowserRouter([
     {
@@ -94,6 +95,11 @@ export const router = createBrowserRouter([
             {
                 path: 'favorites',
                 element: <Favorites></Favorites>
+            },
+            // charity route 
+            {
+                path: 'myRequests',
+                element: <MyRequests></MyRequests>
             },
             // admin route
             {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart } from 'react-icons/fa';
+import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart, FaClipboardList } from 'react-icons/fa';
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
@@ -73,6 +73,16 @@ const DashboardLayout = () => {
                                 <NavLink to="/dashboard/requestCharityRole">
                                     <FaUserCheck className="inline-block mr-2" />
                                     Request Charity Role
+                                </NavLink>
+                            </li>
+                        </>
+                    }
+                    {!roleLoading && role === 'charity' &&
+                        <>
+                            <li>
+                                <NavLink to="/dashboard/myRequests">
+                                    <FaClipboardList className="inline-block mr-2" />
+                                    My Requests
                                 </NavLink>
                             </li>
                         </>
