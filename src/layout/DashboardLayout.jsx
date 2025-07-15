@@ -163,6 +163,12 @@ const DashboardLayout = () => {
                                     Manage Role Request
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/dashboard/manageRequests">
+                                    <FaClipboardList className="inline-block mr-2" />
+                                    Manage Requests
+                                </NavLink>
+                            </li>
                         </>
                     }
                     <li className="mt-auto border-t pt-2">

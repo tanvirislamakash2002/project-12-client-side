@@ -26,6 +26,7 @@ import MyRequests from "../pages/Dashboard/Charity/MyRequests";
 import RequestedDonations from "../pages/Dashboard/Restaurant/RequestedDonations";
 import MyPickups from "../pages/Dashboard/Charity/MyPickups";
 import ReceivedDonations from "../pages/Dashboard/Charity/ReceivedDonations";
+import ManageRequests from "../pages/Dashboard/Admim/ManageRequests";
 
 export const router = createBrowserRouter([
     {
@@ -130,6 +131,10 @@ export const router = createBrowserRouter([
             {
                 path: 'manageUsers',
                 element: <AdminRoute><ManageUsers></ManageUsers></AdminRoute>
+            },
+            {
+                path: 'manageRequests',
+                element: <AdminRoute><ManageRequests></ManageRequests></AdminRoute>
             },
 
         ]
