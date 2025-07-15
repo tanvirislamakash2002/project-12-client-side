@@ -23,6 +23,8 @@ import RestaurantRoute from "../routes/RestaurantRoute";
 import MyReviews from "../pages/Dashboard/MyReviews";
 import Favorites from "../pages/Dashboard/Favorites";
 import MyRequests from "../pages/Dashboard/Charity/MyRequests";
+import RequestedDonations from "../pages/Dashboard/Restaurant/RequestedDonations";
+import MyPickups from "../pages/Dashboard/Charity/MyPickups";
 
 export const router = createBrowserRouter([
     {
@@ -77,6 +79,10 @@ export const router = createBrowserRouter([
                 path: 'myDonations',
                 element: <RestaurantRoute><MyDonation></MyDonation></RestaurantRoute>
             },
+            {
+                path: 'requestedDonations',
+                element: <RestaurantRoute><RequestedDonations></RequestedDonations></RestaurantRoute>
+            },
             // user route
             {
                 path: 'requestCharityRole',
@@ -100,6 +106,10 @@ export const router = createBrowserRouter([
             {
                 path: 'myRequests',
                 element: <MyRequests></MyRequests>
+            },
+            {
+                path: 'myPickups',
+                element: <MyPickups></MyPickups>
             },
             // admin route
             {

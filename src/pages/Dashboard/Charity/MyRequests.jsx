@@ -11,7 +11,7 @@ const MyRequests = () => {
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['myRequests', user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donation-requests?charityEmail=${user.email}`);
+      const res = await axiosSecure.get(`/donation-requests/my?charityEmail=${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,

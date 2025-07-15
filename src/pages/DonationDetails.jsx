@@ -72,26 +72,6 @@ const DonationDetails = () => {
   };
 
   // Submit request (charity)
-  // const handleRequestSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const form = e.target;
-  //   const requestDescription = form.requestDescription.value;
-  //   const pickupTime = form.pickupTime.value;
-
-  //   await axiosSecure.post('/donation-requests', {
-  //     donationId: id,
-  //     donationTitle: donation.title,
-  //     restaurantName: donation.restaurantName,
-  //     charityName: user.displayName,
-  //     charityEmail: user.email,
-  //     requestDescription,
-  //     pickupTime,
-  //     status: 'Pending',
-  //   });
-
-  //   toast.success('Request submitted!');
-  //   setRequestModalOpen(false);
-  // };
   const handleRequestButtonClick = async () => {
   try {
     const res = await axiosSecure.get(`/donation-requests/check?donationId=${id}&charityEmail=${user.email}`);
