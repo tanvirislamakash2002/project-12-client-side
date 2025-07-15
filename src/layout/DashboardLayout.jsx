@@ -91,6 +91,12 @@ const DashboardLayout = () => {
                                     My Pickups
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/dashboard/receivedDonations">
+                                    <FaClipboardList className="inline-block mr-2" />
+                                    Received Donation
+                                </NavLink>
+                            </li>
                         </>
                     }
                     {!roleLoading && (role === 'charity' || role === 'user') &&

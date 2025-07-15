@@ -25,6 +25,7 @@ import Favorites from "../pages/Dashboard/Favorites";
 import MyRequests from "../pages/Dashboard/Charity/MyRequests";
 import RequestedDonations from "../pages/Dashboard/Restaurant/RequestedDonations";
 import MyPickups from "../pages/Dashboard/Charity/MyPickups";
+import ReceivedDonations from "../pages/Dashboard/Charity/ReceivedDonations";
 
 export const router = createBrowserRouter([
     {
@@ -110,6 +111,10 @@ export const router = createBrowserRouter([
             {
                 path: 'myPickups',
                 element: <MyPickups></MyPickups>
+            },
+            {
+                path: 'receivedDonations',
+                element: <ReceivedDonations></ReceivedDonations>
             },
             // admin route
             {
