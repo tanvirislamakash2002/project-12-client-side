@@ -31,6 +31,7 @@ import AdminProfile from "../pages/Dashboard/Admim/AdminProfile";
 import CharityProfile from "../pages/Dashboard/Charity/CharityProfile";
 import RestaurantProfile from "../pages/Dashboard/Restaurant/RestaurantProfile";
 import MyProfile from "../pages/Dashboard/User/MyProfile";
+import FeatureDonations from "../pages/Dashboard/Admim/FeatureDonations";
 
 export const router = createBrowserRouter([
     {
@@ -156,6 +157,10 @@ export const router = createBrowserRouter([
             {
                 path: 'manageRequests',
                 element: <AdminRoute><ManageRequests></ManageRequests></AdminRoute>
+            },
+            {
+                path: 'featureDonations',
+                element: <AdminRoute><FeatureDonations></FeatureDonations></AdminRoute>
             },
 
         ]

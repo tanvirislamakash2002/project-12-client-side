@@ -193,6 +193,12 @@ const DashboardLayout = () => {
                                     Manage Requests
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/dashboard/featureDonations">
+                                    <FaClipboardList className="inline-block mr-2" />
+                                    Feature Donation
+                                </NavLink>
+                            </li>
                         </>
                     }
                     <li className="mt-auto border-t pt-2">
