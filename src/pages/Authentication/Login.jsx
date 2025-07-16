@@ -27,6 +27,9 @@ const Login = () => {
                         photoURL: data.user.photoURL
                     });
                 }
+
+                await axiosInstance.post('/login', { email: data.user.email });
+
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -45,6 +48,7 @@ const Login = () => {
     //login with email and password
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+
     const onSubmit = async data => {
         const { email, password } = data;
 
@@ -64,6 +68,8 @@ const Login = () => {
 
             // 2️⃣ If exists, proceed with Firebase login
             await signInUser(email, password);
+
+            await axiosInstance.post('/login', { email });
 
             Swal.fire({
                 position: "center",

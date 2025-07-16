@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart, FaClipboardList, FaTasks } from 'react-icons/fa';
+import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart, FaClipboardList, FaTasks, FaUserShield } from 'react-icons/fa';
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
@@ -145,6 +145,12 @@ const DashboardLayout = () => {
                     }
                     {!roleLoading && role === 'admin' &&
                         <>
+                            <li>
+                                <NavLink to="/dashboard/adminProfile">
+                                    <FaUserShield className="inline-block mr-2" />
+                                    Admin Profile
+                                </NavLink>
+                            </li>
                             <li>
                                 <NavLink to="/dashboard/manageDonations">
                                     <FaHandHoldingUsd className="inline-block mr-2" />
