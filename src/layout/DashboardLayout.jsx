@@ -70,6 +70,12 @@ const DashboardLayout = () => {
                     {!roleLoading && role === 'user' &&
                         <>
                             <li>
+                                <NavLink to="/dashboard/my-profile">
+                                    <FaUserCheck className="inline-block mr-2" />
+                                    My profile
+                                </NavLink>
+                            </li>
+                            <li>
                                 <NavLink to="/dashboard/requestCharityRole">
                                     <FaUserCheck className="inline-block mr-2" />
                                     Request Charity Role
@@ -79,6 +85,12 @@ const DashboardLayout = () => {
                     }
                     {!roleLoading && role === 'charity' &&
                         <>
+                            <li>
+                                <NavLink to="/dashboard/charity-profile">
+                                    <FaMoneyCheckAlt className="inline-block mr-2" />
+                                    Charity Profile
+                                </NavLink>
+                            </li>
                             <li>
                                 <NavLink to="/dashboard/myRequests">
                                     <FaClipboardList className="inline-block mr-2" />
@@ -123,6 +135,12 @@ const DashboardLayout = () => {
                     }
                     {!roleLoading && role === 'restaurant' &&
                         <>
+                            <li>
+                                <NavLink to="/dashboard/restaurant-profile">
+                                    <FaHandsHelping className="inline-block mr-2" />
+                                    Restaurant Profile
+                                </NavLink>
+                            </li>
                             <li>
                                 <NavLink to="/dashboard/myDonations">
                                     <FaHandsHelping className="inline-block mr-2" />

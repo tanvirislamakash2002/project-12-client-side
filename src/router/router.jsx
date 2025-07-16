@@ -28,6 +28,9 @@ import MyPickups from "../pages/Dashboard/Charity/MyPickups";
 import ReceivedDonations from "../pages/Dashboard/Charity/ReceivedDonations";
 import ManageRequests from "../pages/Dashboard/Admim/ManageRequests";
 import AdminProfile from "../pages/Dashboard/Admim/AdminProfile";
+import CharityProfile from "../pages/Dashboard/Charity/CharityProfile";
+import RestaurantProfile from "../pages/Dashboard/Restaurant/RestaurantProfile";
+import MyProfile from "../pages/Dashboard/User/MyProfile";
 
 export const router = createBrowserRouter([
     {
@@ -79,6 +82,10 @@ export const router = createBrowserRouter([
                 element: <RestaurantRoute><AddDonation></AddDonation></RestaurantRoute>
             },
             {
+                path: 'restaurant-profile',
+                element: <RestaurantRoute><RestaurantProfile></RestaurantProfile></RestaurantRoute>
+            },
+            {
                 path: 'myDonations',
                 element: <RestaurantRoute><MyDonation></MyDonation></RestaurantRoute>
             },
@@ -87,6 +94,10 @@ export const router = createBrowserRouter([
                 element: <RestaurantRoute><RequestedDonations></RequestedDonations></RestaurantRoute>
             },
             // user route
+            {
+                path: 'my-profile',
+                element: <MyProfile></MyProfile>
+            },
             {
                 path: 'requestCharityRole',
                 element: <StripeElementsWrapper>
@@ -106,6 +117,10 @@ export const router = createBrowserRouter([
                 element: <Favorites></Favorites>
             },
             // charity route 
+            {
+                path: 'charity-profile',
+                element: <CharityProfile></CharityProfile>
+            },
             {
                 path: 'myRequests',
                 element: <MyRequests></MyRequests>
