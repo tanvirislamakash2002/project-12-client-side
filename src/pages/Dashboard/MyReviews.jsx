@@ -8,17 +8,15 @@ const MyReviews = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  // Fetch my reviews
-const { data: myReviews = [], isLoading } = useQuery({
-  queryKey: ['myReviews', user?.email],
-  queryFn: async () => {
-    const res = await axiosSecure.get(`/donation-reviews?reviewerEmail=${user?.email}`);
-    return res.data;
-  },
-  enabled: !!user?.email
-});
+  const { data: myReviews = [], isLoading } = useQuery({
+    queryKey: ['myReviews', user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/donation-reviews?reviewerEmail=${user?.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
 
-  // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
       return await axiosSecure.delete(`/donation-reviews/${id}`);
@@ -57,42 +55,48 @@ const { data: myReviews = [], isLoading } = useQuery({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-6">My Reviews</h2>
+    <section className="max-w-5xl mx-auto px-4 py-10">
+      <h1 className="text-4xl font-bold text-center mb-10">My Reviews</h1>
 
       {isLoading ? (
-        <p>Loading...</p>
+        <div className="flex justify-center items-center h-40">
+          <span className="loading loading-spinner loading-lg text-primary" />
+        </div>
       ) : myReviews.length === 0 ? (
-        <p>You haven’t submitted any reviews yet.</p>
+        <div className="text-center text-gray-500">You haven’t submitted any reviews yet.</div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {myReviews.map((review) => (
             <div
               key={review._id}
-              className="border p-4 rounded-md shadow-sm bg-white"
+              className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
-              <h3 className="text-xl font-semibold mb-1">
-                {review.donation?.title || "Unknown Title"}
-              </h3>
-              <p className="text-gray-500 mb-1">
-                <strong>Restaurant:</strong> {review.donation?.restaurantName || "Unknown Restaurant"}
-              </p>
-              <p className="text-gray-500 mb-1">
-                <strong>Time:</strong>{" "}
-                {new Date(review.createdAt).toLocaleString()}
-              </p>
-              <p className="mb-2">{review.description}</p>
-              <button
-                onClick={() => handleDelete(review._id)}
-                className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
+              <div className="card-body space-y-2">
+                <h2 className="card-title text-lg font-semibold text-primary">
+                  {review.donation?.title || "Unknown Donation"}
+                </h2>
+                <p className="text-sm text-gray-600">
+                  <strong>Restaurant:</strong> {review.donation?.restaurantName || "Unknown"}
+                </p>
+                <p className="text-sm text-gray-500">
+                  <strong>Reviewed:</strong> {new Date(review.createdAt).toLocaleString()}
+                </p>
+                <p className="text-sm">{review.description}</p>
+
+                <div className="card-actions justify-end">
+                  <button
+                    onClick={() => handleDelete(review._id)}
+                    className="btn btn-sm btn-error"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

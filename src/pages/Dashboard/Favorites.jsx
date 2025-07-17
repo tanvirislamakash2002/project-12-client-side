@@ -9,18 +9,16 @@ const Favorites = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  // Fetch all favorites for this user
   const { data: favorites = [], isLoading } = useQuery({
     queryKey: ['favorites', user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/favorites?userEmail=${user.email}`);
-      return res.data; // Expect [{ _id, donation: { ... } }]
+      return res.data;
     },
     onError: () => toast.error('Failed to load favorites'),
   });
 
-  // Remove favorite mutation
   const removeFavorite = useMutation({
     mutationFn: async (favoriteId) => {
       await axiosSecure.delete(`/favorites/${favoriteId}`);
@@ -32,53 +30,75 @@ const Favorites = () => {
     onError: () => toast.error('Failed to remove favorite'),
   });
 
-  if (isLoading) return <p className="py-10 text-center">Loading favorites...</p>;
-  if (favorites.length === 0) return <p className="py-10 text-center">No favorites found.</p>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <span className="loading loading-spinner loading-lg text-primary" />
+      </div>
+    );
+  }
+
+  if (favorites.length === 0) {
+    return (
+      <div className="text-center py-20 text-gray-500 text-lg">
+        You don’t have any favorite donations yet.
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-6">Your Favorites</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {favorites.map((favorite) => (
-          <div
-            key={favorite._id}
-            className="border rounded-lg p-4 shadow flex flex-col"
-          >
-            {favorite.donation?.image && (
-              <img
-                src={favorite.donation.image}
-                alt={favorite.donation.title}
-                className="w-full h-48 object-cover mb-4 rounded"
-              />
-            )}
-            <h3 className="text-xl font-bold mb-2">{favorite.donation?.title}</h3>
-            <p className="mb-1">
-              <strong>Restaurant:</strong> {favorite.donation?.restaurantName} — {favorite.donation?.location}
-            </p>
-            <p className="mb-1">
-              <strong>Status:</strong> {favorite.donation?.status}
-            </p>
-            <p className="mb-4">
-              <strong>Quantity:</strong> {favorite.donation?.quantity} {favorite.donation?.quantityUnit}
-            </p>
-            <div className="mt-auto flex gap-2">
-              <Link
-                to={`/donationDetails/${favorite.donation?._id}`}
-                className="btn btn-primary flex-1"
-              >
-                Details
-              </Link>
-              <button
-                onClick={() => removeFavorite.mutate(favorite._id)}
-                className="btn btn-outline flex-1"
-              >
-                Remove
-              </button>
+    <section className="max-w-7xl mx-auto px-4 py-10">
+      <h1 className="text-4xl font-bold text-center mb-10">Your Favorite Donations</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {favorites.map(({ _id, donation }) => {
+          if (!donation) return null;
+
+          return (
+            <div key={_id} className="card bg-base-100 border border-base-300 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+              {donation.image && (
+                <figure className="h-48 overflow-hidden rounded-t-xl">
+                  <img
+                    src={donation.image}
+                    alt={donation.title}
+                    className="w-full h-full object-cover"
+                  />
+                </figure>
+              )}
+              <div className="card-body space-y-3">
+                <h2 className="card-title text-xl font-semibold text-primary">
+                  {donation.title}
+                </h2>
+
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p><strong>Restaurant:</strong> {donation.restaurantName}</p>
+                  <p><strong>Location:</strong> {donation.location}</p>
+                  <p>
+                    <strong>Status:</strong>{' '}
+                    <span className={`badge text-white ${donation.status === 'Available' ? 'badge-success' : 'badge-warning'}`}>
+                      {donation.status}
+                    </span>
+                  </p>
+                  <p><strong>Quantity:</strong> {donation.quantity} {donation.quantityUnit}</p>
+                </div>
+
+                <div className="card-actions mt-4 flex gap-2">
+                  <Link to={`/donationDetails/${donation._id}`} className="btn btn-sm btn-primary flex-1">
+                    View Details
+                  </Link>
+                  <button
+                    onClick={() => removeFavorite.mutate(_id)}
+                    className="btn btn-sm btn-outline btn-error flex-1 hover:text-white"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 };
 

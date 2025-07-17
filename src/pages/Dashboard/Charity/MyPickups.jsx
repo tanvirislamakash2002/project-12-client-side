@@ -8,16 +8,18 @@ const MyPickups = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  // ✅ Get only "Accepted" requests for this charity
+  // Fetch pickups
   const { data: pickups = [], isLoading } = useQuery({
     queryKey: ['myPickups', user.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donation-requests/pickups?charityEmail=${user.email}`);
+      const res = await axiosSecure.get(
+        `/donation-requests/pickups?charityEmail=${user.email}`
+      );
       return res.data;
     },
   });
 
-  // ✅ Confirm pickup mutation
+  // Confirm pickup mutation
   const confirmPickupMutation = useMutation({
     mutationFn: async (requestId) => {
       await axiosSecure.patch(`/donation-requests/${requestId}/confirm-pickup`);
@@ -28,49 +30,66 @@ const MyPickups = () => {
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <span className="loading loading-spinner loading-lg text-primary" />
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">My Pickups</h2>
+    <div className="p-4 max-w-6xl mx-auto">
+      <h2 className="text-3xl font-bold mb-6 text-center">My Pickups</h2>
+
       {pickups.length === 0 ? (
-        <p>No assigned pickups yet.</p>
+        <div className="text-center text-gray-500 text-lg">No assigned pickups yet.</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
           {pickups.map((pickup) => (
-            <div
-              key={pickup._id}
-              className="border rounded-lg p-4 shadow flex flex-col gap-2"
-            >
-              <h3 className="text-xl font-semibold">{pickup.donationTitle}</h3>
-              <p>
-                <strong>Restaurant:</strong> {pickup.restaurantName} ({pickup.location})
-              </p>
-              <p>
-                <strong>Food Type:</strong> {pickup.foodType}
-              </p>
-              <p>
-                <strong>Quantity:</strong> {pickup.quantity}
-              </p>
-              <p>
-                <strong>Pickup Time:</strong> {pickup.pickupTime}
-              </p>
-              <p>
-                <strong>Status:</strong> {pickup.status === 'Picked Up' ? 'Picked Up' : 'Assigned'}
-              </p>
+            <div key={pickup._id} className="card bg-base-100 shadow border border-base-300">
+              <div className="card-body">
+                <h3 className="text-xl font-bold text-primary">{pickup.donationTitle}</h3>
 
-              {pickup.status === 'Accepted' && (
-                <button
-                  onClick={() => confirmPickupMutation.mutate(pickup._id)}
-                  className="btn btn-success"
-                >
-                  Confirm Pickup
-                </button>
-              )}
+                <div className="text-base-content space-y-1">
+                  <p><strong>Restaurant:</strong> {pickup.restaurantName}</p>
+                  <p><strong>Location:</strong> {pickup.location}</p>
+                  <p><strong>Food Type:</strong> {pickup.foodType}</p>
+                  <p><strong>Quantity:</strong> {pickup.quantity}</p>
+                  <p><strong>Pickup Time:</strong> {pickup.pickupTime}</p>
+                  <p>
+                    <strong>Status:</strong>{' '}
+                    <span
+                      className={`badge text-white ${
+                        pickup.status === 'Picked Up'
+                          ? 'badge-success'
+                          : pickup.status === 'Accepted'
+                          ? 'badge-warning'
+                          : 'badge-info'
+                      }`}
+                    >
+                      {pickup.status}
+                    </span>
+                  </p>
+                </div>
 
-              {pickup.status === 'Picked Up' && (
-                <span className="text-green-600 font-bold">Already Picked Up</span>
-              )}
+                {pickup.status === 'Accepted' && (
+                  <div className="mt-4">
+                    <button
+                      onClick={() => confirmPickupMutation.mutate(pickup._id)}
+                      className="btn btn-success w-full text-white"
+                    >
+                      Confirm Pickup
+                    </button>
+                  </div>
+                )}
+
+                {pickup.status === 'Picked Up' && (
+                  <div className="mt-4 text-center text-green-600 font-semibold">
+                    ✅ Already Picked Up
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>

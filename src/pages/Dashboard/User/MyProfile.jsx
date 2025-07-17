@@ -15,32 +15,35 @@ const MyProfile = () => {
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p className="text-center text-gray-500">Loading...</p>;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow rounded">
-      <div className="flex items-center space-x-4">
+    <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-6 md:mt-10">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
         <img
           src={profile.photoURL || '/placeholder-user.png'}
           alt="User"
-          className="w-24 h-24 rounded-full object-cover"
+          className="w-32 h-32 rounded-full object-cover shadow-md"
         />
-        <div>
-          <h2 className="text-2xl font-bold">
+        <div className="text-center md:text-left space-y-2">
+          <h2 className="text-2xl font-semibold text-gray-800">
             {profile.name || 'User Name'}
           </h2>
+
           {profile.role && profile.role !== 'user' && (
-            <p className="text-gray-600">
-              Role: <span className="font-semibold">{profile.role}</span>
-            </p>
+            <span className="inline-block px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full">
+              {profile.role.charAt(0).toUpperCase() + profile.role.slice(1)}
+            </span>
           )}
+
           {profile.contact && (
-            <p className="text-gray-500 mt-2">
+            <p className="text-gray-600">
               <strong>Contact:</strong> {profile.contact}
             </p>
           )}
+
           {profile.createdAt && (
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-500 text-sm">
               <strong>Joined:</strong> {new Date(profile.createdAt).toLocaleDateString()}
             </p>
           )}

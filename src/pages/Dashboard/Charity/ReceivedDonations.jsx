@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useAuth from '../../../hooks/useAuth';
 import { useState } from 'react';
-import ReviewModal from '../../../component/ReviewModal'; // if you have a reusable modal
+import ReviewModal from '../../../component/ReviewModal';
 
 const ReceivedDonations = () => {
   const axiosSecure = useAxiosSecure();
@@ -12,34 +12,68 @@ const ReceivedDonations = () => {
   const { data: received = [], isLoading } = useQuery({
     queryKey: ['receivedDonations', user.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donation-requests/received?charityEmail=${user.email}`);
+      const res = await axiosSecure.get(
+        `/donation-requests/received?charityEmail=${user.email}`
+      );
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <span className="loading loading-spinner loading-lg text-primary" />
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Received Donations</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {received.map((donation) => (
-          <div key={donation._id} className="card p-4 shadow rounded border">
-            <h3 className="text-lg font-bold">{donation.donationTitle}</h3>
-            <p>Restaurant: {donation.restaurantName}</p>
-            <p>Food Type: {donation.foodType}</p>
-            <p>Quantity: {donation.quantity}</p>
-            <p>Pickup Date: {donation.pickupTime}</p>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h2 className="text-3xl font-bold text-center mb-8">
+        Received Donations
+      </h2>
 
-            <button
-              onClick={() => setSelectedDonation(donation)}
-              className="btn btn-primary mt-2"
+      {received.length === 0 ? (
+        <div className="text-center text-gray-500 text-lg">
+          No donations received yet.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {received.map((donation) => (
+            <div
+              key={donation._id}
+              className="card bg-base-100 shadow-md border border-base-300"
             >
-              Leave Review
-            </button>
-          </div>
-        ))}
-      </div>
+              <div className="card-body space-y-2">
+                <h3 className="card-title text-primary">
+                  {donation.donationTitle}
+                </h3>
+
+                <p>
+                  <strong>Restaurant:</strong> {donation.restaurantName}
+                </p>
+                <p>
+                  <strong>Food Type:</strong> {donation.foodType}
+                </p>
+                <p>
+                  <strong>Quantity:</strong> {donation.quantity}
+                </p>
+                <p>
+                  <strong>Pickup Date:</strong> {donation.pickupTime}
+                </p>
+
+                <button
+                  onClick={() => setSelectedDonation(donation)}
+                  className="btn btn-outline btn-primary w-full mt-4"
+                >
+                  Leave Review
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {selectedDonation && (
         <ReviewModal

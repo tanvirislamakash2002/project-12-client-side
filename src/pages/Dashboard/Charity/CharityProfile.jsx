@@ -15,33 +15,43 @@ const CharityProfile = () => {
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <span className="loading loading-spinner loading-lg text-primary" />
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow rounded">
-      <div className="flex items-center space-x-4">
-        <img
-          src={profile.photoURL || '/placeholder-charity.png'}
-          alt="Charity"
-          className="w-24 h-24 rounded-full object-cover"
-        />
-        <div>
-          <h2 className="text-2xl font-bold">
-            {profile.name || 'Charity Name'}
-          </h2>
-          <p className="text-gray-600">
-            Role: <span className="font-semibold">{profile.role || 'Charity'}</span>
-          </p>
-          {profile.mission && (
-            <p className="text-gray-500 mt-2">
-              <strong>Mission:</strong> {profile.mission}
-            </p>
-          )}
-          {profile.contact && (
-            <p className="text-gray-500 mt-1">
-              <strong>Contact:</strong> {profile.contact}
-            </p>
-          )}
+    <div className="max-w-3xl mx-auto p-6">
+      <div className="card bg-base-100 shadow-lg border border-base-300">
+        <div className="card-body">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <img
+              src={profile.photoURL || '/placeholder-charity.png'}
+              alt="Charity"
+              className="w-32 h-32 rounded-full object-cover border border-base-300"
+            />
+            <div className="text-center md:text-left">
+              <h2 className="text-3xl font-bold">{profile.name || 'Charity Name'}</h2>
+              <p className="text-base-content/70">
+                Role: <span className="font-semibold">{profile.role || 'Charity'}</span>
+              </p>
+
+              {profile.mission && (
+                <p className="mt-3 text-base-content">
+                  <span className="font-medium">Mission:</span> {profile.mission}
+                </p>
+              )}
+
+              {profile.contact && (
+                <p className="mt-1 text-base-content">
+                  <span className="font-medium">Contact:</span> {profile.contact}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
