@@ -46,6 +46,7 @@ const DonationDetails = () => {
       axiosSecure.get(`/favorites/check?userEmail=${user.email}&donationId=${id}`)
         .then(res => {
           setIsFavorite(res.data.isFavorite);
+          console.log(res.data.isFavorite)
         });
     }
   }, [user, id]);
@@ -76,7 +77,7 @@ const DonationDetails = () => {
   try {
     const res = await axiosSecure.get(`/donation-requests/check?donationId=${id}&charityEmail=${user.email}`);
     if (res.data.hasRequested) {
-      toast.info('You have already requested this donation!');
+      toast.info('You have already requested this donation Once!');
       return; // 👈 Do NOT open modal
     }
     setRequestModalOpen(true); // ✅ Open modal only if not requested

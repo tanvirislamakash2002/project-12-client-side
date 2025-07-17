@@ -3,7 +3,7 @@ import Banner from '../component/home/Banner';
 import FeaturedDonationsSection from '../component/home/FeaturedDonationsSection';
 import LatestCharityRequests from '../component/home/LatestCharityRequests';
 import TopContributors from '../component/home/TopContributors';
-import CommunityImpactTimeline from '../component/home/CommunityImpactTimeline';
+import DonationTips from '../component/home/DonationTips';
 
 const Home = () => {
     return (
@@ -21,7 +21,7 @@ const Home = () => {
                 <TopContributors></TopContributors>
             </div>
             <div className="">
-                <CommunityImpactTimeline></CommunityImpactTimeline>
+                <DonationTips></DonationTips>
             </div>
         </div>
     );

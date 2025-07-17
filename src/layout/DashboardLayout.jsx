@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart, FaClipboardList, FaTasks, FaUserShield } from 'react-icons/fa';
+import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart, FaClipboardList, FaTasks, FaUserShield, FaUser, FaStar, FaBoxOpen } from 'react-icons/fa';
+import { IoIosStats } from "react-icons/io";
+import { FaBoxesPacking } from "react-icons/fa6";
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
@@ -71,7 +73,7 @@ const DashboardLayout = () => {
                         <>
                             <li>
                                 <NavLink to="/dashboard/my-profile">
-                                    <FaUserCheck className="inline-block mr-2" />
+                                    <FaUser  className="inline-block mr-2" />
                                     My profile
                                 </NavLink>
                             </li>
@@ -87,7 +89,7 @@ const DashboardLayout = () => {
                         <>
                             <li>
                                 <NavLink to="/dashboard/charity-profile">
-                                    <FaMoneyCheckAlt className="inline-block mr-2" />
+                                    <FaUser  className="inline-block mr-2" />
                                     Charity Profile
                                 </NavLink>
                             </li>
@@ -99,13 +101,13 @@ const DashboardLayout = () => {
                             </li>
                             <li>
                                 <NavLink to="/dashboard/myPickups">
-                                    <FaClipboardList className="inline-block mr-2" />
+                                    <FaBoxesPacking  className="inline-block mr-2" />
                                     My Pickups
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink to="/dashboard/receivedDonations">
-                                    <FaClipboardList className="inline-block mr-2" />
+                                    <FaBoxOpen  className="inline-block mr-2" />
                                     Received Donation
                                 </NavLink>
                             </li>
@@ -137,8 +139,14 @@ const DashboardLayout = () => {
                         <>
                             <li>
                                 <NavLink to="/dashboard/restaurant-profile">
-                                    <FaHandsHelping className="inline-block mr-2" />
+                                    <FaUser  className="inline-block mr-2" />
                                     Restaurant Profile
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/dashboard/donationStats">
+                                    <IoIosStats  className="inline-block mr-2" />
+                                    Donation Stats
                                 </NavLink>
                             </li>
                             <li>
@@ -165,7 +173,7 @@ const DashboardLayout = () => {
                         <>
                             <li>
                                 <NavLink to="/dashboard/adminProfile">
-                                    <FaUserShield className="inline-block mr-2" />
+                                    <FaUser  className="inline-block mr-2" />
                                     Admin Profile
                                 </NavLink>
                             </li>
@@ -195,7 +203,7 @@ const DashboardLayout = () => {
                             </li>
                             <li>
                                 <NavLink to="/dashboard/featureDonations">
-                                    <FaClipboardList className="inline-block mr-2" />
+                                    <FaStar  className="inline-block mr-2" />
                                     Feature Donation
                                 </NavLink>
                             </li>
