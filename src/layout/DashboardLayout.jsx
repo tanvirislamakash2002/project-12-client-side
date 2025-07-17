@@ -1,224 +1,123 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { FaHome, FaPlusCircle, FaHandsHelping, FaTimes, FaSignOutAlt, FaUserCheck, FaUsersCog, FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart, FaClipboardList, FaTasks, FaUserShield, FaUser, FaStar, FaBoxOpen } from 'react-icons/fa';
-import { IoIosStats } from "react-icons/io";
-import { FaBoxesPacking } from "react-icons/fa6";
+import {
+  FaHome, FaPlusCircle, FaHandsHelping, FaSignOutAlt, FaUserCheck, FaUsersCog,
+  FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart,
+  FaClipboardList, FaTasks, FaUserShield, FaUser, FaStar, FaBoxOpen
+} from 'react-icons/fa';
+import { IoIosStats } from 'react-icons/io';
+import { FaBoxesPacking } from 'react-icons/fa6';
 import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
 import { ToastContainer } from 'react-toastify';
 
+const SidebarLink = ({ to, icon: Icon, label }) => (
+  <li>
+    <NavLink to={to} className={({ isActive }) => isActive ? 'active-link' : ''}>
+      <Icon className="inline-block mr-2" /> {label}
+    </NavLink>
+  </li>
+);
+
 const DashboardLayout = () => {
-    const { signOutUser } = useAuth();
-    const { role, roleLoading } = useUserRole()
-    const navigate = useNavigate();
+  const { signOutUser } = useAuth();
+  const { role, roleLoading } = useUserRole();
+  const navigate = useNavigate();
 
-    const handleSignOut = () => {
-        signOutUser()
-            .then(() => navigate('/login'))
-            .catch(error => console.error('Logout error:', error));
-    };
-    return (
-        <div className="drawer lg:drawer-open">
-            <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content flex flex-col">
+  const handleSignOut = () => {
+    signOutUser()
+      .then(() => navigate('/login'))
+      .catch(error => console.error('Logout error:', error));
+  };
 
-                {/* Navbar (mobile only) */}
-                <div className="navbar bg-base-300 w-full lg:hidden">
-                    <div className="flex-none">
-                        <label htmlFor="my-drawer-2" aria-label="open sidebar" className="btn btn-square btn-ghost">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                className="inline-block h-6 w-6 stroke-current"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M4 6h16M4 12h16M4 18h16"
-                                ></path>
-                            </svg>
-                        </label>
-                    </div>
-                    <div className="mx-2 flex-1 px-2">Dashboard</div>
-                </div>
-
-                {/* Page content */}
-                <Outlet />
-                <ToastContainer />
-            </div>
-
-            {/* Sidebar */}
-            <div className="drawer-side">
-                <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-                <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 relative">
-                    {/* Close Button (visible on all screens) */}
-                    <label
-                        htmlFor="my-drawer-2"
-                        className="btn btn-ghost btn-circle absolute right-2 top-2 lg:hidden"
-                    >
-                        <FaTimes className="text-lg" />
-                    </label>
-                    <Logo></Logo>
-                    {/* Sidebar Links */}
-                    <li>
-                        <NavLink to="/">
-                            <FaHome className="inline-block mr-2" />
-                            Home
-                        </NavLink>
-                    </li>
-                    {!roleLoading && role === 'user' &&
-                        <>
-                            <li>
-                                <NavLink to="/dashboard/my-profile">
-                                    <FaUser  className="inline-block mr-2" />
-                                    My profile
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/requestCharityRole">
-                                    <FaUserCheck className="inline-block mr-2" />
-                                    Request Charity Role
-                                </NavLink>
-                            </li>
-                        </>
-                    }
-                    {!roleLoading && role === 'charity' &&
-                        <>
-                            <li>
-                                <NavLink to="/dashboard/charity-profile">
-                                    <FaUser  className="inline-block mr-2" />
-                                    Charity Profile
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/myRequests">
-                                    <FaClipboardList className="inline-block mr-2" />
-                                    My Requests
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/myPickups">
-                                    <FaBoxesPacking  className="inline-block mr-2" />
-                                    My Pickups
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/receivedDonations">
-                                    <FaBoxOpen  className="inline-block mr-2" />
-                                    Received Donation
-                                </NavLink>
-                            </li>
-                        </>
-                    }
-                    {!roleLoading && (role === 'charity' || role === 'user') &&
-                        (<>
-                            <li>
-                                <NavLink to="/dashboard/transactionHistory">
-                                    <FaMoneyCheckAlt className="inline-block mr-2" />
-                                    Transaction History
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/myReviews">
-                                    <FaStarHalfAlt className="inline-block mr-2" />
-                                    My Reviews
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/favorites">
-                                    <FaHeart className="inline-block mr-2" />
-                                    Favorites
-                                </NavLink>
-                            </li>
-                        </>)
-                    }
-                    {!roleLoading && role === 'restaurant' &&
-                        <>
-                            <li>
-                                <NavLink to="/dashboard/restaurant-profile">
-                                    <FaUser  className="inline-block mr-2" />
-                                    Restaurant Profile
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/donationStats">
-                                    <IoIosStats  className="inline-block mr-2" />
-                                    Donation Stats
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/myDonations">
-                                    <FaHandsHelping className="inline-block mr-2" />
-                                    My Donations
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/addDonation">
-                                    <FaPlusCircle className="inline-block mr-2" />
-                                    Add Donation
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/requestedDonations">
-                                    <FaTasks className="inline-block mr-2" />
-                                    Requested Donations
-                                </NavLink>
-                            </li>
-                        </>
-                    }
-                    {!roleLoading && role === 'admin' &&
-                        <>
-                            <li>
-                                <NavLink to="/dashboard/adminProfile">
-                                    <FaUser  className="inline-block mr-2" />
-                                    Admin Profile
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/manageDonations">
-                                    <FaHandHoldingUsd className="inline-block mr-2" />
-                                    Manage Donations
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/manageUsers">
-                                    <FaUsersCog className="inline-block mr-2" />
-                                    Manage Users
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/manageRoleRequests">
-                                    <FaUserTag className="inline-block mr-2" />
-                                    Manage Role Request
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/manageRequests">
-                                    <FaClipboardList className="inline-block mr-2" />
-                                    Manage Requests
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/featureDonations">
-                                    <FaStar  className="inline-block mr-2" />
-                                    Feature Donation
-                                </NavLink>
-                            </li>
-                        </>
-                    }
-                    <li className="mt-auto border-t pt-2">
-                        <button onClick={handleSignOut} className="hover:bg-base-300 rounded-lg text-red-600 bg-primary/30">
-                            <FaSignOutAlt className="inline-block mr-2" />
-                            Logout
-                        </button>
-                    </li>
-                </ul>
-            </div>
+  return (
+    <div className="drawer lg:drawer-open min-h-screen">
+      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+      <div className="drawer-content flex flex-col">
+        <div className="navbar bg-base-200 lg:hidden px-4">
+          <div className="flex-none">
+            <label htmlFor="my-drawer-2" className="btn btn-ghost">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </label>
+          </div>
+          <div className="flex-1 text-lg font-semibold">Dashboard</div>
         </div>
-    );
+
+        <main className="p-4">
+          <Outlet />
+        </main>
+        <ToastContainer />
+      </div>
+
+      <div className="drawer-side z-50">
+        <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+        <aside className="menu bg-base-100 text-base-content w-80 p-4 min-h-full border-r border-base-300 flex flex-col">
+          <Logo />
+
+          <SidebarLink to="/" icon={FaHome} label="Home" />
+
+          {!roleLoading && role === 'user' && (
+            <>
+              <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">User</div>
+              <SidebarLink to="/dashboard/my-profile" icon={FaUser} label="My Profile" />
+              <SidebarLink to="/dashboard/requestCharityRole" icon={FaUserCheck} label="Request Charity Role" />
+            </>
+          )}
+
+          {!roleLoading && role === 'charity' && (
+            <>
+              <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Charity</div>
+              <SidebarLink to="/dashboard/charity-profile" icon={FaUser} label="Charity Profile" />
+              <SidebarLink to="/dashboard/myRequests" icon={FaClipboardList} label="My Requests" />
+              <SidebarLink to="/dashboard/myPickups" icon={FaBoxesPacking} label="My Pickups" />
+              <SidebarLink to="/dashboard/receivedDonations" icon={FaBoxOpen} label="Received Donations" />
+            </>
+          )}
+
+          {!roleLoading && (role === 'charity' || role === 'user') && (
+            <>
+              {/* <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Common</div> */}
+              <SidebarLink to="/dashboard/transactionHistory" icon={FaMoneyCheckAlt} label="Transaction History" />
+              <SidebarLink to="/dashboard/myReviews" icon={FaStarHalfAlt} label="My Reviews" />
+              <SidebarLink to="/dashboard/favorites" icon={FaHeart} label="Favorites" />
+            </>
+          )}
+
+          {!roleLoading && role === 'restaurant' && (
+            <>
+              <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Restaurant</div>
+              <SidebarLink to="/dashboard/restaurant-profile" icon={FaUser} label="Restaurant Profile" />
+              <SidebarLink to="/dashboard/donationStats" icon={IoIosStats} label="Donation Stats" />
+              <SidebarLink to="/dashboard/myDonations" icon={FaHandsHelping} label="My Donations" />
+              <SidebarLink to="/dashboard/addDonation" icon={FaPlusCircle} label="Add Donation" />
+              <SidebarLink to="/dashboard/requestedDonations" icon={FaTasks} label="Requested Donations" />
+            </>
+          )}
+
+          {!roleLoading && role === 'admin' && (
+            <>
+              <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Admin</div>
+              <SidebarLink to="/dashboard/adminProfile" icon={FaUser} label="Admin Profile" />
+              <SidebarLink to="/dashboard/manageDonations" icon={FaHandHoldingUsd} label="Manage Donations" />
+              <SidebarLink to="/dashboard/manageUsers" icon={FaUsersCog} label="Manage Users" />
+              <SidebarLink to="/dashboard/manageRoleRequests" icon={FaUserTag} label="Manage Role Requests" />
+              <SidebarLink to="/dashboard/manageRequests" icon={FaClipboardList} label="Manage Requests" />
+              <SidebarLink to="/dashboard/featureDonations" icon={FaStar} label="Feature Donations" />
+            </>
+          )}
+
+          <div className="mt-auto pt-4 border-t">
+            <button onClick={handleSignOut} className="btn w-full btn-ghost text-red-600">
+              <FaSignOutAlt className="inline-block mr-2" /> Logout
+            </button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
 };
 
 export default DashboardLayout;

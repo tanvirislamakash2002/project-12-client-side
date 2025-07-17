@@ -9,8 +9,7 @@ const ManageRoleRequests = () => {
   const queryClient = useQueryClient();
   const [processingId, setProcessingId] = useState(null);
 
-  // Fetch all role requests
-  const { data: requests = [], isLoading, refetch } = useQuery({
+  const { data: requests = [], isLoading } = useQuery({
     queryKey: ['charity-requests'],
     queryFn: async () => {
       const res = await axiosSecure.get('/charity-requests');
@@ -18,7 +17,6 @@ const ManageRoleRequests = () => {
     }
   });
 
-  // Update request status
   const updateRequestStatus = useMutation({
     mutationFn: async ({ id, status }) => {
       setProcessingId(id);
@@ -28,7 +26,6 @@ const ManageRoleRequests = () => {
     onSuccess: (data) => {
       toast.success(`Request ${data.status}!`);
       queryClient.invalidateQueries(['charity-requests']);
-      // Optional: Send email notification
       sendNotification(data.userEmail, data.status);
     },
     onError: (error) => {
@@ -40,32 +37,29 @@ const ManageRoleRequests = () => {
   });
 
   const sendNotification = (email, status) => {
-    // This would call your backend email service
-    axiosSecure.post('/send-notification', {
-      email,
-      subject: `Your Charity Request was ${status}`,
-      message: `Your request for charity role has been ${status}.`
-    });
+    toast.error( `currently I didn't added the feature`);
+    // axiosSecure.post('/send-notification', {
+    //   email,
+    //   subject: `Your Charity Request was ${status}`,
+    //   message: `Your request for charity role has been ${status}.`
+    // });
   };
 
-  const handleApprove = (id) => {
-    updateRequestStatus.mutate({ id, status: 'approved' });
-  };
+  const handleApprove = (id) => updateRequestStatus.mutate({ id, status: 'approved' });
+  const handleReject = (id) => updateRequestStatus.mutate({ id, status: 'rejected' });
 
-  const handleReject = (id) => {
-    updateRequestStatus.mutate({ id, status: 'rejected' });
-  };
-
-  if (isLoading) return <div className="text-center py-8">Loading requests...</div>;
+  if (isLoading) {
+    return <div className="text-center py-8">Loading requests...</div>;
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-6">Manage Role Requests</h2>
-      
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold mb-6 text-center text-primary">Manage Role Requests</h2>
+
       <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="table w-full">
-          <thead>
-            <tr className="bg-gray-100">
+          <thead className="bg-base-200 text-base-content">
+            <tr>
               <th>User</th>
               <th>Organization</th>
               <th>Mission</th>
@@ -77,63 +71,69 @@ const ManageRoleRequests = () => {
           <tbody>
             {requests.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-4">
+                <td colSpan="6" className="text-center py-4 text-gray-500">
                   No pending requests
                 </td>
               </tr>
             ) : (
               requests.map((request) => (
-                <tr key={request._id} className="hover:bg-gray-50">
-                  <td>
-                    <div className="font-medium">{request.userName}</div>
+                <tr key={request._id} className="hover:bg-base-100">
+                  <td className="px-4 py-2">
+                    <div className="font-semibold">{request.userName}</div>
                     <div className="text-sm text-gray-500">{request.userEmail}</div>
                   </td>
-                  <td>{request.organizationName}</td>
-                  <td className="max-w-xs truncate">{request.missionStatement}</td>
-                  <td className="font-mono text-sm">{request.paymentId}</td>
-                  <td>
-                    <span className={`badge ${
-                      request.status === 'pending' ? 'badge-warning' :
-                      request.status === 'approved' ? 'badge-success' : 'badge-error'
+                  <td className="px-4 py-2">{request.organizationName}</td>
+                  <td className="px-4 py-2 max-w-xs truncate">{request.missionStatement}</td>
+                  <td className="px-4 py-2 font-mono text-sm">{request.paymentId}</td>
+                  <td className="px-4 py-2">
+                    <span className={`badge text-white px-3 py-1 ${
+                      request.status === 'pending'
+                        ? 'badge-warning'
+                        : request.status === 'approved'
+                        ? 'badge-success'
+                        : 'badge-error'
                     }`}>
                       {request.status}
                     </span>
                   </td>
-                  <td>
+                  <td className="px-4 py-2">
                     {request.status === 'pending' ? (
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <button
                           onClick={() => handleApprove(request._id)}
                           disabled={processingId === request._id}
-                          className="btn btn-sm btn-success"
+                          className="btn btn-sm btn-success text-white"
                         >
                           {processingId === request._id ? (
                             <span className="loading loading-spinner"></span>
                           ) : (
-                            <FaCheck />
+                            <>
+                              <FaCheck className="mr-1" /> Approve
+                            </>
                           )}
-                          Approve
                         </button>
                         <button
                           onClick={() => handleReject(request._id)}
                           disabled={processingId === request._id}
-                          className="btn btn-sm btn-error"
+                          className="btn btn-sm btn-error text-white"
                         >
                           {processingId === request._id ? (
                             <span className="loading loading-spinner"></span>
                           ) : (
-                            <FaTimes />
+                            <>
+                              <FaTimes className="mr-1" /> Reject
+                            </>
                           )}
-                          Reject
                         </button>
                       </div>
                     ) : (
-                      <button 
-                        className="btn btn-ghost btn-sm"
+                      <button
                         onClick={() => sendNotification(request.userEmail, request.status)}
+                        className="btn btn-sm btn-outline btn-info"
                         title="Resend notification"
                       >
-                        <FaEnvelope />
+                        <FaEnvelope className="mr-1" />
+                        Notify
                       </button>
                     )}
                   </td>
