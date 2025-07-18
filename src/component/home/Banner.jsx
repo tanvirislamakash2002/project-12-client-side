@@ -2,9 +2,9 @@ import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import bannerImg1 from '../../assets/bannerImg/1.jpeg';
-import bannerImg2 from '../../assets/bannerImg/2.jpeg';
-import bannerImg3 from '../../assets/bannerImg/3.jpeg';
+import bannerImg1 from '../../assets/bannerImg/1.jpg';
+import bannerImg2 from '../../assets/bannerImg/2.jpg';
+import bannerImg3 from '../../assets/bannerImg/3.jpg';
 
 const slides = [
   {
@@ -12,21 +12,21 @@ const slides = [
     title: 'Reduce Food Waste, Feed More People',
     subtitle: 'Join our community in saving surplus food and helping those in need.',
     ctaText: 'Learn More',
-    ctaLink: '/about',
+    ctaLink: '/allDonations',
   },
   {
     image: bannerImg2,
     title: 'Connect Restaurants with Charities',
     subtitle: 'Making food donations seamless and impactful.',
     ctaText: 'Get Started',
-    ctaLink: '/donate',
+    ctaLink: '/allDonations',
   },
   {
     image: bannerImg3,
     title: 'Together We Build a Healthier Community',
     subtitle: 'Your donation can make a real difference today.',
     ctaText: 'See Donations',
-    ctaLink: '/all-donations',
+    ctaLink: '/allDonations',
   },
 ];
 

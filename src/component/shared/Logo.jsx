@@ -1,13 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router';
+import logo from '../../assets/Logo/logoH.png'
 
 const Logo = () => {
     return (
-        <Link to='/'>
-            <div>
-                <span className="font-bold text-xl text-amber-700">FoodFairy</span>
-            </div>
-        </Link>
+                  <Link to="/">
+                    <img
+                      src={logo}
+                      alt="Logo"
+                      className="h-12 w-auto object-contain"
+                    />
+                  </Link>
     );
 };
 

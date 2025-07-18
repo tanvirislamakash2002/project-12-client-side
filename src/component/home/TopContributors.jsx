@@ -1,12 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const TopContributors = () => {
+  const axiosSecure = useAxiosSecure()
   const { data: topRestaurants = [], isLoading } = useQuery({
     queryKey: ['topRestaurants'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/top-restaurants');
+      const res = await axiosSecure.get('/top-restaurants');
       return res.data;
     },
   });

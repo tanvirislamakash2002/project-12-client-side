@@ -1,19 +1,20 @@
 import React from 'react';
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
 } from 'recharts';
 import useAuth from '../../../hooks/useAuth';
 import { FaChartBar } from 'react-icons/fa';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const DonationStats = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure()
 
   const { data = [], isLoading, refetch } = useQuery({
     queryKey: ['donationStats', user.email],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/restaurant-donation-stats?email=${user.email}`);
+      const res = await axiosSecure.get(`/restaurant-donation-stats?email=${user.email}`);
       return res.data;
     },
     enabled: !!user.email,

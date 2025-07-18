@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router';
 import {
   FaHome, FaPlusCircle, FaHandsHelping, FaSignOutAlt, FaUserCheck, FaUsersCog,
   FaUserTag, FaMoneyCheckAlt, FaHandHoldingUsd, FaStarHalfAlt, FaHeart,
@@ -11,6 +11,7 @@ import Logo from '../component/shared/Logo';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
 import { ToastContainer } from 'react-toastify';
+import logo from '../assets/Logo/logoH.png'
 
 const SidebarLink = ({ to, icon: Icon, label }) => (
   <li>
@@ -43,7 +44,14 @@ const DashboardLayout = () => {
               </svg>
             </label>
           </div>
-          <div className="flex-1 text-lg font-semibold">Dashboard</div>
+
+          <Link to="/">
+            <img
+              src={logo}
+              alt="Logo"
+              className="h-12 w-auto object-contain"
+            />
+          </Link>
         </div>
 
         <main className="p-4">
@@ -62,7 +70,7 @@ const DashboardLayout = () => {
           {!roleLoading && role === 'user' && (
             <>
               <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">User</div>
-              <SidebarLink to="/dashboard/my-profile" icon={FaUser} label="My Profile" />
+              <SidebarLink to="/dashboard" icon={FaUser} label="My Profile" />
               <SidebarLink to="/dashboard/requestCharityRole" icon={FaUserCheck} label="Request Charity Role" />
             </>
           )}
@@ -70,7 +78,7 @@ const DashboardLayout = () => {
           {!roleLoading && role === 'charity' && (
             <>
               <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Charity</div>
-              <SidebarLink to="/dashboard/charity-profile" icon={FaUser} label="Charity Profile" />
+              <SidebarLink to="/dashboard" icon={FaUser} label="Charity Profile" />
               <SidebarLink to="/dashboard/myRequests" icon={FaClipboardList} label="My Requests" />
               <SidebarLink to="/dashboard/myPickups" icon={FaBoxesPacking} label="My Pickups" />
               <SidebarLink to="/dashboard/receivedDonations" icon={FaBoxOpen} label="Received Donations" />
@@ -89,7 +97,7 @@ const DashboardLayout = () => {
           {!roleLoading && role === 'restaurant' && (
             <>
               <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Restaurant</div>
-              <SidebarLink to="/dashboard/restaurant-profile" icon={FaUser} label="Restaurant Profile" />
+              <SidebarLink to="/dashboard" icon={FaUser} label="Restaurant Profile" />
               <SidebarLink to="/dashboard/donationStats" icon={IoIosStats} label="Donation Stats" />
               <SidebarLink to="/dashboard/myDonations" icon={FaHandsHelping} label="My Donations" />
               <SidebarLink to="/dashboard/addDonation" icon={FaPlusCircle} label="Add Donation" />
@@ -100,7 +108,7 @@ const DashboardLayout = () => {
           {!roleLoading && role === 'admin' && (
             <>
               <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Admin</div>
-              <SidebarLink to="/dashboard/adminProfile" icon={FaUser} label="Admin Profile" />
+              <SidebarLink to="/dashboard" icon={FaUser} label="Admin Profile" />
               <SidebarLink to="/dashboard/manageDonations" icon={FaHandHoldingUsd} label="Manage Donations" />
               <SidebarLink to="/dashboard/manageUsers" icon={FaUsersCog} label="Manage Users" />
               <SidebarLink to="/dashboard/manageRoleRequests" icon={FaUserTag} label="Manage Role Requests" />

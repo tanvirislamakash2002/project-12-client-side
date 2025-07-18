@@ -11,12 +11,12 @@ import PrivateRoute from "../routes/PrivateRoute";
 import MyDonation from "../pages/Dashboard/Restaurant/MyDonation";
 import RequestCharityRole from "../pages/Dashboard/User/RequestCharityRole";
 import StripeElementsWrapper from "../pages/Dashboard/User/StripeElementsWrapper";
-import ManageRoleRequests from "../pages/Dashboard/Admim/ManageRoleRequests";
+import ManageRoleRequests from "../pages/Dashboard/Admin/ManageRoleRequests";
 import TransactionHistory from "../pages/Dashboard/TransactionHistory";
-import ManageDonations from "../pages/Dashboard/Admim/ManageDonations";
+import ManageDonations from "../pages/Dashboard/Admin/ManageDonations";
 import AllDonations from "../pages/AllDonations";
 import DonationDetails from "../pages/DonationDetails";
-import ManageUsers from "../pages/Dashboard/Admim/ManageUsers";
+import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
 import Forbidden from "../pages/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
 import RestaurantRoute from "../routes/RestaurantRoute";
@@ -26,14 +26,15 @@ import MyRequests from "../pages/Dashboard/Charity/MyRequests";
 import RequestedDonations from "../pages/Dashboard/Restaurant/RequestedDonations";
 import MyPickups from "../pages/Dashboard/Charity/MyPickups";
 import ReceivedDonations from "../pages/Dashboard/Charity/ReceivedDonations";
-import ManageRequests from "../pages/Dashboard/Admim/ManageRequests";
-import AdminProfile from "../pages/Dashboard/Admim/AdminProfile";
+import ManageRequests from "../pages/Dashboard/Admin/ManageRequests";
+import AdminProfile from "../pages/Dashboard/Admin/AdminProfile";
 import CharityProfile from "../pages/Dashboard/Charity/CharityProfile";
 import RestaurantProfile from "../pages/Dashboard/Restaurant/RestaurantProfile";
 import MyProfile from "../pages/Dashboard/User/MyProfile";
-import FeatureDonations from "../pages/Dashboard/Admim/FeatureDonations";
+import FeatureDonations from "../pages/Dashboard/Admin/FeatureDonations";
 import DonationStats from "../pages/Dashboard/Restaurant/DonationStats";
 import UpdateDonation from "../pages/Dashboard/Restaurant/UpdateDonation";
+import Profile from "../pages/Dashboard/Profile";
 
 export const router = createBrowserRouter([
     {
@@ -79,15 +80,16 @@ export const router = createBrowserRouter([
             <DashboardLayout></DashboardLayout>
         </PrivateRoute>,
         children: [
+            {
+                index:true,
+                element: <Profile></Profile>
+            },
             // restaurant route
             {
                 path: 'addDonation',
                 element: <RestaurantRoute><AddDonation></AddDonation></RestaurantRoute>
             },
-            {
-                path: 'restaurant-profile',
-                element: <RestaurantRoute><RestaurantProfile></RestaurantProfile></RestaurantRoute>
-            },
+
             {
                 path: 'donationStats',
                 element: <RestaurantRoute><DonationStats></DonationStats></RestaurantRoute>
@@ -105,10 +107,7 @@ export const router = createBrowserRouter([
                 element: <RestaurantRoute><RequestedDonations></RequestedDonations></RestaurantRoute>
             },
             // user route
-            {
-                path: 'my-profile',
-                element: <MyProfile></MyProfile>
-            },
+
             {
                 path: 'requestCharityRole',
                 element: <StripeElementsWrapper>
@@ -128,10 +127,7 @@ export const router = createBrowserRouter([
                 element: <Favorites></Favorites>
             },
             // charity route 
-            {
-                path: 'charity-profile',
-                element: <CharityProfile></CharityProfile>
-            },
+
             {
                 path: 'myRequests',
                 element: <MyRequests></MyRequests>
@@ -145,11 +141,7 @@ export const router = createBrowserRouter([
                 element: <ReceivedDonations></ReceivedDonations>
             },
             // admin route
-            {
-                path: 'adminProfile',
-                element: <AdminRoute><AdminProfile></AdminProfile></AdminRoute>
 
-            },
             {
                 path: 'manageRoleRequests',
                 element: <AdminRoute><ManageRoleRequests></ManageRoleRequests></AdminRoute>

@@ -1,12 +1,13 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const LatestDonationRequests = () => {
+  const axiosSecure = useAxiosSecure()
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['latestDonationRequests'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/donation-requests/latest');
+      const res = await axiosSecure.get('/donation-requests/latest');
       return res.data;
     },
   });
