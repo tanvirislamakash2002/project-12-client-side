@@ -8,70 +8,40 @@ import axios from "axios";
 const AddDonation = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const [imageFile, setImageFile] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  //   // Food type options
   const foodTypes = [
-    "Bakery",
-    "Produce",
-    "Dairy",
-    "Meat",
-    "Prepared Meals",
-    "Frozen Foods",
-    "Canned Goods",
-    "Other",
+    "Bakery", "Produce", "Dairy", "Meat",
+    "Prepared Meals", "Frozen Foods", "Canned Goods", "Other"
   ];
 
   const onSubmit = async (data) => {
     if (!imageUrl) {
-      Swal.fire({
-        title: "Image Required",
-        text: "Please upload a food image first.",
-        icon: "warning",
-      });
-      return;
+      return Swal.fire("Image Required", "Please upload an image.", "warning");
     }
 
     setIsSubmitting(true);
     try {
       const donationData = {
         ...data,
+        image: imageUrl,
         restaurantName: user.displayName,
         restaurantEmail: user.email,
-        image: imageUrl,
         status: "Pending",
         createdAt: new Date().toISOString(),
       };
 
       const res = await axiosSecure.post("/add-donation", donationData);
-
       if (res.data.insertedId) {
-        Swal.fire({
-          title: "Success!",
-          text: "Your donation has been submitted for approval.",
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false,
-        });
+        Swal.fire("Success", "Donation added!", "success");
         reset();
         setImageUrl('');
       }
-    } catch (error) {
-      Swal.fire({
-        title: "Error",
-        text: error.message,
-        icon: "error",
-      });
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -82,199 +52,129 @@ const AddDonation = () => {
     if (!image) return;
 
     setUploading(true);
-
     const formData = new FormData();
     formData.append("image", image);
 
     try {
-      const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`;
-      const res = await axios.post(imageUploadUrl, formData);
+      const res = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`,
+        formData
+      );
       setImageUrl(res.data.data.url);
-      Swal.fire({
-        title: "Image Uploaded",
-        text: "Image uploaded successfully!",
-        icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
-      });
+      Swal.fire("Image Uploaded", "Successfully uploaded!", "success");
     } catch (err) {
-      Swal.fire({
-        title: "Upload Failed",
-        text: err.message,
-        icon: "error",
-      });
+      Swal.fire("Upload Failed", err.message, "error");
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6">
-        {/* Heading */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold">Add Food Donation</h2>
-          <p className="text-gray-500">Help reduce waste by sharing surplus food</p>
-        </div>
+    <div className="max-w-5xl mx-auto p-6">
+      <div className="bg-white shadow-md rounded-xl p-8">
+        <h2 className="text-3xl font-bold text-center mb-2">Add Food Donation</h2>
+        <p className="text-gray-500 text-center mb-8">
+          Help reduce waste by sharing your surplus food
+        </p>
 
-        {/* Donation Info */}
-        <div className="border p-6 rounded-xl shadow-md space-y-6">
-          <h3 className="font-semibold text-xl">Food Details</h3>
-
-          {/* Donation Title */}
-          <div>
-            <label className="label">
-              <span className="label-text">Donation Title*</span>
-            </label>
-            <input
-              {...register("title", { required: "Title is required" })}
-              className="input input-bordered w-full"
-              placeholder="e.g., Surplus Pastries, Fresh Vegetables"
-            />
-            {errors.title && (
-              <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
-            )}
-          </div>
-
-          {/* Food Type */}
-          <div>
-            <label className="label">
-              <span className="label-text">Food Type*</span>
-            </label>
-            <select
-              {...register("foodType", { required: "Food type is required" })}
-              className="select select-bordered w-full"
-            >
-              <option value="">Select food type</option>
-              {foodTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            {errors.foodType && (
-              <p className="text-red-500 text-sm mt-1">{errors.foodType.message}</p>
-            )}
-          </div>
-
-          {/* Quantity */}
-          <div>
-            <label className="label">
-              <span className="label-text">Quantity*</span>
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                min="1"
-                {...register("quantity", {
-                  required: "Quantity is required",
-                  min: { value: 1, message: "Must be at least 1" },
-                })}
-                className="input input-bordered w-3/4"
-                placeholder="e.g., 5"
-              />
-              <select
-                {...register("quantityUnit", { required: true })}
-                className="select select-bordered w-1/4"
-              >
-                <option value="portions">Portions</option>
-                <option value="kg">Kilograms</option>
-                <option value="lbs">Pounds</option>
-              </select>
-            </div>
-            {errors.quantity && (
-              <p className="text-red-500 text-sm mt-1">{errors.quantity.message}</p>
-            )}
-          </div>
-
-          {/* Pickup Time */}
-          <div>
-            <label className="label">
-              <span className="label-text">Pickup Time Window*</span>
-            </label>
-            <input
-              {...register("pickupTime", {
-                required: "Pickup time is required",
-              })}
-              className="input input-bordered w-full"
-              placeholder="e.g., 2:00 PM - 5:00 PM today"
-            />
-            {errors.pickupTime && (
-              <p className="text-red-500 text-sm mt-1">{errors.pickupTime.message}</p>
-            )}
-          </div>
-
-          {/* Location */}
-          <div>
-            <label className="label">
-              <span className="label-text">Pickup Location*</span>
-            </label>
-            <textarea
-              {...register("location", {
-                required: "Location is required",
-              })}
-              className="textarea textarea-bordered w-full"
-              placeholder="Full address or coordinates"
-              rows={2}
-            />
-            {errors.location && (
-              <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>
-            )}
-          </div>
-
-          {/* Image Upload */}
-          <div>
-            <label className="label">
-              <span className="label-text">Food Image*</span>
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="file-input file-input-bordered w-full"
-            />
-            {errors.image && (
-              <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
-            )}
-          </div>
-          {/* <div>
-            <label className="label">
-              <span className="label-text">Food Image</span>
-            </label> */}
-          {/* <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files[0])}
-              className="file-input file-input-bordered w-full"
-            /> */}
-          {/* <input
-              {...register("image", { required: "image is required" })}
-              className="input input-bordered w-full"
-              placeholder="e.g., image of the donation"
-            />
-            {errors.title && (
-              <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
-            )}
-          </div> */}
-
-          {/* Restaurant Info (readonly) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Column */}
+          <div className="space-y-5">
             <div>
-              <label className="label">
-                <span className="label-text">Restaurant Name</span>
-              </label>
+              <label className="label-text font-medium">Donation Title*</label>
+              <input
+                {...register("title", { required: "Title is required" })}
+                className="input input-bordered w-full"
+                placeholder="e.g., Extra Sandwiches"
+              />
+              {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
+            </div>
+
+            <div>
+              <label className="label-text font-medium">Food Type*</label>
+              <select
+                {...register("foodType", { required: "Food type is required" })}
+                className="select select-bordered w-full"
+              >
+                <option value="">Select food type</option>
+                {foodTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+              {errors.foodType && <p className="text-sm text-red-500">{errors.foodType.message}</p>}
+            </div>
+
+            <div>
+              <label className="label-text font-medium">Quantity*</label>
+              <div className="flex gap-3">
+                <input
+                  type="number"
+                  min={1}
+                  {...register("quantity", {
+                    required: "Quantity is required",
+                    min: { value: 1, message: "Must be at least 1" }
+                  })}
+                  className="input input-bordered w-2/3"
+                  placeholder="e.g., 5"
+                />
+                <select
+                  {...register("quantityUnit", { required: true })}
+                  className="select select-bordered w-1/3"
+                >
+                  <option value="portions">Portions</option>
+                  <option value="kg">Kilograms</option>
+                  <option value="lbs">Pounds</option>
+                </select>
+              </div>
+              {errors.quantity && <p className="text-sm text-red-500">{errors.quantity.message}</p>}
+            </div>
+
+            <div>
+              <label className="label-text font-medium">Pickup Time Window*</label>
+              <input
+                {...register("pickupTime", { required: "Pickup time is required" })}
+                className="input input-bordered w-full"
+                placeholder="e.g., 2:00 PM - 5:00 PM"
+              />
+              {errors.pickupTime && <p className="text-sm text-red-500">{errors.pickupTime.message}</p>}
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-5">
+            <div>
+              <label className="label-text font-medium">Pickup Location*</label>
+              <textarea
+                {...register("location", { required: "Location is required" })}
+                className="textarea textarea-bordered w-full"
+                rows={3}
+                placeholder="e.g., 123 Food St, City"
+              />
+              {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
+            </div>
+
+            <div>
+              <label className="label-text font-medium">Food Image*</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="file-input file-input-bordered w-full"
+              />
+              {uploading && <p className="text-sm text-blue-500 mt-1">Uploading...</p>}
+            </div>
+
+            <div>
+              <label className="label-text font-medium">Restaurant Name</label>
               <input
                 value={user?.displayName || ""}
                 readOnly
                 className="input input-bordered w-full bg-gray-100"
               />
             </div>
+
             <div>
-              <label className="label">
-                <span className="label-text">Restaurant Email</span>
-              </label>
+              <label className="label-text font-medium">Restaurant Email</label>
               <input
                 value={user?.email || ""}
                 readOnly
@@ -282,43 +182,23 @@ const AddDonation = () => {
               />
             </div>
           </div>
-        </div>
 
-        {/* Submit Button */}
-        <div className="text-center">
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={isSubmitting || uploading}
-          >
-            {isSubmitting ? (
-              <div className="flex items-center">
-                <span className="loading loading-spinner"></span>
-                <span className="ml-2">Adding donation...</span>
-              </div>
-            ) : uploading ? (
-              "Uploading image..."
-            ) : (
-              "Add Donation"
-            )}
-          </button>
-          {/* <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <div className=" flex items-center">
-                <span className="loading loading-spinner"></span>
-                <span className="ml-2">adding donation</span>
-              </div>
-            ) : (
-              "Add Donation"
-            )}
-          </button> */}
-          {/* <button className="btn btn-primary">Add donation</button> */}
-        </div>
-      </form>
+          {/* Submit Button (full width under grid) */}
+          <div className="col-span-1 md:col-span-2 text-center mt-6">
+            <button
+              type="submit"
+              className="btn btn-primary px-6"
+              disabled={isSubmitting || uploading}
+            >
+              {isSubmitting
+                ? <span className="loading loading-spinner"></span>
+                : uploading
+                ? "Uploading..."
+                : "Add Donation"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

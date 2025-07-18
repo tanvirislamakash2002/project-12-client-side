@@ -1,99 +1,109 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import { toast } from 'react-toastify';
 import useAuth from '../../../hooks/useAuth';
+import { toast } from 'react-toastify';
+import { FaCheck, FaTimes, FaClock } from 'react-icons/fa';
+
+const StatusBadge = ({ status }) => {
+  const statusStyles = {
+    Pending: 'bg-yellow-100 text-yellow-800',
+    Accepted: 'bg-green-100 text-green-800',
+    Rejected: 'bg-red-100 text-red-800',
+  };
+
+  const statusIcons = {
+    Pending: <FaClock />,
+    Accepted: <FaCheck />,
+    Rejected: <FaTimes />,
+  };
+
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${statusStyles[status]}`}>
+      {statusIcons[status]} {status}
+    </span>
+  );
+};
 
 const RequestedDonations = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
-  // Fetch all donation requests for this restaurant
-const { data: requests = [], isLoading } = useQuery({
-  queryKey: ['restaurantRequests', user.email],
-  queryFn: async () => {
-    const res = await axiosSecure.get(`/donation-requests?restaurantEmail=${user.email}`);
-    return res.data;
-  },
-});
-
-  // Accept request
-  const acceptMutation = useMutation({
-    mutationFn: async (requestId) => {
-      await axiosSecure.patch(`/donation-requests/${requestId}/accept`);
+  const { data: requests = [], isLoading } = useQuery({
+    queryKey: ['restaurantRequests', user.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/donation-requests?restaurantEmail=${user.email}`);
+      return res.data;
     },
+    enabled: !!user?.email,
+  });
+
+  const acceptMutation = useMutation({
+    mutationFn: (id) => axiosSecure.patch(`/donation-requests/${id}/accept`),
     onSuccess: () => {
       toast.success('Request accepted!');
-      queryClient.invalidateQueries(['requestedDonations']);
+      queryClient.invalidateQueries(['restaurantRequests']);
     },
   });
 
-  // Reject request
   const rejectMutation = useMutation({
-    mutationFn: async (requestId) => {
-      await axiosSecure.patch(`/donation-requests/${requestId}/reject`);
-    },
+    mutationFn: (id) => axiosSecure.patch(`/donation-requests/${id}/reject`),
     onSuccess: () => {
       toast.success('Request rejected!');
-      queryClient.invalidateQueries(['requestedDonations']);
+      queryClient.invalidateQueries(['restaurantRequests']);
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="p-6 text-center text-gray-500">
+        <span className="loading loading-spinner text-primary"></span>
+        <p className="mt-2">Loading donation requests...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Requested Donations</h2>
-      <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th>Donation Title</th>
-              <th>Food Type</th>
-              <th>Charity Name</th>
-              <th>Charity Email</th>
-              <th>Request Description</th>
-              <th>Pickup Time</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((req) => (
-              <tr key={req._id}>
-                <td>{req.donationTitle}</td>
-                <td>{req.foodType}</td>
-                <td>{req.charityName}</td>
-                <td>{req.charityEmail}</td>
-                <td>{req.requestDescription}</td>
-                <td>{req.pickupTime}</td>
-                <td>{req.status}</td>
-                <td className="space-x-2">
-                  {req.status === 'Pending' && (
-                    <>
-                      <button
-                        onClick={() => acceptMutation.mutate(req._id)}
-                        className="btn btn-success btn-sm"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() => rejectMutation.mutate(req._id)}
-                        className="btn btn-error btn-sm"
-                      >
-                        Reject
-                      </button>
-                    </>
-                  )}
-                  {(req.status === 'Accepted' || req.status === 'Rejected') && (
-                    <span>-</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold text-center mb-8">📨 Requested Donations</h2>
+
+      {requests.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg">No donation requests found.</p>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {requests.map((req) => (
+            <div key={req._id} className="bg-white shadow-md rounded-xl overflow-hidden p-5 hover:shadow-lg transition duration-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-1">{req.donationTitle}</h3>
+              <p className="text-sm text-gray-600 mb-1"><span className="font-medium">🍽 Food Type:</span> {req.foodType}</p>
+              <p className="text-sm text-gray-600 mb-1"><span className="font-medium">🏢 Charity:</span> {req.charityName}</p>
+              <p className="text-sm text-gray-600 mb-1 truncate"><span className="font-medium">📧 Email:</span> {req.charityEmail}</p>
+              <p className="text-sm text-gray-600 mb-1"><span className="font-medium">🕒 Pickup Time:</span> {req.pickupTime}</p>
+              <p className="text-sm text-gray-600 mb-2 line-clamp-2"><span className="font-medium">📝 Description:</span> {req.requestDescription}</p>
+              <div className="flex justify-between items-center mt-4">
+                <StatusBadge status={req.status} />
+                {req.status === 'Pending' ? (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => acceptMutation.mutate(req._id)}
+                      className="btn btn-sm btn-success text-white"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => rejectMutation.mutate(req._id)}
+                      className="btn btn-sm btn-error text-white"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                ) : (
+                  <span className="text-sm text-gray-500">No actions</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
