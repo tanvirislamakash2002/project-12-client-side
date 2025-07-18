@@ -1,54 +1,63 @@
 import React from 'react';
-import { FaUtensils, FaClock, FaBoxOpen, FaThermometerHalf } from 'react-icons/fa';
+import {
+  FaUtensils,
+  FaClock,
+  FaBoxOpen,
+  FaThermometerHalf,
+} from 'react-icons/fa';
 
 const tips = [
   {
-    icon: <FaUtensils className="text-green-600 text-3xl" />,
-    title: "Donate Fresh & Properly Packaged Food",
+    icon: <FaUtensils className="text-white text-2xl" />,
+    title: 'Donate Fresh & Properly Packaged Food',
     description:
-      "Only donate fresh, edible items that are securely packaged or stored to maintain food safety.",
+      'Only donate fresh, edible items that are securely packaged or stored to maintain food safety.',
   },
   {
-    icon: <FaClock className="text-green-600 text-3xl" />,
-    title: "Respect Pickup Times",
+    icon: <FaClock className="text-white text-2xl" />,
+    title: 'Respect Pickup Times',
     description:
-      "Be on time! Punctuality ensures smooth pickup and keeps donated food in good condition.",
+      'Be on time! Punctuality ensures smooth pickup and keeps donated food in good condition.',
   },
   {
-    icon: <FaThermometerHalf className="text-green-600 text-3xl" />,
-    title: "Maintain Safe Temperatures",
+    icon: <FaThermometerHalf className="text-white text-2xl" />,
+    title: 'Maintain Safe Temperatures',
     description:
-      "Use coolers or insulation to preserve perishable food until it’s picked up.",
+      'Use coolers or insulation to preserve perishable food until it’s picked up.',
   },
   {
-    icon: <FaBoxOpen className="text-green-600 text-3xl" />,
-    title: "Label Your Donation",
+    icon: <FaBoxOpen className="text-white text-2xl" />,
+    title: 'Label Your Donation',
     description:
-      "Include donation details like date/time, food type, and quantity. It helps charities manage supplies better.",
+      'Include donation details like date/time, food type, and quantity. It helps charities manage supplies better.',
   },
 ];
 
 const DonationTips = () => {
   return (
-    <section className="bg-gray-100 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8">
+    <section className="bg-white py-20 px-4">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl font-bold text-center mb-6">
           💡 Smart Donation Tips
         </h2>
-        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-10">
-          Help your donation make the greatest impact! Whether you're giving or receiving,
-          follow these simple best practices to keep our community fed and healthy.
+        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-14">
+          Maximize your impact! These quick, effective practices ensure your donations are safe, appreciated, and well-utilized by charities in need.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {tips.map((tip, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow p-6 flex gap-4 items-start"
+              className="group bg-gray-50 border border-gray-200 hover:border-green-500 rounded-2xl p-6 flex gap-5 transition"
             >
-              <div className="shrink-0">{tip.icon}</div>
+              <div className="w-14 h-14 rounded-full bg-green-600 flex items-center justify-center shadow-lg group-hover:scale-105 transition">
+                {tip.icon}
+              </div>
               <div>
-                <h3 className="text-xl font-semibold mb-1">{tip.title}</h3>
-                <p className="text-gray-600">{tip.description}</p>
+                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-green-600 mb-1">
+                  {tip.title}
+                </h3>
+                <p className="text-gray-600 text-sm">{tip.description}</p>
               </div>
             </div>
           ))}

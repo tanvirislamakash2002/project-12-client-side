@@ -46,7 +46,6 @@ const DonationDetails = () => {
       axiosSecure.get(`/favorites/check?userEmail=${user.email}&donationId=${id}`)
         .then(res => {
           setIsFavorite(res.data.isFavorite);
-          console.log(res.data.isFavorite)
         });
     }
   }, [user, id]);

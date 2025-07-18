@@ -11,38 +11,51 @@ const LatestDonationRequests = () => {
     },
   });
 
-  if (isLoading) return <p className="text-center">Loading latest charity requests...</p>;
+  if (isLoading)
+    return <p className="text-center py-10 text-lg font-medium">Loading latest charity requests...</p>;
+
+  if (!requests || requests.length === 0) return null;
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-12">
-      <h2 className="text-3xl font-bold mb-8 text-center">Latest Charity Requests</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {requests.map((request, idx) => (
-          <div
-            key={idx}
-            className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col"
-          >
-            <img
-              src={
-                request.charityImage ||
-                'https://via.placeholder.com/400x250?text=Charity+Logo'
-              }
-              alt={request.charityName}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4 flex-1 flex flex-col">
-              <h3 className="text-xl font-semibold mb-2">{request.charityName}</h3>
-              <p className="text-gray-600 mb-4">
-                {request.requestDescription?.length > 80
-                  ? request.requestDescription.slice(0, 80) + '...'
-                  : request.requestDescription}
-              </p>
-              <p className="mt-auto text-sm text-gray-500">
-                <strong>Donation:</strong> {request.foodDonationTitle}
-              </p>
+    <section className="bg-white py-16">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-4xl font-bold text-center mb-12">
+          🤝 Latest Charity Requests
+        </h2>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {requests.map((request, idx) => (
+            <div
+              key={idx}
+              className="bg-gray-50 rounded-2xl shadow hover:shadow-md transition duration-200 overflow-hidden flex flex-col"
+            >
+              <img
+                src={
+                  request.charityImage ||
+                  'https://via.placeholder.com/400x250?text=Charity+Image'
+                }
+                alt={request.charityName}
+                className="h-48 w-full object-cover"
+              />
+
+              <div className="p-5 flex-1 flex flex-col">
+                <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                  {request.charityName}
+                </h3>
+
+                <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                  {request.requestDescription}
+                </p>
+
+                <div className="mt-auto">
+                  <p className="text-sm text-blue-700 font-medium">
+                    🍱 Requested: <span className="font-semibold">{request.foodDonationTitle}</span>
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

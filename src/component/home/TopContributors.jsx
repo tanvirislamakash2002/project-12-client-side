@@ -11,36 +11,46 @@ const TopContributors = () => {
     },
   });
 
-  if (isLoading) return <p className="text-center">Loading top contributors...</p>;
+  if (isLoading)
+    return <p className="text-center py-10 text-lg font-medium">Loading top contributors...</p>;
+
+  if (!topRestaurants || topRestaurants.length === 0) return null;
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-12">
-      <h2 className="text-3xl font-bold mb-8 text-center">
-        🌟 Top Restaurant Contributors
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {topRestaurants.map((rest, idx) => (
-          <div
-            key={idx}
-            className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center"
-          >
-            <img
-              src={
-                rest.logo || 'https://via.placeholder.com/150?text=Restaurant+Logo'
-              }
-              alt={rest.restaurantName}
-              className="w-24 h-24 object-cover rounded-full mb-4"
-            />
-            <h3 className="text-xl font-semibold mb-2">{rest.restaurantName}</h3>
-            <p className="text-gray-600 mb-1">
-              <strong>Donations:</strong> {rest.totalDonations}
-            </p>
-            <p className="text-gray-600 mb-1">
-              <strong>Total Quantity:</strong> {rest.totalQuantity} lbs
-            </p>
-            <p className="text-gray-500 text-sm">{rest.location}</p>
-          </div>
-        ))}
+    <section className="bg-gray-50 py-16">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-4xl font-bold text-center mb-12">
+          🍽️ Top Restaurant Contributors
+        </h2>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {topRestaurants.map((rest, idx) => (
+            <div
+              key={idx}
+              className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition duration-200 text-center"
+            >
+              <img
+                src={
+                  rest.logo || 'https://via.placeholder.com/150?text=Restaurant+Logo'
+                }
+                alt={rest.restaurantName}
+                className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-primary"
+              />
+
+              <h3 className="text-xl font-bold text-gray-800">{rest.restaurantName}</h3>
+              <p className="text-gray-500 text-sm mb-3">{rest.location}</p>
+
+              <div className="flex justify-center gap-4 mt-4">
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                  {rest.totalDonations} Donations
+                </span>
+                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                  {rest.totalQuantity} lbs
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
