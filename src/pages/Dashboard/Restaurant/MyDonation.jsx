@@ -103,7 +103,8 @@ const MyDonation = () => {
                 </div>
                 <p><strong>🍽 Food:</strong> {donation.foodType}</p>
                 <p><strong>📦 Quantity:</strong> {donation.quantity} {donation.quantityUnit}</p>
-                <p><strong>⏰ Pickup Time:</strong> {donation.pickupTime}</p>
+                <p><strong>⏰ Pickup Time:</strong> {donation.pickupStart} - {donation.pickupEnd}</p>
+                <p><strong>📍 Location:</strong> {donation.location}</p>
 
                 <div className="flex justify-end gap-2 mt-4">
                   {donation.status !== 'Rejected' && (

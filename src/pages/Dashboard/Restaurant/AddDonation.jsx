@@ -23,6 +23,10 @@ const AddDonation = () => {
       return Swal.fire("Image Required", "Please upload an image.", "warning");
     }
 
+    if (data.pickupStart >= data.pickupEnd) {
+      return Swal.fire("Invalid Time", "Start time must be before end time.", "error");
+    }
+
     setIsSubmitting(true);
     try {
       const donationData = {
@@ -30,6 +34,8 @@ const AddDonation = () => {
         image: imageUrl,
         restaurantName: user.displayName,
         restaurantEmail: user.email,
+        pickupStart: data.pickupStart,
+        pickupEnd: data.pickupEnd,
         status: "Pending",
         createdAt: new Date().toISOString(),
       };
@@ -129,14 +135,32 @@ const AddDonation = () => {
               {errors.quantity && <p className="text-sm text-red-500">{errors.quantity.message}</p>}
             </div>
 
+            {/* Pickup Time Window */}
             <div>
-              <label className="label-text font-medium">Pickup Time Window*</label>
-              <input
-                {...register("pickupTime", { required: "Pickup time is required" })}
-                className="input input-bordered w-full"
-                placeholder="e.g., 2:00 PM - 5:00 PM"
-              />
-              {errors.pickupTime && <p className="text-sm text-red-500">{errors.pickupTime.message}</p>}
+              <label className="label-text font-medium mb-1 block">Pickup Time Window*</label>
+              <div className="flex items-center gap-4 bg-gray-100 p-4 rounded-xl">
+                <div className="w-1/2">
+                  <label className="block text-sm text-gray-500 mb-1">From</label>
+                  <input
+                    type="time"
+                    {...register("pickupStart", { required: "Start time is required" })}
+                    className="input input-bordered w-full"
+                  />
+                  {errors.pickupStart && <p className="text-sm text-red-500">{errors.pickupStart.message}</p>}
+                </div>
+
+                <div className="text-gray-400 font-semibold">to</div>
+
+                <div className="w-1/2">
+                  <label className="block text-sm text-gray-500 mb-1">To</label>
+                  <input
+                    type="time"
+                    {...register("pickupEnd", { required: "End time is required" })}
+                    className="input input-bordered w-full"
+                  />
+                  {errors.pickupEnd && <p className="text-sm text-red-500">{errors.pickupEnd.message}</p>}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -152,6 +176,12 @@ const AddDonation = () => {
               />
               {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
             </div>
+
+            {imageUrl && (
+              <div className="mt-2">
+                <img src={imageUrl} alt="Uploaded Food" className="w-40 rounded-xl border" />
+              </div>
+            )}
 
             <div>
               <label className="label-text font-medium">Food Image*</label>
@@ -183,7 +213,7 @@ const AddDonation = () => {
             </div>
           </div>
 
-          {/* Submit Button (full width under grid) */}
+          {/* Submit Button */}
           <div className="col-span-1 md:col-span-2 text-center mt-6">
             <button
               type="submit"

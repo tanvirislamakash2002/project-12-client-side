@@ -1,137 +1,141 @@
-
-import Swal from 'sweetalert2';
-import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import useAuth from '../../hooks/useAuth';
 import useAxios from '../../hooks/useAxios';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import Lottie from 'lottie-react';
+import loginAnimation from '../../assets/lottie/login.json';
 
 const Login = () => {
-    const { signInWithGoogle, signInUser, user } = useAuth()
-    const location = useLocation();
-    const navigate = useNavigate()
-    const from = location.state || '/'
-    const axiosInstance = useAxios()
+  const { signInWithGoogle, signInUser } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state || '/';
+  const axiosInstance = useAxios();
 
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-    // signin with google
-    const handleSignInWithGoogle = () => {
-        signInWithGoogle()
-            .then(async (data) => {
-                const res = await axiosInstance.get(`/check-user-email?email=${data.user.email}`);
-                if (!res.data.exists) {
-                    // return toast.error("Email doesn't exist!");
-                    await axiosInstance.post('/register-user', {
-                        name: data.user.displayName,
-                        email: data.user.email,
-                        photoURL: data.user.photoURL
-                    });
-                }
-
-                await axiosInstance.post('/login', { email: data.user.email });
-
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "You have successfully logged in with google",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-
-                navigate(from)
-            })
-            .then(error => {
-                // console.log(error)
-            })
-    }
-
-    //login with email and password
-
-    const { register, handleSubmit, formState: { errors } } = useForm();
-
-    const onSubmit = async data => {
-        const { email, password } = data;
-
-        try {
-            // 1️⃣ Check MongoDB first
-            const res = await axiosInstance.get(`/check-user-email?email=${email}`);
-            if (!res.data.exists) {
-                return toast.error("Email doesn't exist!");
-                // Swal.fire({
-                //     title: 'Email does not exist in our database',
-                //     icon: 'error',
-                //     timer: 1400
-                // });
-
-            }
-
-
-            // 2️⃣ If exists, proceed with Firebase login
-            await signInUser(email, password);
-
-            await axiosInstance.post('/login', { email });
-
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "You have successfully logged in",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            navigate(from);
-        } catch (error) {
-            let message = "Login failed";
-
-            if (error.code === 'auth/user-not-found') {
-                message = "Email doesn't exist in Firebase";
-            } else if (
-                error.code === 'auth/wrong-password' ||
-                error.code === 'auth/invalid-credential'
-            ) {
-                message = "Password doesn't match";
-            } else {
-                message = error.message;
-            }
-
-            // Swal.fire({
-            //     title: message,
-            //     icon: 'error',
-            //     timer: 1400
-            // });
-            toast.error(message);
+  const handleSignInWithGoogle = () => {
+    signInWithGoogle()
+      .then(async (data) => {
+        const res = await axiosInstance.get(`/check-user-email?email=${data.user.email}`);
+        if (!res.data.exists) {
+          await axiosInstance.post('/register-user', {
+            name: data.user.displayName,
+            email: data.user.email,
+            photoURL: data.user.photoURL
+          });
         }
-    };
 
-    return (
+        await axiosInstance.post('/login', { email: data.user.email });
 
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'You have successfully logged in with Google',
+          showConfirmButton: false,
+          timer: 1500
+        });
 
-        <div className="card bg-base-100 w-full mx-auto max-w-sm select-shadow" style={{ perspective: '1000px' }}>
-            <div className="card-body shadow-2xl bg-gray-100/10">
-                <h1 className="text-5xl font-bold">Login now!</h1>
+        navigate(from);
+      })
+      .catch(err => {
+        console.error(err);
+        toast.error("Something went wrong with Google login.");
+      });
+  };
 
-                <form onSubmit={handleSubmit(onSubmit)} className=''>
-                    <fieldset className="fieldset">
-                        <label className="label">Email</label>
-                        <input {...register("email", { required: true })} name='email' type="email" className="input input-shadow w-full" placeholder="Email" />
-                        {errors?.email && <span className='text-red-700'>Insert Your Email</span>}
+  const onSubmit = async ({ email, password }) => {
+    try {
+      const res = await axiosInstance.get(`/check-user-email?email=${email}`);
+      if (!res.data.exists) {
+        return toast.error("Email doesn't exist!");
+      }
 
-                        <label className="label">Password</label>
-                        <input {...register("password", { required: true })} name='password' type="password" className="input input-shadow w-full" placeholder="Email" />
-                        {errors?.password && <span className='text-red-700'>Insert Your Password</span>}
+      await signInUser(email, password);
+      await axiosInstance.post('/login', { email });
 
-                        <div><a className="link link-hover">Forgot password?</a></div>
-                        <button className="btn bg-green-950 text-white border-2 border-green-950 hover:bg-white hover:text-green-950 text-lg mt-4">Login</button>
-                    </fieldset>
-                </form>
-                <button onClick={handleSignInWithGoogle} className="btn  text-black border-[#e5e5e5] bg-green-200 hover:bg-green-300">
-                    <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path d="m0 0H512V512H0" fill="#fff"></path><path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path><path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path><path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path><path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path></g></svg>
-                    Continue with Google
-                </button>
-                <p>Don't have an account? Please <Link className='text-red-500 underline font-semibold' to='/register' state={location.state}>Register Now</Link></p>
-            </div>
-        </div>
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'You have successfully logged in',
+        showConfirmButton: false,
+        timer: 1500
+      });
 
-    );
+      navigate(from);
+    } catch (error) {
+      let message = "Login failed";
+      if (error.code === 'auth/user-not-found') {
+        message = "Email doesn't exist in Firebase";
+      } else if (['auth/wrong-password', 'auth/invalid-credential'].includes(error.code)) {
+        message = "Password doesn't match";
+      } else {
+        message = error.message;
+      }
+
+      toast.error(message);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-6xl bg-white rounded-xl shadow-lg overflow-hidden grid md:grid-cols-2">
+      <div className="hidden md:block bg-green-50 p-6">
+        <Lottie animationData={loginAnimation} loop={true} />
+      </div>
+
+      <div className="p-10">
+        <h2 className="text-4xl font-bold mb-6 text-green-900">Login</h2>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label className="label">Email</label>
+            <input
+              type="email"
+              {...register("email", { required: true })}
+              className="input input-bordered w-full"
+              placeholder="Enter email"
+            />
+            {errors.email && <p className="text-sm text-red-600">Email is required</p>}
+          </div>
+
+          <div>
+            <label className="label">Password</label>
+            <input
+              type="password"
+              {...register("password", { required: true })}
+              className="input input-bordered w-full"
+              placeholder="Enter password"
+            />
+            {errors.password && <p className="text-sm text-red-600">Password is required</p>}
+          </div>
+
+          <div className="text-right">
+            <a className="text-sm text-green-600 hover:underline">Forgot password?</a>
+          </div>
+
+          <button className="btn btn-success w-full mt-2 text-white">Login</button>
+        </form>
+
+        <div className="divider">OR</div>
+
+        <button onClick={handleSignInWithGoogle} className="btn btn-outline w-full mb-4">
+          <svg width="20" height="20" viewBox="0 0 48 48" className="mr-2">
+            <path fill="#EA4335" d="M24 9.5c3.06 0 5.81 1.1 7.97 2.9l5.94-5.94C34.52 3.58 29.57 1.5 24 1.5 14.8 1.5 7.16 7.68 4.54 16.2l6.98 5.43C13.6 15.1 18.36 9.5 24 9.5z"/>
+            <path fill="#34A853" d="M4.54 16.2A23.948 23.948 0 0024 46.5c6.48 0 11.94-2.4 15.91-6.3l-6.98-5.43c-2.56 2.3-5.96 3.73-9.93 3.73-7.63 0-14.09-5.44-15.46-12.69l-7-5.43z"/>
+            <path fill="#FBBC05" d="M43.91 19.8H24v8.4h11.54c-1.18 3.06-3.2 5.65-5.61 7.34l6.98 5.43c4.09-3.78 6.51-9.36 6.51-15.77 0-1.5-.18-2.95-.51-4.3z"/>
+            <path fill="#4285F4" d="M24 9.5c3.06 0 5.81 1.1 7.97 2.9l5.94-5.94C34.52 3.58 29.57 1.5 24 1.5c-5.64 0-10.4 3.6-12.48 8.88l6.98 5.43C18.36 15.1 24 9.5 24 9.5z"/>
+          </svg>
+          Sign in with Google
+        </button>
+
+        <p className="text-sm">
+          Don't have an account? <Link className="text-green-600 font-semibold" to="/register" state={location.state}>Register</Link>
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

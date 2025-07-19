@@ -19,7 +19,7 @@ const Modal = ({ children, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg p-6 max-w-lg w-full relative"
+        className="bg-white rounded-lg p-6 max-w-lg w-full relative overflow-y-auto max-h-[90vh]"
         onClick={stopPropagation}
       >
         {/* Close button top-right */}

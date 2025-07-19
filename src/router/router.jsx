@@ -27,19 +27,17 @@ import RequestedDonations from "../pages/Dashboard/Restaurant/RequestedDonations
 import MyPickups from "../pages/Dashboard/Charity/MyPickups";
 import ReceivedDonations from "../pages/Dashboard/Charity/ReceivedDonations";
 import ManageRequests from "../pages/Dashboard/Admin/ManageRequests";
-import AdminProfile from "../pages/Dashboard/Admin/AdminProfile";
-import CharityProfile from "../pages/Dashboard/Charity/CharityProfile";
-import RestaurantProfile from "../pages/Dashboard/Restaurant/RestaurantProfile";
-import MyProfile from "../pages/Dashboard/User/MyProfile";
 import FeatureDonations from "../pages/Dashboard/Admin/FeatureDonations";
 import DonationStats from "../pages/Dashboard/Restaurant/DonationStats";
 import UpdateDonation from "../pages/Dashboard/Restaurant/UpdateDonation";
 import Profile from "../pages/Dashboard/Profile";
+import ErrorPage from "../pages/ErrorPage";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <RootLayout></RootLayout>,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
                 index: true,
@@ -63,6 +61,7 @@ export const router = createBrowserRouter([
     {
         path: "/",
         element: <AuthLayout></AuthLayout>,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
                 path: 'login',
@@ -76,12 +75,14 @@ export const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        element: <PrivateRoute>
-            <DashboardLayout></DashboardLayout>
-        </PrivateRoute>,
+        element:
+            <PrivateRoute>
+                <DashboardLayout></DashboardLayout>
+            </PrivateRoute>,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
-                index:true,
+                index: true,
                 element: <Profile></Profile>
             },
             // restaurant route

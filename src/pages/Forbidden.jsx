@@ -1,12 +1,14 @@
-import { Link } from "react-router";
-import { FaLock } from "react-icons/fa"; 
+import { Link } from "react-router"; // Note: Correct router import
+import Lottie from "lottie-react";
+import forbiddenAnim from "../../src/assets/lottie/forbidden.json"; // adjust path as needed
 
 const Forbidden = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
-      <FaLock className="w-16 h-16 text-red-500 mb-4" /> 
-      <h1 className="text-6xl font-bold text-red-600 mb-2">403</h1>
-      <h2 className="text-3xl font-semibold mb-2">Forbidden</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen mb-12 bg-gray-50 px-4">
+      <div className="max-w-sm w-full mb-6">
+        <Lottie animationData={forbiddenAnim} loop={true} />
+      </div>
+      <h1 className="text-5xl font-bold text-red-600 mb-2">403 - Forbidden</h1>
       <p className="text-gray-600 mb-6 text-center max-w-md">
         Sorry, you don’t have permission to access this page.
         Please contact an administrator if you believe this is a mistake.

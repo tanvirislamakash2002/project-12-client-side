@@ -38,13 +38,17 @@ const RequestedDonations = () => {
     enabled: !!user?.email,
   });
 
-  const acceptMutation = useMutation({
-    mutationFn: (id) => axiosSecure.patch(`/donation-requests/${id}/accept`),
-    onSuccess: () => {
-      toast.success('Request accepted!');
-      queryClient.invalidateQueries(['restaurantRequests']);
-    },
-  });
+const acceptMutation = useMutation({
+  mutationFn: (id) => axiosSecure.patch(`/donation-requests/${id}/accept`),
+  onSuccess: () => {
+    toast.success('Request accepted!');
+    queryClient.invalidateQueries(['restaurantRequests']);
+  },
+  onError: (error) => {
+    console.error('Accept request error:', error.response?.data || error.message);
+    toast.error('Failed to accept request');
+  }
+});
 
   const rejectMutation = useMutation({
     mutationFn: (id) => axiosSecure.patch(`/donation-requests/${id}/reject`),

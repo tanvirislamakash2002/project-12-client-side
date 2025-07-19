@@ -1,4 +1,3 @@
-
 import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
@@ -6,46 +5,33 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useState } from 'react';
 import useAxios from '../../hooks/useAxios';
+import { Player } from '@lottiefiles/react-lottie-player';
+import animationData from '../../assets/lottie/register.json'; // 👉 Replace with your Lottie JSON path
 
 const Register = () => {
-  const { createUser, updateUser } = useAuth()
-  const location = useLocation()
-  const navigate = useNavigate()
-  const from = location.state || '/'
-  const [profilePic, setProfilePic] = useState('')
+  const { createUser, updateUser } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state || '/';
+  const [profilePic, setProfilePic] = useState('');
   const [uploading, setUploading] = useState(false);
-  const axiosInstance = useAxios()
+  const axiosInstance = useAxios();
 
   const { register, handleSubmit, formState: { errors } } = useForm();
+
   const onSubmit = async (data) => {
     const { name, email, password } = data;
     try {
-      // 1. Firebase auth
       await createUser(email, password);
-
-      // 2. Update Firebase profile
       const userProfile = {
         displayName: name,
         photoURL: profilePic
-      }
+      };
       await updateUser(userProfile);
+      await axiosInstance.post('/register-user', { name, email, photoURL: profilePic });
 
-      // 3. Save to MongoDB
-       await axiosInstance.post('/register-user', {
-        name,
-        email,
-        photoURL: profilePic
-      });
-
-      // 4. Success flow
-      Swal.fire({
-        title: 'Registration Successful',
-        timer: 1400,
-        icon: 'success'
-      });
-
+      Swal.fire({ title: 'Registration Successful', timer: 1400, icon: 'success' });
       navigate(from);
-
     } catch (error) {
       Swal.fire({
         title: 'Registration Failed',
@@ -56,66 +42,110 @@ const Register = () => {
   };
 
   const handleImageUpload = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setUploading(true);
-    const image = e.target.files[0]
-    console.log(image)
-    const formData = new FormData()
-    formData.append('image', image)
-    const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`
+    const image = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', image);
+    const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`;
 
-    const res = await axios.post(imageUploadUrl, formData)
-    setProfilePic(res.data.data.url)
-
+    const res = await axios.post(uploadUrl, formData);
+    setProfilePic(res.data.data.url);
     setUploading(false);
-  }
+  };
 
   return (
-    <div className="card bg-base-100 w-full mx-auto max-w-sm select-shadow" style={{ perspective: '1000px' }}>
-      <div className="card-body bg-gray-100/10 shadow-xl">
-        <h1 className="text-5xl font-bold">Register now!</h1>
+    <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gray-100 px-4">
+      {/* Lottie Section */}
+      <div className="w-full lg:w-1/2 flex justify-center items-center mb-10 lg:mb-0">
+        <Player
+          autoplay
+          loop
+          src={animationData}
+          className="w-full max-w-md"
+        />
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className=''>
-          <fieldset className="fieldset">
+      {/* Register Form */}
+      <div className="w-full lg:w-1/2 max-w-md bg-white rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-bold mb-6 text-center">Create an Account</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-            <label className="label">Photo URL</label>
-            <input type="file" onChange={handleImageUpload} className="file-input" placeholder="Photo URL" />
+          {/* Photo Upload */}
+          <div>
+            <label className="block font-medium mb-1">Profile Photo</label>
+            <input
+              type="file"
+              onChange={handleImageUpload}
+              className="file-input w-full"
+            />
+            {errors?.photo && <span className="text-red-600">Photo is required</span>}
+          </div>
 
-            {errors?.photo && <span className='text-red-700'>you must fill your photo url</span>}
+          {/* Name */}
+          <div>
+            <label className="block font-medium mb-1">Name</label>
+            <input
+              {...register('name', { required: true })}
+              type="text"
+              placeholder="Your Name"
+              className="input input-bordered w-full"
+            />
+            {errors?.name && <span className="text-red-600">Name is required</span>}
+          </div>
 
-            <label className="label">Name</label>
-            <input {...register("name", { required: true })} name='name' type="text" className="input input-shadow w-full" placeholder="Name" />
-            {errors?.name && <span className='text-red-700'>you must fill Your Name</span>}
+          {/* Email */}
+          <div>
+            <label className="block font-medium mb-1">Email</label>
+            <input
+              {...register('email', { required: true })}
+              type="email"
+              placeholder="Email"
+              className="input input-bordered w-full"
+            />
+            {errors?.email && <span className="text-red-600">Email is required</span>}
+          </div>
 
-            <label className="label">Email</label>
-            <input {...register("email", { required: true })} name='email' type="email" className="input input-shadow w-full" placeholder="Email" />
-            {errors?.email && <span className='text-red-700'>you must fill Email</span>}
-
-            <label className="label">Password</label>
+          {/* Password */}
+          <div>
+            <label className="block font-medium mb-1">Password</label>
             <input
               {...register('password', {
-                required: 'you must fill your password',
+                required: 'Password is required',
                 minLength: {
                   value: 6,
-                  message: 'Password must be more than 6 characters'
+                  message: 'Password must be at least 6 characters'
                 },
                 validate: {
-                  hasUpperCase: value => /[A-Z]/.test(value) || 'Password must contain an uppercase letter',
-                  hasLowerCase: value => /[a-z]/.test(value) || 'Password must contain a lowercase letter'
+                  hasUpperCase: value =>
+                    /[A-Z]/.test(value) || 'Must include an uppercase letter',
+                  hasLowerCase: value =>
+                    /[a-z]/.test(value) || 'Must include a lowercase letter'
                 }
               })}
-              name='password' type="password" className="input input-shadow w-full" placeholder="Password" />
-            {errors?.password && <span className='text-red-700'>{errors?.password?.message}</span>}
+              type="password"
+              placeholder="Password"
+              className="input input-bordered w-full"
+            />
+            {errors?.password && <span className="text-red-600">{errors?.password?.message}</span>}
+          </div>
 
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={uploading || !profilePic}
+            className={`btn w-full text-white ${uploading || !profilePic ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-700 hover:bg-green-800'}`}
+          >
+            {uploading ? 'Uploading...' : 'Register'}
+          </button>
 
-            <button className="btn bg-green-950 text-white border-2 border-green-950 hover:bg-white hover:text-green-950 text-lg mt-4 w-full"
-              style={uploading || !profilePic ? { color: 'black' } : {}}
-              disabled={uploading || !profilePic}
-            >{uploading ? 'Uploading...' : 'Register'}</button>
-          </fieldset>
         </form>
-        <p>Already have an account? Please <Link className='text-red-500 underline font-semibold' to='/login' state={location.state}>Login Now</Link></p>
-
+        <p className="mt-4 text-center">
+          Already have an account?{' '}
+          <Link to="/login" state={location.state} className="text-green-700 font-semibold underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );
