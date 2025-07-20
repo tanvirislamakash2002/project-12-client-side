@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 
 const axiosInstance = axios.create({
-    baseURL:`https://ph-a12-server.vercel.app`
+    baseURL: import.meta.env.VITE_API_URL
 })
 const useAxios = () => {
     return axiosInstance;

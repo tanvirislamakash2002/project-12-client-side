@@ -10,11 +10,11 @@ const RootLayout = () => {
             <header className=''>
                 <Navbar></Navbar>
             </header>
-            <main className='min-h-[calc(100vh-337px)]'>
+            <main className='pt-16 min-h-[calc(100vh-337px)]'>
                 <Outlet></Outlet>
                 <ToastContainer />
             </main>
-            <footer className='bg-amber-600'>
+            <footer className=''>
                 <Footer></Footer>
             </footer>
         </div>

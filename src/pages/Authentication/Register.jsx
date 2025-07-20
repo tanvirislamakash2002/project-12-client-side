@@ -6,7 +6,8 @@ import axios from 'axios';
 import { useState } from 'react';
 import useAxios from '../../hooks/useAxios';
 import { Player } from '@lottiefiles/react-lottie-player';
-import animationData from '../../assets/lottie/register.json'; // 👉 Replace with your Lottie JSON path
+import animationData from '../../assets/lottie/register.json';
+import { useMutation } from '@tanstack/react-query';
 
 const Register = () => {
   const { createUser, updateUser } = useAuth();
@@ -19,26 +20,29 @@ const Register = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = async (data) => {
-    const { name, email, password } = data;
-    try {
+  // ✅ React Query mutation for registration
+  const mutation = useMutation({
+    mutationFn: async ({ name, email, password, photoURL }) => {
       await createUser(email, password);
-      const userProfile = {
-        displayName: name,
-        photoURL: profilePic
-      };
-      await updateUser(userProfile);
-      await axiosInstance.post('/register-user', { name, email, photoURL: profilePic });
-
+      await updateUser({ displayName: name, photoURL });
+      return axiosInstance.post('/register-user', { name, email, photoURL });
+    },
+    onSuccess: () => {
       Swal.fire({ title: 'Registration Successful', timer: 1400, icon: 'success' });
       navigate(from);
-    } catch (error) {
+    },
+    onError: (error) => {
       Swal.fire({
         title: 'Registration Failed',
-        text: error.response?.data?.error || error.message,
+        text: error?.response?.data?.error || error.message,
         icon: 'error'
       });
     }
+  });
+
+  const onSubmit = async (data) => {
+    const { name, email, password } = data;
+    mutation.mutate({ name, email, password, photoURL: profilePic });
   };
 
   const handleImageUpload = async (e) => {
@@ -49,9 +53,14 @@ const Register = () => {
     formData.append('image', image);
     const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`;
 
-    const res = await axios.post(uploadUrl, formData);
-    setProfilePic(res.data.data.url);
-    setUploading(false);
+    try {
+      const res = await axios.post(uploadUrl, formData);
+      setProfilePic(res.data.data.url);
+    } catch (err) {
+      Swal.fire('Upload Failed', 'Could not upload image', 'error');
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -70,7 +79,6 @@ const Register = () => {
       <div className="w-full lg:w-1/2 max-w-md bg-white rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold mb-6 text-center">Create an Account</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
           {/* Photo Upload */}
           <div>
             <label className="block font-medium mb-1">Profile Photo</label>
@@ -133,13 +141,21 @@ const Register = () => {
           {/* Submit */}
           <button
             type="submit"
-            disabled={uploading || !profilePic}
-            className={`btn w-full text-white ${uploading || !profilePic ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-700 hover:bg-green-800'}`}
+            disabled={uploading || !profilePic || mutation.isPending}
+            className={`btn w-full text-white ${
+              uploading || !profilePic || mutation.isPending
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-green-700 hover:bg-green-800'
+            }`}
           >
-            {uploading ? 'Uploading...' : 'Register'}
+            {uploading
+              ? 'please wait..Image is Uploading...'
+              : mutation.isPending
+              ? 'Registering...'
+              : 'Register'}
           </button>
-
         </form>
+
         <p className="mt-4 text-center">
           Already have an account?{' '}
           <Link to="/login" state={location.state} className="text-green-700 font-semibold underline">

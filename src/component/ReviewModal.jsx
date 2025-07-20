@@ -2,23 +2,39 @@ import { useState } from 'react';
 import useAxiosSecure from '../hooks/useAxiosSecure';
 import { toast } from 'react-toastify';
 import useAuth from '../hooks/useAuth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const ReviewModal = ({ donation, onClose }) => {
   const axiosSecure = useAxiosSecure();
-  const {user} =useAuth();
+  const { user } = useAuth();
   const [description, setDescription] = useState('');
   const [rating, setRating] = useState(5);
 
-  const handleSubmit = async () => {
-    await axiosSecure.post('/donation-reviews', {
-      donationId: donation._id,
-      reviewerName:user.displayName,
-      reviewerEmail:user.email,
-      description,
-      rating,
-    });
-    toast.success('Review submitted!');
-    onClose();
+  const queryClient = useQueryClient();
+
+  const { mutate: submitReview, isPending } = useMutation({
+    mutationFn: async () => {
+      const res = await axiosSecure.post('/donation-reviews', {
+        donationId: donation.donationId,
+        reviewerName: user.displayName,
+        reviewerEmail: user.email,
+        description,
+        rating,
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success('Review submitted!');
+      queryClient.invalidateQueries({ queryKey: ['donation-reviews'] }); // optional
+      onClose();
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || 'Failed to submit review');
+    },
+  });
+
+  const handleSubmit = () => {
+    submitReview();
   };
 
   return (
@@ -42,8 +58,12 @@ const ReviewModal = ({ donation, onClose }) => {
           placeholder="Rating (1-5)"
         />
         <div className="flex justify-end space-x-2">
-          <button onClick={onClose} className="btn">Cancel</button>
-          <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
+          <button onClick={onClose} className="btn" disabled={isPending}>
+            Cancel
+          </button>
+          <button onClick={handleSubmit} className="btn btn-primary" disabled={isPending}>
+            {isPending ? 'Submitting...' : 'Submit'}
+          </button>
         </div>
       </div>
     </div>

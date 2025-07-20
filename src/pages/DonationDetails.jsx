@@ -127,11 +127,11 @@ const DonationDetails = () => {
   // Submit review form (user/charity)
   const handleReviewSubmit = async ({ description, rating }) => {
     try {
-      await axiosSecure.post('/reviews', {
+      await axiosSecure.post('/donation-reviews', {
         donationId: id,
-        userName: user.displayName,
-        userEmail: user.email,
-        userImage: user.photoURL,
+        reviewerName: user.displayName,
+        reviewerEmail: user.email,
+        reviewerImage: user.photoURL,
         restaurantEmail: donation.restaurantEmail,
         rating,
         description,

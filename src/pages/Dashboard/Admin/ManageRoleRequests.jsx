@@ -26,7 +26,7 @@ const ManageRoleRequests = () => {
     onSuccess: (data) => {
       toast.success(`Request ${data.status}!`);
       queryClient.invalidateQueries(['charity-requests']);
-      sendNotification(data.userEmail, data.status);
+      // sendNotification(data.userEmail, data.status);
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Update failed');

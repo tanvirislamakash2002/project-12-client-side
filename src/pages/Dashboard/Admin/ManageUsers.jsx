@@ -47,7 +47,7 @@ const ManageUsers = () => {
       ) : (
         <div className="overflow-x-auto">
           <table className="table w-full border border-gray-200 shadow-sm">
-            <thead className="bg-base-200 text-base-content text-primary">
+            <thead className="bg-base-200 text-primary">
               <tr>
                 <th className="px-4 py-2 text-left">Name</th>
                 <th className="px-4 py-2 text-left">Email</th>

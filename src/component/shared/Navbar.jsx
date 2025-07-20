@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
-import logo from '../../assets/Logo/logoH.png'; // use only your logo image
+import logo from '../../assets/Logo/logoH.png'; 
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
@@ -20,7 +20,7 @@ const Navbar = () => {
           timer: 1500,
           showConfirmButton: false,
         });
-        navigate('/');
+        navigate(from);
       })
       .catch((error) => console.error(error));
   };
@@ -38,7 +38,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="bg-base-100 shadow-md sticky top-0 z-50">
+    <div className="bg-base-100 shadow-md fixed top-0 left-0 w-full z-50">
       <div className="navbar max-w-7xl mx-auto px-4">
         {/* Start */}
         <div className="navbar-start">

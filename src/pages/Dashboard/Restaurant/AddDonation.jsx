@@ -223,7 +223,7 @@ const AddDonation = () => {
               {isSubmitting
                 ? <span className="loading loading-spinner"></span>
                 : uploading
-                ? "Uploading..."
+                ? "Please wait Image is Uploading..."
                 : "Add Donation"}
             </button>
           </div>

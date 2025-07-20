@@ -83,7 +83,8 @@ const MyDonation = () => {
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {donations.map((donation) => (
             <div key={donation._id} className="rounded-xl overflow-hidden shadow-md bg-white">
-              <div className="h-48 bg-gray-100">
+              <div className="h-48 bg-gray-100 relative">
+                {donation.restaurantEmail&&<span className="absolute top-2 left-2 badge bg-primary/60 text-white">{ `by ${donation.restaurantEmail}`}</span>}
                 {donation.image ? (
                   <img
                     src={donation.image}
