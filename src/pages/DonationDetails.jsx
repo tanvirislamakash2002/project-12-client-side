@@ -17,7 +17,6 @@ const DonationDetails = () => {
 
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
 
   const {
     register,
@@ -33,8 +32,7 @@ const DonationDetails = () => {
     formState: { errors: reviewErrors },
   } = useForm();
 
-  // Fetch donation details
-  const { data: donation, isLoading } = useQuery({
+  const { data: donation, isLoading: isDonationLoading } = useQuery({
     queryKey: ['donation', id],
     queryFn: async () => {
       const res = await axiosSecure.get(`/donation/${id}`);
@@ -43,7 +41,6 @@ const DonationDetails = () => {
     onError: () => toast.error('Failed to load donation details'),
   });
 
-  // Fetch donation reviews
   const { data: reviews = [] } = useQuery({
     queryKey: ['reviews', id],
     queryFn: async () => {
@@ -52,33 +49,44 @@ const DonationDetails = () => {
     },
   });
 
-  // Check if donation is in favorites
-  useEffect(() => {
-    if (user?.email && id) {
-      axiosSecure.get(`/favorites/check?userEmail=${user.email}&donationId=${id}`)
-        .then(res => setIsFavorite(res.data.isFavorite))
-        .catch(() => setIsFavorite(false));
-    }
-  }, [user, id, axiosSecure]);
+  const { data: isFavorite = false, refetch: refetchFavorite } = useQuery({
+    queryKey: ['favorite', id, user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/favorites/check?userEmail=${user.email}&donationId=${id}`);
+      return res.data.isFavorite;
+    },
+    enabled: !!user?.email && !!id
+  });
 
-  // Toggle favorite status
   const toggleFavorite = async () => {
     try {
       const res = await axiosSecure.post('/favorites/toggle', {
         userEmail: user.email,
         donationId: id,
       });
-      setIsFavorite(res.data.isFavorite);
       toast.success(res.data.message);
+      refetchFavorite();
     } catch {
       toast.error('Failed to update favorite');
     }
   };
 
-  // Confirm pickup (charity only)
+  const { data: myRequests = [] } = useQuery({
+  queryKey: ['myRequests', id, user?.email],
+  queryFn: async () => {
+    if (!user?.email) return [];
+    const res = await axiosSecure.get(`/donation-requests/my?donationId=${id}&charityEmail=${user.email}`);
+    return res.data;
+  },
+  enabled: !!user?.email && !!id,
+});
+console.log(myRequests)
+
+const myRequest = myRequests[0] || null; // get first request or null
+
   const confirmPickup = async () => {
     try {
-      await axiosSecure.patch(`/donations/${id}/confirm-pickup`);
+      await axiosSecure.patch(`/donation-requests/${id}/confirm-pickup`);
       toast.success('Donation marked as Picked Up!');
       queryClient.invalidateQueries(['donation', id]);
     } catch {
@@ -86,7 +94,6 @@ const DonationDetails = () => {
     }
   };
 
-  // Request donation button click (charity only)
   const handleRequestButtonClick = async () => {
     try {
       const res = await axiosSecure.get(`/donation-requests/check?donationId=${id}&charityEmail=${user.email}`);
@@ -100,7 +107,6 @@ const DonationDetails = () => {
     }
   };
 
-  // Submit request form (charity only)
   const onSubmit = async (data) => {
     try {
       await axiosSecure.post('/donation-requests', {
@@ -116,15 +122,13 @@ const DonationDetails = () => {
 
       toast.success('Request submitted!');
       setRequestModalOpen(false);
-      reset(); // clear form
+      reset();
       queryClient.invalidateQueries(['donation', id]);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to submit request!');
     }
   };
 
-
-  // Submit review form (user/charity)
   const handleReviewSubmit = async ({ description, rating }) => {
     try {
       await axiosSecure.post('/donation-reviews', {
@@ -139,14 +143,14 @@ const DonationDetails = () => {
 
       toast.success('Review submitted!');
       setReviewModalOpen(false);
-      queryClient.invalidateQueries(['donation', id]);
+      resetReview();
+      queryClient.invalidateQueries(['reviews', id]);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to submit review!');
     }
   };
 
-
-  if (isLoading) return <p className="py-10 text-center text-lg">Loading donation details...</p>;
+  if (isDonationLoading) return <p className="py-10 text-center text-lg">Loading donation details...</p>;
   if (!donation) return <p className="py-10 text-center text-lg">Donation not found.</p>;
 
   return (
@@ -191,14 +195,13 @@ const DonationDetails = () => {
             <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Status</h2>
             <span
               className={`inline-block px-4 py-2 rounded-full text-white font-semibold
-                ${donation.status === 'Pending' ? 'bg-yellow-500' :
-                  donation.status === 'Accepted' ? 'bg-green-600' :
+                ${donation.status === 'Verified' ? 'bg-green-600' :
                     donation.status === 'Picked Up' ? 'bg-blue-600' :
                       donation.status === 'Rejected' ? 'bg-red-600' :
                         'bg-gray-500'
                 }`}
             >
-              {donation.status}
+              {donation.status === "Verified" ? 'Available' : donation.status}
             </span>
           </section>
 
@@ -217,7 +220,7 @@ const DonationDetails = () => {
                   Request Donation
                 </button>
 
-                {donation.status === 'Accepted' && (
+                {myRequest?.status === 'Accepted' && (
                   <button className="btn btn-success flex-grow md:flex-grow-0" onClick={confirmPickup}>
                     Confirm Pickup
                   </button>

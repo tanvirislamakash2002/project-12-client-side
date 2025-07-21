@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const RequestCharityRole = () => {
   const { user } = useAuth();
@@ -11,8 +12,7 @@ const RequestCharityRole = () => {
   const elements = useElements();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [hasPendingRequest, setHasPendingRequest] = useState(false);
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
     organizationName: '',
@@ -21,41 +21,31 @@ const RequestCharityRole = () => {
 
   const CHARITY_FEE = 25;
 
-  useEffect(() => {
-    const checkExistingRequest = async () => {
-      try {
-        const { data } = await axiosSecure.get(`/charity-requests-transactions?email=${user.email}`);
-        if (data.some(req => req.status === 'pending' || req.status === 'approved')) {
-          setHasPendingRequest(true);
-        }
-      } catch (error) {
-        toast.error('Error checking existing requests');
-      }
-    };
-    if (user?.email) checkExistingRequest();
-  }, [user, axiosSecure]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    if (!stripe || !elements) {
-      setLoading(false);
-      return;
+  // 🔍 Check for existing requests
+  const { data: existingRequest, isLoading: checkingRequest } = useQuery({
+    queryKey: ['charity-requests', user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/charity-requests-transactions?email=${user.email}`);
+      return res.data;
     }
+  });
 
-    try {
+  const hasPendingRequest = existingRequest?.some(
+    (req) => req.status === 'pending' || req.status === 'approved'
+  );
+
+  // 💳 Mutation: Handle payment & request submission
+  const { mutate: submitRequest, isPending: submitting } = useMutation({
+    mutationFn: async () => {
+      // Step 1: Create payment intent
       const { data: { clientSecret } } = await axiosSecure.post('/create-payment-intent', {
         amount: CHARITY_FEE * 100,
         currency: 'usd',
         metadata: { userEmail: user.email }
       });
 
+      // Step 2: Confirm payment
       const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -68,9 +58,10 @@ const RequestCharityRole = () => {
 
       if (error) {
         toast.error(error.message);
-        throw error;
+        throw new Error(error.message);
       }
 
+      // Step 3: Submit request if payment succeeded
       if (paymentIntent.status === 'succeeded') {
         const requestData = {
           userId: user._id,
@@ -84,16 +75,39 @@ const RequestCharityRole = () => {
         };
 
         await axiosSecure.post('/charity-request', requestData);
-        toast.success('Request submitted for admin approval!');
-        navigate('/dashboard');
+        return true;
+      } else {
+        throw new Error('Payment did not succeed');
       }
-    } catch (error) {
-      console.error('Stripe error:', error);
-      toast.error(error.message || 'Payment failed');
-    } finally {
-      setLoading(false);
+    },
+    onSuccess: () => {
+      toast.success('Request submitted for admin approval!');
+      queryClient.invalidateQueries({ queryKey: ['charity-requests'] });
+      navigate('/dashboard');
+    },
+    onError: (err) => {
+      toast.error(err.message || 'Submission failed');
     }
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!stripe || !elements) {
+      toast.error('Stripe not loaded yet');
+      return;
+    }
+    submitRequest();
+  };
+
+  // 🔄 While checking existing request
+  if (checkingRequest) {
+    return <p className="text-center mt-10">Checking request status...</p>;
+  }
 
   if (hasPendingRequest) {
     return (
@@ -112,7 +126,6 @@ const RequestCharityRole = () => {
       <h2 className="text-2xl font-bold text-center">Request Charity Role</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* User Info */}
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="label">Your Name</label>
@@ -134,7 +147,6 @@ const RequestCharityRole = () => {
           </div>
         </div>
 
-        {/* Org Info */}
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="label">Organization Name *</label>
@@ -160,7 +172,6 @@ const RequestCharityRole = () => {
           </div>
         </div>
 
-        {/* Payment Info */}
         <div className="mt-6">
           <div className="mb-2 text-sm text-gray-700 font-medium">
             Payment: ${CHARITY_FEE}
@@ -181,13 +192,12 @@ const RequestCharityRole = () => {
           </div>
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
-          disabled={!stripe || loading}
+          disabled={!stripe || submitting}
           className="btn btn-primary w-full"
         >
-          {loading ? 'Processing...' : `Pay $${CHARITY_FEE} & Submit Request`}
+          {submitting ? 'Processing...' : `Pay $${CHARITY_FEE} & Submit Request`}
         </button>
       </form>
     </div>

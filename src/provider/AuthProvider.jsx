@@ -2,17 +2,14 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged,
 import React, { useEffect, useState } from 'react';
 import { auth } from '../firebase/firebase.init';
 import { AuthContext } from './AuthContext';
+import { useJwtToken } from '../hooks/useJwtToken';
 
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [darkMode, setDarkMode] = useState(false)
 
-    useEffect(()=>{
-        localStorage.setItem('darkMode', darkMode)
-        setDarkMode(localStorage.getItem('darkMode')==='false'?false:true)
-    },[darkMode])
+
     // Register
     const createUser = (email, password) => {
         setLoading(true)
@@ -43,17 +40,21 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('token')
         return signOut(auth)
     }
-
+    const { mutate: fetchJwtToken } = useJwtToken();
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser)
-            console.log(currentUser)
-            setLoading(false)
-        })
-        return () => {
-            unSubscribe()
-        }
-    }, [])
+            setUser(currentUser);
+            setLoading(false);
+
+            if (currentUser?.email) {
+                fetchJwtToken(currentUser.email);
+            } else {
+                localStorage.removeItem('token');
+            }
+        });
+
+        return () => unSubscribe();
+    }, [fetchJwtToken]);
 
     const authData = {
         createUser,
@@ -64,8 +65,6 @@ const AuthProvider = ({ children }) => {
         setUser,
         signOutUser,
         loading,
-        darkMode,
-        setDarkMode
     }
     return (
         <AuthContext.Provider value={authData}>

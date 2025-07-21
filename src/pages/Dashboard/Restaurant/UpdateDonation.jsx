@@ -1,65 +1,78 @@
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const UpdateDonation = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
   const { id } = useParams();
 
-  // Donation data passed from previous page
-  const donation = location.state || {};
-
-  const [imageUrl, setImageUrl] = useState(donation.image || "");
+  const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      title: donation.title || "",
-      foodType: donation.foodType || "",
-      quantity: donation.quantity || "",
-      quantityUnit: donation.quantityUnit || "portions",
-      pickupStart: donation.pickupStart || "",
-      pickupEnd: donation.pickupEnd || "",
-      location: donation.location || "",
+  } = useForm();
+
+  // Load donation data using TanStack Query
+  const {
+    data: donation,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["donation", id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/donation/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
+  // Pre-fill form once donation data is fetched
+  useEffect(() => {
+    if (donation) {
+      reset({
+        title: donation.title || "",
+        foodType: donation.foodType || "",
+        quantity: donation.quantity || "",
+        quantityUnit: donation.quantityUnit || "portions",
+        pickupStart: donation.pickupStart || "",
+        pickupEnd: donation.pickupEnd || "",
+        location: donation.location || "",
+      });
+      setImageUrl(donation.image || "");
+    }
+  }, [donation, reset]);
+
+  // Mutation to update donation
+  const updateDonationMutation = useMutation({
+    mutationFn: async (updatedDonation) => {
+      const res = await axiosSecure.patch(`/donation/${id}`, updatedDonation);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      if (data.modified) {
+        Swal.fire("Success", "Donation updated!", "success");
+        queryClient.invalidateQueries(["donation", id]);
+        navigate("/dashboard/myDonations");
+      } else {
+        Swal.fire("Info", "No changes made.", "info");
+      }
+    },
+    onError: (err) => {
+      Swal.fire("Error", err.message, "error");
     },
   });
 
-  // Update form values if donation loads later
-  useEffect(() => {
-    if (donation) {
-      setValue("title", donation.title);
-      setValue("foodType", donation.foodType);
-      setValue("quantity", donation.quantity);
-      setValue("quantityUnit", donation.quantityUnit);
-      setValue("pickupStart", donation.pickupStart);
-      setValue("pickupEnd", donation.pickupEnd);
-      setValue("location", donation.location);
-      setImageUrl(donation.image || "");
-    }
-  }, [donation, setValue]);
-
-  const foodTypes = [
-    "Bakery",
-    "Produce",
-    "Dairy",
-    "Meat",
-    "Prepared Meals",
-    "Frozen Foods",
-    "Canned Goods",
-    "Other",
-  ];
-
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     if (!imageUrl) {
       return Swal.fire("Image Required", "Please upload an image.", "warning");
     }
@@ -68,31 +81,16 @@ const UpdateDonation = () => {
       return Swal.fire("Invalid Time", "Start time must be before end time.", "error");
     }
 
-    setIsSubmitting(true);
+    const updatedDonation = {
+      ...data,
+      image: imageUrl,
+      restaurantName: donation.restaurantName || "",
+      restaurantEmail: donation.restaurantEmail || "",
+      status: donation.status || "Pending",
+      createdAt: donation.createdAt || new Date().toISOString(),
+    };
 
-    try {
-      const updatedDonation = {
-        ...data,
-        image: imageUrl,
-        restaurantName: donation.restaurantName || "",
-        restaurantEmail: donation.restaurantEmail || "",
-        status: donation.status || "Pending",
-        createdAt: donation.createdAt || new Date().toISOString(),
-      };
-
-      const res = await axiosSecure.patch(`/donation/${id}`, updatedDonation);
-
-      if (res.data.modified) {
-        Swal.fire("Success", "Donation updated!", "success");
-        navigate(`/dashboard/myDonations`);
-      } else {
-        Swal.fire("Info", "No changes made.", "info");
-      }
-    } catch (err) {
-      Swal.fire("Error", err.message, "error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    updateDonationMutation.mutate(updatedDonation);
   };
 
   const handleImageUpload = async (e) => {
@@ -120,6 +118,20 @@ const UpdateDonation = () => {
       setUploading(false);
     }
   };
+
+  const foodTypes = [
+    "Bakery",
+    "Produce",
+    "Dairy",
+    "Meat",
+    "Prepared Meals",
+    "Frozen Foods",
+    "Canned Goods",
+    "Other",
+  ];
+
+  if (isLoading) return <div className="text-center py-20">Loading donation...</div>;
+  if (isError) return <div className="text-center text-red-500 py-20">Error loading donation.</div>;
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -276,9 +288,9 @@ const UpdateDonation = () => {
             <button
               type="submit"
               className="btn btn-primary px-6"
-              disabled={isSubmitting || uploading}
+              disabled={updateDonationMutation.isPending || uploading}
             >
-              {isSubmitting ? (
+              {updateDonationMutation.isPending ? (
                 <span className="loading loading-spinner"></span>
               ) : uploading ? (
                 "Uploading..."

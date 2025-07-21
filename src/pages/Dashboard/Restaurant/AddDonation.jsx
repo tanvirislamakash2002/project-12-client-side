@@ -4,11 +4,11 @@ import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useState } from "react";
 import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 
 const AddDonation = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -17,6 +17,22 @@ const AddDonation = () => {
     "Bakery", "Produce", "Dairy", "Meat",
     "Prepared Meals", "Frozen Foods", "Canned Goods", "Other"
   ];
+
+  // Mutation for posting donation
+  const addDonationMutation = useMutation({
+    mutationFn: (donationData) =>
+      axiosSecure.post("/add-donation", donationData),
+    onSuccess: (res) => {
+      if (res.data.insertedId) {
+        Swal.fire("Success", "Donation added!", "success");
+        reset();
+        setImageUrl('');
+      }
+    },
+    onError: (err) => {
+      Swal.fire("Error", err.message, "error");
+    }
+  });
 
   const onSubmit = async (data) => {
     if (!imageUrl) {
@@ -27,30 +43,18 @@ const AddDonation = () => {
       return Swal.fire("Invalid Time", "Start time must be before end time.", "error");
     }
 
-    setIsSubmitting(true);
-    try {
-      const donationData = {
-        ...data,
-        image: imageUrl,
-        restaurantName: user.displayName,
-        restaurantEmail: user.email,
-        pickupStart: data.pickupStart,
-        pickupEnd: data.pickupEnd,
-        status: "Pending",
-        createdAt: new Date().toISOString(),
-      };
+    const donationData = {
+      ...data,
+      image: imageUrl,
+      restaurantName: user.displayName,
+      restaurantEmail: user.email,
+      pickupStart: data.pickupStart,
+      pickupEnd: data.pickupEnd,
+      status: "Pending",
+      createdAt: new Date().toISOString(),
+    };
 
-      const res = await axiosSecure.post("/add-donation", donationData);
-      if (res.data.insertedId) {
-        Swal.fire("Success", "Donation added!", "success");
-        reset();
-        setImageUrl('');
-      }
-    } catch (err) {
-      Swal.fire("Error", err.message, "error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    addDonationMutation.mutate(donationData);
   };
 
   const handleImageUpload = async (e) => {
@@ -135,7 +139,6 @@ const AddDonation = () => {
               {errors.quantity && <p className="text-sm text-red-500">{errors.quantity.message}</p>}
             </div>
 
-            {/* Pickup Time Window */}
             <div>
               <label className="label-text font-medium mb-1 block">Pickup Time Window*</label>
               <div className="flex items-center gap-4 bg-gray-100 p-4 rounded-xl">
@@ -218,9 +221,9 @@ const AddDonation = () => {
             <button
               type="submit"
               className="btn btn-primary px-6"
-              disabled={isSubmitting || uploading}
+              disabled={addDonationMutation.isPending || uploading}
             >
-              {isSubmitting
+              {addDonationMutation.isPending
                 ? <span className="loading loading-spinner"></span>
                 : uploading
                 ? "Please wait Image is Uploading..."

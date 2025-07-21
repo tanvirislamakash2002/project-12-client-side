@@ -1,62 +1,55 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 import useAuth from './useAuth';
 import { useNavigate } from 'react-router';
 
 const axiosSecure = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 const useAxiosSecure = () => {
-    const { user, loading, signOutUser } = useAuth();
-    const navigate = useNavigate();
+  const { user, loading, signOutUser } = useAuth();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if(loading) return;
-        const requestInterceptor = axiosSecure.interceptors.request.use(
-            async (config) => {
-                if (user) {
-                    try {
-                        // Get a fresh token safely
-                        const token = await user.getIdToken(true);
-                        config.headers.Authorization = `Bearer ${token}`;
-                    } catch (error) {
-                        console.error('Error refreshing token:', error);
-                        // If token refresh fails, you might want to sign out:
-                        await signOutUser();
-                        navigate('/login');
-                        return Promise.reject(error);
-                    }
-                }
-                return config;
-            },
-            (error) => Promise.reject(error)
-        );
+  useEffect(() => {
+    if (loading) return;
 
-        // Response interceptor unchanged
-        const responseInterceptor = axiosSecure.interceptors.response.use(
-            (res) => res,
-            (error) => {
-                const status = error.response?.status;
-                if (status === 403) {
-                    navigate('/forbidden');
-                } else if (status === 401) {
-                    signOutUser()
-                        .then(() => navigate('/login'))
-                        .catch(() => { });
-                }
-                return Promise.reject(error);
-            }
-        );
+    const requestInterceptor = axiosSecure.interceptors.request.use(
+      async (config) => {
+        const token = localStorage.getItem('token'); // move inside interceptor
+        if (user && token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
 
-        return () => {
-            axiosSecure.interceptors.request.eject(requestInterceptor);
-            axiosSecure.interceptors.response.eject(responseInterceptor);
-        };
-    }, [user, signOutUser, navigate]);
+    const responseInterceptor = axiosSecure.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const status = error.response?.status;
+        if (status === 403) {
+          navigate('/forbidden');
+        } else if (status === 401) {
+          try {
+            await signOutUser();
+            navigate('/login');
+          } catch (err) {
+            console.error('Error signing out:', err);
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
 
+    return () => {
+      axiosSecure.interceptors.request.eject(requestInterceptor);
+      axiosSecure.interceptors.response.eject(responseInterceptor);
+    };
+  }, [user, loading, signOutUser, navigate]);
 
-    return axiosSecure;
+  return axiosSecure;
 };
 
 export default useAxiosSecure;

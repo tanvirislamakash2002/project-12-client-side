@@ -32,6 +32,8 @@ import DonationStats from "../pages/Dashboard/Restaurant/DonationStats";
 import UpdateDonation from "../pages/Dashboard/Restaurant/UpdateDonation";
 import Profile from "../pages/Dashboard/Profile";
 import ErrorPage from "../pages/ErrorPage";
+import CharityRoute from "../routes/CharityRoute";
+import UserRoute from "../routes/UserRoute";
 
 export const router = createBrowserRouter([
     {
@@ -45,11 +47,15 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'allDonations',
-                element: <AllDonations></AllDonations>
+                element: <PrivateRoute>
+                    <AllDonations></AllDonations>
+                </PrivateRoute>
             },
             {
                 path: 'donationDetails/:id',
-                element: <DonationDetails></DonationDetails>
+                element: <PrivateRoute>
+                    <DonationDetails></DonationDetails>
+                </PrivateRoute>
             },
             {
                 path: 'forbidden',
@@ -85,85 +91,116 @@ export const router = createBrowserRouter([
                 index: true,
                 element: <Profile></Profile>
             },
-            // restaurant route
-            {
-                path: 'addDonation',
-                element: <RestaurantRoute><AddDonation></AddDonation></RestaurantRoute>
-            },
-
-            {
-                path: 'donationStats',
-                element: <RestaurantRoute><DonationStats></DonationStats></RestaurantRoute>
-            },
-            {
-                path: 'myDonations',
-                element: <RestaurantRoute><MyDonation></MyDonation></RestaurantRoute>
-            },
-            {
-                path: 'updateDonation/:id',
-                element: <RestaurantRoute><UpdateDonation></UpdateDonation></RestaurantRoute>
-            },
-            {
-                path: 'requestedDonations',
-                element: <RestaurantRoute><RequestedDonations></RequestedDonations></RestaurantRoute>
-            },
             // user route
 
             {
                 path: 'requestCharityRole',
-                element: <StripeElementsWrapper>
-                    <RequestCharityRole></RequestCharityRole>
-                </StripeElementsWrapper>
+                element: <UserRoute>
+                    <StripeElementsWrapper>
+                        <RequestCharityRole></RequestCharityRole>
+                    </StripeElementsWrapper>
+                </UserRoute>
             },
             {
                 path: 'transactionHistory',
                 element: <TransactionHistory></TransactionHistory>
+
             },
             {
                 path: 'myReviews',
                 element: <MyReviews></MyReviews>
+
             },
             {
                 path: 'favorites',
                 element: <Favorites></Favorites>
+
             },
             // charity route 
 
             {
                 path: 'myRequests',
-                element: <MyRequests></MyRequests>
+                element: <CharityRoute>
+                    <MyRequests></MyRequests>
+                </CharityRoute>
             },
             {
                 path: 'myPickups',
-                element: <MyPickups></MyPickups>
+                element: <CharityRoute>
+                    <MyPickups></MyPickups>
+                </CharityRoute>
             },
             {
                 path: 'receivedDonations',
-                element: <ReceivedDonations></ReceivedDonations>
+                element: <CharityRoute>
+                    <ReceivedDonations></ReceivedDonations>
+                </CharityRoute>
+            },
+            // restaurant route
+            {
+                path: 'addDonation',
+                element: <RestaurantRoute>
+                    <AddDonation></AddDonation>
+                </RestaurantRoute>
+            },
+
+            {
+                path: 'donationStats',
+                element: <RestaurantRoute>
+                    <DonationStats></DonationStats>
+                </RestaurantRoute>
+            },
+            {
+                path: 'myDonations',
+                element: <RestaurantRoute>
+                    <MyDonation></MyDonation>
+                </RestaurantRoute>
+            },
+            {
+                path: 'updateDonation/:id',
+                element: <RestaurantRoute>
+                    <UpdateDonation></UpdateDonation>
+                </RestaurantRoute>
+            },
+            {
+                path: 'requestedDonations',
+                element: <RestaurantRoute>
+                    <RequestedDonations></RequestedDonations>
+                </RestaurantRoute>
             },
             // admin route
 
             {
                 path: 'manageRoleRequests',
-                element: <AdminRoute><ManageRoleRequests></ManageRoleRequests></AdminRoute>
+                element: <AdminRoute>
+                    <ManageRoleRequests></ManageRoleRequests>
+                </AdminRoute>
 
             },
             {
                 path: 'manageDonations',
-                element: <AdminRoute><ManageDonations></ManageDonations></AdminRoute>
+                element: <AdminRoute>
+                    <ManageDonations></ManageDonations>
+                </AdminRoute>
 
             },
             {
                 path: 'manageUsers',
-                element: <AdminRoute><ManageUsers></ManageUsers></AdminRoute>
+                element: <AdminRoute>
+                    <ManageUsers></ManageUsers>
+                </AdminRoute>
             },
             {
                 path: 'manageRequests',
-                element: <AdminRoute><ManageRequests></ManageRequests></AdminRoute>
+                element: <AdminRoute>
+                    <ManageRequests></ManageRequests>
+                </AdminRoute>
             },
             {
                 path: 'featureDonations',
-                element: <AdminRoute><FeatureDonations></FeatureDonations></AdminRoute>
+                element: <AdminRoute>
+                    <FeatureDonations></FeatureDonations>
+                </AdminRoute>
             },
 
         ]

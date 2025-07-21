@@ -12,19 +12,25 @@ const AllDonations = () => {
 
   const [searchLocation, setSearchLocation] = useState('');
   const [sortBy, setSortBy] = useState('');
+  const [onlyVerified, setOnlyVerified] = useState(false);
   const [debouncedSearch] = useDebounce(searchLocation, 500);
 
-  const { data: donations = [], isLoading } = useQuery({
-    enabled: !loading && !!user,
-    queryKey: ['verifiedDonations', debouncedSearch, sortBy],
-    queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/donations?status=Verified&location=${debouncedSearch}&sortBy=${sortBy}`
-      );
-      return res.data;
-    },
-    onError: () => toast.error('Failed to load donations'),
-  });
+const { data: donations = [], isLoading } = useQuery({
+  queryKey: ['available-donations', debouncedSearch, sortBy, onlyVerified], // add onlyVerified here
+  queryFn: async () => {
+    const res = await axiosSecure.get('/donations/all', {
+      params: {
+        location: debouncedSearch,
+        sortBy,
+        onlyVerified,       // Pass onlyVerified param here
+      },
+    });
+    return res.data;
+  },
+});
+
+
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -41,7 +47,7 @@ const AllDonations = () => {
           {/* Drawer toggle button for small screens */}
           <div className="lg:hidden mb-4">
             <label htmlFor="filter-drawer" className="btn btn-outline w-full">
-             <IoFilter /> Open Filters
+              <IoFilter /> Open Filters
             </label>
           </div>
 
@@ -97,13 +103,12 @@ const AllDonations = () => {
 
                     <div className="mt-3 flex justify-between items-center">
                       <span
-                        className={`badge ${
-                          donation.status === 'Verified'
-                            ? 'badge-success'
-                            : 'badge-warning'
-                        }`}
+                        className={`badge ${donation.status === 'Verified'
+                          ? 'badge-success'
+                          : 'badge-warning'
+                          }`}
                       >
-                        {donation.status}
+                        {donation.status === "Verified" ? 'Available' : donation.status}
                       </span>
                       <Link
                         to={`/donationDetails/${donation._id}`}
@@ -139,10 +144,26 @@ const AllDonations = () => {
               onChange={(e) => setSortBy(e.target.value)}
               className="select select-bordered w-full"
             >
-              <option value="">Sort By</option>
+              <option value="" disabled>Sort By</option>
               <option value="quantity">Quantity</option>
               <option value="pickupTime">Pickup Time</option>
             </select>
+            <div className="card bg-base-100 shadow-md p-4 mt-4 border border-primary/20 mb-6">
+              <h4 className="font-semibold text-lg mb-2 text-primary">
+                Filter by Status
+              </h4>
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium">All</span>
+                <input
+                  type="checkbox"
+                  className="toggle toggle-primary"
+                  checked={onlyVerified}
+                  onChange={() => setOnlyVerified(prev => !prev)}
+                />
+                <span className="text-sm font-medium">Available Only</span>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

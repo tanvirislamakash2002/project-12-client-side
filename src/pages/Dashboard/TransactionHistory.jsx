@@ -53,7 +53,7 @@ const TransactionHistory = () => {
                   <td>
                     <span
                       className={`badge text-white ${
-                        tx.status === "completed"
+                        tx.status === "approved"
                           ? "badge-success"
                           : tx.status === "pending"
                           ? "badge-warning"
