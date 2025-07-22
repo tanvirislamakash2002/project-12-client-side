@@ -82,6 +82,8 @@ const ManageDonations = () => {
                         ? 'badge-success'
                         : donation.status === 'Rejected'
                         ? 'badge-error'
+                        : donation.status === 'Picked Up'
+                        ? 'badge-info'
                         : 'badge-warning'
                     }`}
                   >
@@ -142,6 +144,8 @@ const ManageDonations = () => {
                     ? 'badge-success'
                     : donation.status === 'Rejected'
                     ? 'badge-error'
+                    : donation.status === 'Picked Up'
+                    ? 'badge-info'
                     : 'badge-warning'
                 }`}
               >

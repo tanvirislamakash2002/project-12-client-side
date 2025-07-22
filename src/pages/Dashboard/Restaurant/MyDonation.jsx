@@ -108,7 +108,7 @@ const MyDonation = () => {
                 <p><strong>📍 Location:</strong> {donation.location}</p>
 
                 <div className="flex justify-end gap-2 mt-4">
-                  {donation.status !== 'Rejected' && (
+                  {donation.status !== 'Rejected' && donation.status !== 'Picked Up' && (
                     <Link
                       to={`/dashboard/updateDonation/${donation._id}`}
                       state={donation}

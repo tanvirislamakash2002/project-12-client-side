@@ -129,7 +129,7 @@ const DonationDetails = () => {
     }
   };
 
-  
+
   const confirmPickup = async () => {
     if (!checkRequest?.request?._id) {
       toast.error('Request ID not found');
@@ -245,32 +245,32 @@ const DonationDetails = () => {
                 {/* Charity-only buttons */}
                 {role === 'charity' && (
                   <>
-{checkRequest?.request?.status !== 'Picked Up' && (
-  <>
-    {checkRequest?.request?.status !== 'Accepted' && (
-      <button
-        className={`btn btn-primary flex-grow md:flex-grow-0 ${checkRequest?.request?.status === 'Pending' ? 'btn-disabled cursor-not-allowed' : ''}`}
-        onClick={() => {
-          if (checkRequest?.request?.status !== 'Pending') {
-            setRequestModalOpen(true);
-          }
-        }}
-        disabled={checkRequest?.request?.status === 'Pending'}
-      >
-        {checkRequest?.request?.status === 'Pending' ? 'Requested' : 'Request Donation'}
-      </button>
-    )}
+                    {donation?.status !== 'Picked Up' && (
+                      <>
+                        {checkRequest?.request?.status !== 'Accepted' && (
+                          <button
+                            className={`btn btn-primary flex-grow md:flex-grow-0 ${checkRequest?.request?.status === 'Pending' ? 'btn-disabled cursor-not-allowed' : ''}`}
+                            onClick={() => {
+                              if (checkRequest?.request?.status !== 'Pending') {
+                                setRequestModalOpen(true);
+                              }
+                            }}
+                            disabled={checkRequest?.request?.status === 'Pending'}
+                          >
+                            {checkRequest?.request?.status === 'Pending' ? 'Requested' : 'Request Donation'}
+                          </button>
+                        )}
 
-    {checkRequest?.request?.status === 'Accepted' && (
-      <button
-        className="btn btn-success flex-grow md:flex-grow-0"
-        onClick={confirmPickup}
-      >
-        Confirm Pickup
-      </button>
-    )}
-  </>
-)}
+                        {checkRequest?.request?.status === 'Accepted' && (
+                          <button
+                            className="btn btn-info text-white flex-grow md:flex-grow-0"
+                            onClick={confirmPickup}
+                          >
+                            Confirm Pickup
+                          </button>
+                        )}
+                      </>
+                    )}
 
 
                   </>

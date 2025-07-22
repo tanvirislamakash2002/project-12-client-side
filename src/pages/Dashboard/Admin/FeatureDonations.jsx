@@ -9,7 +9,7 @@ const FeatureDonations = () => {
   const { data: donations = [], isLoading } = useQuery({
     queryKey: ['verifiedDonations'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/donations?verified=true');
+      const res = await axiosSecure.get('/donations?status=Verified');
       return res.data;
     },
   });

@@ -78,11 +78,13 @@ const RequestedDonations = () => {
                   <td>{req.pickupTime}</td>
                   <td>
                     <span
-                      className={`badge px-3 py-1 ${
+                      className={`badge px-3 py-1 whitespace-nowrap ${
                         req.status === 'Pending'
                           ? 'badge-warning'
                           : req.status === 'Accepted'
                           ? 'badge-success'
+                          : req.status === 'Picked Up'
+                          ? 'badge-info'
                           : 'badge-error'
                       }`}
                     >
