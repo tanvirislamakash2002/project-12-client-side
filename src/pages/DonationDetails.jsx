@@ -71,48 +71,42 @@ const DonationDetails = () => {
     }
   };
 
-const { data: myRequest } = useQuery({
-  queryKey: ['mySingleRequest', id, user?.email],
-  queryFn: async () => {
-    if (!user?.email || !id) return null;
-    const res = await axiosSecure.get(
-      `/donation-requests/my/single?donationId=${id}&charityEmail=${user.email}`
-    );
-    return res.data;
-  },
-  enabled: !!user?.email && !!id,
-});
+  // const { data: myRequest } = useQuery({
+  //   queryKey: ['mySingleRequest', id, user?.email],
+  //   queryFn: async () => {
+  //     if (!user?.email || !id) return null;
+  //     const res = await axiosSecure.get(
+  //       `/donation-requests/my/single?donationId=${id}&charityEmail=${user.email}`
+  //     );
+  //     return res.data;
+  //   },
+  //   enabled: !!user?.email && !!id,
+  // });
 
 
-const confirmPickup = async () => {
-  if (!myRequest?._id) {
-    toast.error('Request ID not found');
-    return;
-  }
-
-  try {
-    await axiosSecure.patch(`/donation-requests/${myRequest._id}/confirm-pickup`);
-    toast.success('Donation marked as Picked Up!');
-    queryClient.invalidateQueries(['donation', id]);
-    queryClient.invalidateQueries(['myRequests', id, user?.email]);
-  } catch {
-    toast.error('Failed to confirm pickup');
-  }
-};
-
-  const handleRequestButtonClick = async () => {
-    try {
+  // const handleRequestButtonClick = async () => {
+  //   try {
+  //     const res = await axiosSecure.get(`/donation-requests/check?donationId=${id}&charityEmail=${user.email}`);
+  //     const request = res.data?.request;
+  //     if (request && request.status === 'Pending') {
+  //       toast.info('You have already requested this donation.');
+  //       return;
+  //     }
+  //     setRequestModalOpen(true);
+  //   } catch {
+  //     toast.error('Failed to check request status.');
+  //   }
+  // };
+  // 2. For checking if already requested (new)
+  const { data: checkRequest } = useQuery({
+    queryKey: ['checkRequest', id, user?.email],
+    queryFn: async () => {
       const res = await axiosSecure.get(`/donation-requests/check?donationId=${id}&charityEmail=${user.email}`);
-      if (res.data.hasRequested) {
-        toast.info('You have already requested this donation.');
-        return;
-      }
-      setRequestModalOpen(true);
-    } catch {
-      toast.error('Failed to check request status.');
-    }
-  };
-
+      return res.data;
+    },
+    enabled: !!user?.email && !!id,
+  });
+  console.log(checkRequest?.request)
   const onSubmit = async (data) => {
     try {
       await axiosSecure.post('/donation-requests', {
@@ -132,6 +126,23 @@ const confirmPickup = async () => {
       queryClient.invalidateQueries(['donation', id]);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to submit request!');
+    }
+  };
+
+  
+  const confirmPickup = async () => {
+    if (!checkRequest?.request?._id) {
+      toast.error('Request ID not found');
+      return;
+    }
+
+    try {
+      await axiosSecure.patch(`/donation-requests/${checkRequest?.request?._id}/confirm-pickup`);
+      toast.success('Donation marked as Picked Up!');
+      queryClient.invalidateQueries(['donation', id]);
+      queryClient.invalidateQueries(['myRequests', id, user?.email]);
+    } catch {
+      toast.error('Failed to confirm pickup');
     }
   };
 
@@ -202,9 +213,9 @@ const confirmPickup = async () => {
             <span
               className={`inline-block px-4 py-2 rounded-full text-white font-semibold
                 ${donation.status === 'Verified' ? 'bg-green-600' :
-                    donation.status === 'Picked Up' ? 'bg-blue-600' :
-                      donation.status === 'Rejected' ? 'bg-red-600' :
-                        'bg-gray-500'
+                  donation.status === 'Picked Up' ? 'bg-blue-600' :
+                    donation.status === 'Rejected' ? 'bg-red-600' :
+                      'bg-gray-500'
                 }`}
             >
               {donation.status === "Verified" ? 'Available' : donation.status}
@@ -213,30 +224,60 @@ const confirmPickup = async () => {
 
           {/* Actions */}
           <section className="flex flex-wrap gap-4 mt-4">
-            <button
-              onClick={toggleFavorite}
-              className={`btn btn-outline ${isFavorite ? 'btn-success' : ''} flex-grow md:flex-grow-0`}
-            >
-              {isFavorite ? 'Remove from Favorites' : 'Save to Favorites'}
-            </button>
-
-            {!roleLoading && role === 'charity' && (
+            {!roleLoading && (role === 'user' || role === 'charity') && (
               <>
-                <button className="btn btn-primary flex-grow md:flex-grow-0" onClick={handleRequestButtonClick}>
-                  Request Donation
+                {/* Add to Favorites */}
+                <button
+                  onClick={toggleFavorite}
+                  className={`btn btn-outline ${isFavorite ? 'btn-success' : ''} flex-grow md:flex-grow-0`}
+                >
+                  {isFavorite ? 'Remove from Favorites' : 'Save to Favorites'}
                 </button>
 
-                {myRequest?.status === 'Accepted' && (
-                  <button className="btn btn-success flex-grow md:flex-grow-0" onClick={confirmPickup}>
-                    Confirm Pickup
-                  </button>
+                {/* Add Review */}
+                <button
+                  className="btn btn-secondary flex-grow md:flex-grow-0"
+                  onClick={() => setReviewModalOpen(true)}
+                >
+                  Add Review
+                </button>
+
+                {/* Charity-only buttons */}
+                {role === 'charity' && (
+                  <>
+{checkRequest?.request?.status !== 'Picked Up' && (
+  <>
+    {checkRequest?.request?.status !== 'Accepted' && (
+      <button
+        className={`btn btn-primary flex-grow md:flex-grow-0 ${checkRequest?.request?.status === 'Pending' ? 'btn-disabled cursor-not-allowed' : ''}`}
+        onClick={() => {
+          if (checkRequest?.request?.status !== 'Pending') {
+            setRequestModalOpen(true);
+          }
+        }}
+        disabled={checkRequest?.request?.status === 'Pending'}
+      >
+        {checkRequest?.request?.status === 'Pending' ? 'Requested' : 'Request Donation'}
+      </button>
+    )}
+
+    {checkRequest?.request?.status === 'Accepted' && (
+      <button
+        className="btn btn-success flex-grow md:flex-grow-0"
+        onClick={confirmPickup}
+      >
+        Confirm Pickup
+      </button>
+    )}
+  </>
+)}
+
+
+                  </>
                 )}
               </>
             )}
 
-            <button className="btn btn-secondary flex-grow md:flex-grow-0" onClick={() => setReviewModalOpen(true)}>
-              Add Review
-            </button>
           </section>
         </div>
       </div>
@@ -331,7 +372,7 @@ const confirmPickup = async () => {
                 type="time"
                 {...register("pickupTime", { required: true })}
                 className="input input-bordered w-full"
-                
+
               />
               {errors.pickupTime && (
                 <p className="text-red-500 text-sm mt-1">This field is required</p>
