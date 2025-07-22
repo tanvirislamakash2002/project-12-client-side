@@ -18,7 +18,6 @@ const MyPickups = () => {
       return res.data;
     },
   });
-
   // Confirm pickup mutation
   const confirmPickupMutation = useMutation({
     mutationFn: async (requestId) => {

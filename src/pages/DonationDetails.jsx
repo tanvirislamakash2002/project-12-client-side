@@ -71,28 +71,34 @@ const DonationDetails = () => {
     }
   };
 
-  const { data: myRequests = [] } = useQuery({
-  queryKey: ['myRequests', id, user?.email],
+const { data: myRequest } = useQuery({
+  queryKey: ['mySingleRequest', id, user?.email],
   queryFn: async () => {
-    if (!user?.email) return [];
-    const res = await axiosSecure.get(`/donation-requests/my?donationId=${id}&charityEmail=${user.email}`);
+    if (!user?.email || !id) return null;
+    const res = await axiosSecure.get(
+      `/donation-requests/my/single?donationId=${id}&charityEmail=${user.email}`
+    );
     return res.data;
   },
   enabled: !!user?.email && !!id,
 });
-console.log(myRequests)
 
-const myRequest = myRequests[0] || null; // get first request or null
 
-  const confirmPickup = async () => {
-    try {
-      await axiosSecure.patch(`/donation-requests/${id}/confirm-pickup`);
-      toast.success('Donation marked as Picked Up!');
-      queryClient.invalidateQueries(['donation', id]);
-    } catch {
-      toast.error('Failed to confirm pickup');
-    }
-  };
+const confirmPickup = async () => {
+  if (!myRequest?._id) {
+    toast.error('Request ID not found');
+    return;
+  }
+
+  try {
+    await axiosSecure.patch(`/donation-requests/${myRequest._id}/confirm-pickup`);
+    toast.success('Donation marked as Picked Up!');
+    queryClient.invalidateQueries(['donation', id]);
+    queryClient.invalidateQueries(['myRequests', id, user?.email]);
+  } catch {
+    toast.error('Failed to confirm pickup');
+  }
+};
 
   const handleRequestButtonClick = async () => {
     try {
