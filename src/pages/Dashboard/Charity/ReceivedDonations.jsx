@@ -56,7 +56,7 @@ const ReceivedDonations = () => {
                   <strong>Food Type:</strong> {donation.foodType}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {donation.quantity}
+                  <strong>Quantity:</strong> {donation.quantity && donation.quantityUnit ? `${donation.quantity} ${donation.quantityUnit}` : 'N/A'}
                 </p>
                 <p>
                   <strong>Pickup Date:</strong> {donation.pickupTime}

@@ -21,7 +21,7 @@ const RequestCharityRole = () => {
 
   const CHARITY_FEE = 25;
 
-  // 🔍 Check for existing requests
+  // Check for existing requests
   const { data: existingRequest, isLoading: checkingRequest } = useQuery({
     queryKey: ['charity-requests', user?.email],
     enabled: !!user?.email,
@@ -35,17 +35,17 @@ const RequestCharityRole = () => {
     (req) => req.status === 'pending' || req.status === 'approved'
   );
 
-  // 💳 Mutation: Handle payment & request submission
+  // Handle payment & request submission
   const { mutate: submitRequest, isPending: submitting } = useMutation({
     mutationFn: async () => {
-      // Step 1: Create payment intent
+      // Create payment intent
       const { data: { clientSecret } } = await axiosSecure.post('/create-payment-intent', {
         amount: CHARITY_FEE * 100,
         currency: 'usd',
         metadata: { userEmail: user.email }
       });
 
-      // Step 2: Confirm payment
+      // Confirm payment
       const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -61,12 +61,12 @@ const RequestCharityRole = () => {
         throw new Error(error.message);
       }
 
-      // Step 3: Submit request if payment succeeded
+      // Submit request if payment succeeded
       if (paymentIntent.status === 'succeeded') {
         const requestData = {
           userId: user._id,
-          userEmail: user.email,
           userName: user.displayName,
+          userEmail: user.email,
           organizationName: formData.organizationName,
           missionStatement: formData.missionStatement,
           paymentAmount: CHARITY_FEE,
@@ -104,7 +104,7 @@ const RequestCharityRole = () => {
     submitRequest();
   };
 
-  // 🔄 While checking existing request
+  // While checking existing request
   if (checkingRequest) {
     return <p className="text-center mt-10">Checking request status...</p>;
   }

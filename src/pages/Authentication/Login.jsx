@@ -16,8 +16,7 @@ const Login = () => {
   const axiosInstance = useAxios();
 
   const { register, handleSubmit, formState: { errors } } = useForm();
-
-  // 🔐 Email Login Mutation
+  
   const emailLoginMutation = useMutation({
     mutationFn: async ({ email, password }) => {
       const res = await axiosInstance.get(`/check-user-email?email=${email}`);
@@ -47,8 +46,7 @@ const Login = () => {
       toast.error(message);
     }
   });
-
-  // 🔐 Google Login Mutation
+ 
   const googleLoginMutation = useMutation({
     mutationFn: async () => {
       const data = await signInWithGoogle();

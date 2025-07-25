@@ -48,13 +48,13 @@ const DonationTips = () => {
           {tips.map((tip, index) => (
             <div
               key={index}
-              className="group bg-gray-50 border border-gray-200 hover:border-green-500 rounded-2xl p-6 flex gap-5 transition"
+              className="group bg-gray-50 border border-gray-200 hover:border-green-600 rounded-2xl p-6 flex gap-5 transition"
             >
-              <div className="w-14 h-14 rounded-full bg-green-600 flex items-center justify-center shadow-lg group-hover:scale-105 transition">
+              <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-lg group-hover:scale-105 transition">
                 {tip.icon}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-green-600 mb-1">
+                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-primary mb-1">
                   {tip.title}
                 </h3>
                 <p className="text-gray-600 text-sm">{tip.description}</p>

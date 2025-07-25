@@ -25,7 +25,7 @@ const ReviewModal = ({ donation, onClose }) => {
     },
     onSuccess: () => {
       toast.success('Review submitted!');
-      queryClient.invalidateQueries({ queryKey: ['donation-reviews'] }); // optional
+      queryClient.invalidateQueries({ queryKey: ['donation-reviews'] }); 
       onClose();
     },
     onError: (err) => {

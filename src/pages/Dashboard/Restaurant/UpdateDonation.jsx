@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import imageCompression from "browser-image-compression";
 
 const UpdateDonation = () => {
   const navigate = useNavigate();
@@ -13,16 +14,15 @@ const UpdateDonation = () => {
 
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const {
     register,
     handleSubmit,
-    setValue,
     reset,
     formState: { errors },
   } = useForm();
 
-  // Load donation data using TanStack Query
   const {
     data: donation,
     isLoading,
@@ -36,7 +36,6 @@ const UpdateDonation = () => {
     enabled: !!id,
   });
 
-  // Pre-fill form once donation data is fetched
   useEffect(() => {
     if (donation) {
       reset({
@@ -52,7 +51,6 @@ const UpdateDonation = () => {
     }
   }, [donation, reset]);
 
-  // Mutation to update donation
   const updateDonationMutation = useMutation({
     mutationFn: async (updatedDonation) => {
       const res = await axiosSecure.patch(`/donation/${id}`, updatedDonation);
@@ -94,23 +92,35 @@ const UpdateDonation = () => {
   };
 
   const handleImageUpload = async (e) => {
-    const image = e.target.files[0];
-    if (!image) return;
+    const imageFile = e.target.files[0];
+    if (!imageFile) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("image", image);
+    setUploadProgress(0);
 
     try {
-      const res = await fetch(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const data = await res.json();
-      setImageUrl(data.data.url);
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(imageFile, options);
+
+      const formData = new FormData();
+      formData.append("image", compressedFile);
+
+      const res = await axiosSecure.post("/upload-image", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percent);
+        },
+      });
+
+      const uploadedUrl = res?.data?.data?.url;
+      if (!uploadedUrl) throw new Error("No image URL returned from server");
+
+      setImageUrl(uploadedUrl);
       Swal.fire("Image Uploaded", "Successfully uploaded!", "success");
     } catch (err) {
       Swal.fire("Upload Failed", err.message, "error");
@@ -118,6 +128,8 @@ const UpdateDonation = () => {
       setUploading(false);
     }
   };
+
+
 
   const foodTypes = [
     "Bakery",
@@ -261,6 +273,8 @@ const UpdateDonation = () => {
                 onChange={handleImageUpload}
                 className="file-input file-input-bordered w-full"
               />
+              {uploading && <progress value={uploadProgress} max="100" className="progress progress-info w-full"></progress>}
+
               {uploading && <p className="text-sm text-blue-500 mt-1">Uploading...</p>}
             </div>
 
@@ -283,8 +297,8 @@ const UpdateDonation = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="col-span-1 md:col-span-2 text-center mt-6">
+          {/* Submit + Cancel Buttons */}
+          <div className="col-span-1 md:col-span-2 flex justify-center gap-4 mt-6">
             <button
               type="submit"
               className="btn btn-primary px-6"
@@ -297,6 +311,15 @@ const UpdateDonation = () => {
               ) : (
                 "Update Donation"
               )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard/myDonations")}
+              className="btn btn-outline btn-secondary px-6"
+              disabled={updateDonationMutation.isPending || uploading}
+            >
+              Cancel
             </button>
           </div>
         </form>

@@ -24,7 +24,6 @@ const ManageRoleRequests = () => {
       return res.data;
     },
     onSuccess: (data) => {
-      console.log(data.status)
       toast.success(`Request ${data.status}!`);
       queryClient.invalidateQueries(['charity-requests']);
       // sendNotification(data.userEmail, data.status);

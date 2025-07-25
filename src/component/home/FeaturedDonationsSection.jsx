@@ -19,7 +19,12 @@ const FeaturedDonationsSection = () => {
     },
   });
 
-  if (isLoading) return <p className="text-center text-lg py-10">Loading Featured Donations...</p>;
+  if (isLoading) return <div className="flex w-52 flex-col gap-4 mx-auto">
+  <div className="skeleton h-32 w-full"></div>
+  <div className="skeleton h-4 w-28"></div>
+  <div className="skeleton h-4 w-full"></div>
+  <div className="skeleton h-4 w-full"></div>
+</div>;
 
   if (!featured || featured.length === 0) return null;
   
@@ -27,7 +32,7 @@ const FeaturedDonationsSection = () => {
     <section className="py-12 bg-gray-50">
       <h2 className="text-3xl font-bold text-center mb-8">🌟 Featured Donations</h2>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
         {featured.map((item) => (
           <div
             key={item._id}

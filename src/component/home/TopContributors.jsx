@@ -13,7 +13,12 @@ const TopContributors = () => {
   });
 
   if (isLoading)
-    return <p className="text-center py-10 text-lg font-medium">Loading top contributors...</p>;
+    return <div className="flex w-52 flex-col gap-4 mx-auto">
+      <div className="skeleton h-32 w-full"></div>
+      <div className="skeleton h-4 w-28"></div>
+      <div className="skeleton h-4 w-full"></div>
+      <div className="skeleton h-4 w-full"></div>
+    </div>;
 
   if (!topRestaurants || topRestaurants.length === 0) return null;
 

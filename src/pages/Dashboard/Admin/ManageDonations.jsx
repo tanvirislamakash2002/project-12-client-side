@@ -15,7 +15,7 @@ const ManageDonations = () => {
     },
   });
 
-  // Verify donation mutation
+  // Verify donation
   const verifyDonation = useMutation({
     mutationFn: async (id) => {
       await axiosSecure.patch(`/donations/${id}`, { status: 'Verified' });
@@ -27,7 +27,7 @@ const ManageDonations = () => {
     onError: () => toast.error('Failed to verify donation'),
   });
 
-  // Reject donation mutation
+  // Reject donation
   const rejectDonation = useMutation({
     mutationFn: async (id) => {
       await axiosSecure.patch(`/donations/${id}`, { status: 'Rejected' });

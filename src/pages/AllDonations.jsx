@@ -15,35 +15,32 @@ const AllDonations = () => {
   const [onlyVerified, setOnlyVerified] = useState(false);
   const [debouncedSearch] = useDebounce(searchLocation, 500);
 
-const { data: donations = [], isLoading } = useQuery({
-  queryKey: ['available-donations', debouncedSearch, sortBy, onlyVerified], // add onlyVerified here
-  queryFn: async () => {
-    const res = await axiosSecure.get('/donations/all', {
-      params: {
-        location: debouncedSearch,
-        sortBy,
-        onlyVerified,       // Pass onlyVerified param here
-      },
-    });
-    return res.data;
-  },
-});
+  const { data: donations = [], isLoading } = useQuery({
+    queryKey: ['available-donations', debouncedSearch, sortBy, onlyVerified],
+    queryFn: async () => {
+      const res = await axiosSecure.get('/donations/all', {
+        params: {
+          location: debouncedSearch,
+          sortBy,
+          onlyVerified,
+        },
+      });
+      return res.data;
+    },
+  });
 
 
 
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-center mb-6 text-primary">
-        All Verified Donations
-      </h2>
+    <div className="max-w-7xl mx-auto">
 
       {/* Drawer wrapper with drawer open on large screens */}
       <div className="drawer lg:drawer-open">
         <input id="filter-drawer" type="checkbox" className="drawer-toggle" />
 
         {/* Main content */}
-        <div className="drawer-content">
+        <div className="drawer-content my-8 mx-4">
           {/* Drawer toggle button for small screens */}
           <div className="lg:hidden mb-4">
             <label htmlFor="filter-drawer" className="btn btn-outline w-full">
@@ -51,9 +48,17 @@ const { data: donations = [], isLoading } = useQuery({
             </label>
           </div>
 
-          {/* Donations grid or loading/empty state */}
+      <h2 className="text-3xl font-bold text-center mb-6 text-primary">
+        All Verified Donations
+      </h2>
+          {/* Donations or loading state */}
           {isLoading ? (
-            <div className="text-center text-lg py-10">Loading donations...</div>
+            <div className="flex w-52 flex-col gap-4">
+              <div className="skeleton h-32 w-full"></div>
+              <div className="skeleton h-4 w-28"></div>
+              <div className="skeleton h-4 w-full"></div>
+              <div className="skeleton h-4 w-full"></div>
+            </div>
           ) : donations.length === 0 ? (
             <div className="text-center text-gray-500 py-10 text-lg">
               No verified donations found.

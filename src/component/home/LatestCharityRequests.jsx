@@ -13,7 +13,12 @@ const LatestDonationRequests = () => {
   });
 
   if (isLoading)
-    return <p className="text-center py-10 text-lg font-medium">Loading latest charity requests...</p>;
+    return <div className="flex w-52 flex-col gap-4 mx-auto">
+  <div className="skeleton h-32 w-full"></div>
+  <div className="skeleton h-4 w-28"></div>
+  <div className="skeleton h-4 w-full"></div>
+  <div className="skeleton h-4 w-full"></div>
+</div>;
 
   if (!requests || requests.length === 0) return null;
 
@@ -49,7 +54,7 @@ const LatestDonationRequests = () => {
                 </p>
 
                 <div className="mt-auto">
-                  <p className="text-sm text-blue-700 font-medium">
+                  <p className="text-sm text-green-700 font-medium">
                     🍱 Requested: <span className="font-semibold">{request.foodDonationTitle}</span>
                   </p>
                 </div>

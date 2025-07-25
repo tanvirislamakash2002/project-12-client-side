@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
 import logo from '../../assets/Logo/logoV.png';
+import { Link } from 'react-router';
 
 const Footer = () => {
   return (
@@ -18,9 +19,9 @@ const Footer = () => {
         <div>
           <h4 className="footer-title mb-3">Company</h4>
           <ul className="space-y-2">
-            <li><a href="/" className="link link-hover">Home</a></li>
-            <li><a href="/about" className="link link-hover">About Us</a></li>
-            <li><a href="/contact" className="link link-hover">Contact</a></li>
+            <li><Link to="/" className="link link-hover">Home</Link></li>
+            <li><Link to="/about-us" className="link link-hover">About Us</Link></li>
+            <li><Link to="/contact-us" className="link link-hover">Contact</Link></li>
           </ul>
         </div>
 
@@ -28,9 +29,9 @@ const Footer = () => {
         <div>
           <h4 className="footer-title mb-3">Support</h4>
           <ul className="space-y-2">
-            <li><a href="/faq" className="link link-hover">FAQ</a></li>
-            <li><a href="/privacy" className="link link-hover">Privacy Policy</a></li>
-            <li><a href="/terms" className="link link-hover">Terms & Conditions</a></li>
+            <li><span className="link link-hover">FAQ</span></li>
+            <li><span className="link link-hover">Privacy Policy</span></li>
+            <li><span className="link link-hover">Terms & Conditions</span></li>
           </ul>
         </div>
 

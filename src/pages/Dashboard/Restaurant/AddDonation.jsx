@@ -3,12 +3,14 @@ import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useState } from "react";
-import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import imageCompression from "browser-image-compression";
 
 const AddDonation = () => {
+  const [previewUrl, setPreviewUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -18,7 +20,6 @@ const AddDonation = () => {
     "Prepared Meals", "Frozen Foods", "Canned Goods", "Other"
   ];
 
-  // Mutation for posting donation
   const addDonationMutation = useMutation({
     mutationFn: (donationData) =>
       axiosSecure.post("/add-donation", donationData),
@@ -27,6 +28,7 @@ const AddDonation = () => {
         Swal.fire("Success", "Donation added!", "success");
         reset();
         setImageUrl('');
+        setPreviewUrl('');
       }
     },
     onError: (err) => {
@@ -58,26 +60,55 @@ const AddDonation = () => {
   };
 
   const handleImageUpload = async (e) => {
-    const image = e.target.files[0];
-    if (!image) return;
+    const imageFile = e.target.files[0];
+    if (!imageFile) return;
+
+    const preview = URL.createObjectURL(imageFile);
+    setPreviewUrl(preview)
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("image", image);
+    setUploadProgress(0);
 
     try {
-      const res = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`,
-        formData
-      );
-      setImageUrl(res.data.data.url);
-      Swal.fire("Image Uploaded", "Successfully uploaded!", "success");
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+
+      const compressedFile = await imageCompression(imageFile, options);
+
+      const formData = new FormData();
+      formData.append("image", compressedFile);
+
+const res = await axiosSecure.post("/upload-image", formData, {
+  headers: { "Content-Type": "multipart/form-data" },
+  onUploadProgress: (progressEvent) => {
+    const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+    setUploadProgress(percent);
+  },
+});
+
+
+const uploadedUrl = res?.data?.data?.url;  
+if (!uploadedUrl) {
+  throw new Error("No image URL returned from server");
+}
+
+setImageUrl(uploadedUrl);
+setPreviewUrl(uploadedUrl);
+Swal.fire("Image Uploaded", "Successfully uploaded!", "success");
+
     } catch (err) {
+      console.error("Upload error:", err);
       Swal.fire("Upload Failed", err.message, "error");
+      setImageUrl(""); 
     } finally {
       setUploading(false);
     }
   };
+
+
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -179,22 +210,34 @@ const AddDonation = () => {
               />
               {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
             </div>
-
-            {imageUrl && (
-              <div className="mt-2">
-                <img src={imageUrl} alt="Uploaded Food" className="w-40 rounded-xl border" />
-              </div>
+            {uploading && (
+              <progress
+                className="progress progress-info w-full mt-2"
+                value={uploadProgress}
+                max="100"
+              ></progress>
             )}
 
             <div>
               <label className="label-text font-medium">Food Image*</label>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*" z
+                disabled={uploading}
                 onChange={handleImageUpload}
                 className="file-input file-input-bordered w-full"
               />
               {uploading && <p className="text-sm text-blue-500 mt-1">Uploading...</p>}
+
+              {previewUrl && (
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500 mb-1">
+                    {uploading ? "Preview Image" : "Uploaded Image"}
+                  </p>
+                  <img src={previewUrl} alt="Food" className="w-40 rounded-xl border" />
+                </div>
+              )}
+
             </div>
 
             <div>
@@ -221,13 +264,13 @@ const AddDonation = () => {
             <button
               type="submit"
               className="btn btn-primary px-6"
-              disabled={addDonationMutation.isPending || uploading}
+              disabled={addDonationMutation.isPending || uploading|| !imageUrl}
             >
               {addDonationMutation.isPending
                 ? <span className="loading loading-spinner"></span>
                 : uploading
-                ? "Please wait Image is Uploading..."
-                : "Add Donation"}
+                  ? "Please wait Image is Uploading..."
+                  : "Add Donation"}
             </button>
           </div>
         </form>

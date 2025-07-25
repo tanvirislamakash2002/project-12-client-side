@@ -2,25 +2,27 @@ import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useState } from 'react';
 import useAxios from '../../hooks/useAxios';
 import { Player } from '@lottiefiles/react-lottie-player';
 import animationData from '../../assets/lottie/register.json';
 import { useMutation } from '@tanstack/react-query';
+import imageCompression from 'browser-image-compression';
 
 const Register = () => {
   const { createUser, updateUser } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state || '/';
-  const [profilePic, setProfilePic] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [processing, setProcessing] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [hostedImageUrl, setHostedImageUrl] = useState('');
   const axiosInstance = useAxios();
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  // ✅ React Query mutation for registration
   const mutation = useMutation({
     mutationFn: async ({ name, email, password, photoURL }) => {
       await createUser(email, password);
@@ -42,30 +44,63 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     const { name, email, password } = data;
-    mutation.mutate({ name, email, password, photoURL: profilePic });
+    mutation.mutate({ name, email, password, photoURL: hostedImageUrl });
   };
 
   const handleImageUpload = async (e) => {
-    e.preventDefault();
-    setUploading(true);
-    const image = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', image);
-    const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Imbb_Upload_Key}`;
+    const imageFile = e.target.files[0];
+    if (!imageFile) return;
 
     try {
-      const res = await axios.post(uploadUrl, formData);
-      setProfilePic(res.data.data.url);
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+
+      const compressedFile = await imageCompression(imageFile, options);
+      const localPreviewUrl = URL.createObjectURL(compressedFile);
+      setPreviewImage(localPreviewUrl);
+
+      setProcessing(true); 
+      setUploading(true);
+      setUploadProgress(0);
+
+      const formData = new FormData();
+      formData.append('image', compressedFile);
+
+      const res = await axiosInstance.post('/upload-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(percent);
+          }
+        },
+        timeout: 180000,
+      });
+
+      const url = res.data?.data?.url;
+
+      if (!url) throw new Error('Image URL not returned');
+
+      setHostedImageUrl(url);
+      setProcessing(false);
+      setUploading(false); 
     } catch (err) {
+      console.error('Upload error:', err);
       Swal.fire('Upload Failed', 'Could not upload image', 'error');
-    } finally {
+      setPreviewImage('');
+      setHostedImageUrl('');
+      setProcessing(false);
       setUploading(false);
+      setUploadProgress(0);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gray-100 px-4">
-      {/* Lottie Section */}
+
       <div className="w-full lg:w-1/2 flex justify-center items-center mb-10 lg:mb-0">
         <Player
           autoplay
@@ -82,6 +117,24 @@ const Register = () => {
           {/* Photo Upload */}
           <div>
             <label className="block font-medium mb-1">Profile Photo</label>
+            {previewImage && (
+              <div className="my-2">
+                <img src={previewImage} alt="Preview" className="w-20 h-20 rounded-full object-cover" />
+              </div>
+            )}
+            {uploading && (
+              <div className="mt-2">
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-green-600 h-3 transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+                <p className="text-sm text-center mt-1 text-gray-600">
+                  Uploading to server: {uploadProgress}% (wait for hosting...)
+                </p>
+              </div>
+            )}
             <input
               type="file"
               onChange={handleImageUpload}
@@ -122,38 +175,43 @@ const Register = () => {
                 required: 'Password is required',
                 minLength: {
                   value: 6,
-                  message: 'Password must be at least 6 characters'
+                  message: 'Password must be at least 6 characters',
                 },
                 validate: {
                   hasUpperCase: value =>
-                    /[A-Z]/.test(value) || 'Must include an uppercase letter',
-                  hasLowerCase: value =>
-                    /[a-z]/.test(value) || 'Must include a lowercase letter'
-                }
+                    /[A-Z]/.test(value) || 'Password must include at least one uppercase letter',
+                  hasSpecialChar: value =>
+                    /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must include at least one special character (for example: ! @ # $ % ^ & * ( ) , . ? " : { } | < > )',
+                },
               })}
               type="password"
               placeholder="Password"
               className="input input-bordered w-full"
             />
-            {errors?.password && <span className="text-red-600">{errors?.password?.message}</span>}
+            {errors?.password && (
+              <span className="text-red-600">{errors.password.message}</span>
+            )}
+
           </div>
 
           {/* Submit */}
           <button
             type="submit"
-            disabled={uploading || !profilePic || mutation.isPending}
-            className={`btn w-full text-white ${
-              uploading || !profilePic || mutation.isPending
+            disabled={uploading || processing || !hostedImageUrl || mutation.isPending}
+            className={`btn w-full text-white ${uploading || processing || !hostedImageUrl || mutation.isPending
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-green-700 hover:bg-green-800'
-            }`}
+              }`}
           >
             {uploading
-              ? 'please wait..Image is Uploading...'
-              : mutation.isPending
-              ? 'Registering...'
-              : 'Register'}
+              ? 'Please wait... Image is uploading...'
+              : processing
+                ? 'Processing image...'
+                : mutation.isPending
+                  ? 'Registering...'
+                  : 'Register'}
           </button>
+
         </form>
 
         <p className="mt-4 text-center">

@@ -23,7 +23,7 @@ const DonationStats = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="bg-white rounded-xl shadow-md p-6 md:p-10">
-        {/* Header */}
+        
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold flex items-center gap-2">

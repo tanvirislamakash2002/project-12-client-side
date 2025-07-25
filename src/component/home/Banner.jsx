@@ -82,7 +82,6 @@ const Banner = () => {
             className="absolute inset-0 w-full h-full object-cover"
           />
 
-          {/* Overlay */}
           <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-center px-6 md:px-12 lg:px-20">
             <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 max-w-3xl drop-shadow-lg">
               {title}
@@ -92,7 +91,7 @@ const Banner = () => {
             </p>
             <a
               href={ctaLink}
-              className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg transition"
+              className="inline-block bg-green-700 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg transition"
             >
               {ctaText}
             </a>

@@ -15,7 +15,15 @@ const MyProfile = () => {
     },
   });
 
-  if (isLoading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (isLoading) return <div className="flex w-52 flex-col gap-4">
+    <div className="flex items-center gap-4">
+      <div className="skeleton h-16 w-16 shrink-0 rounded-full"></div>
+      <div className="flex flex-col gap-4">
+        <div className="skeleton h-4 w-20"></div>
+        <div className="skeleton h-4 w-28"></div>
+      </div>
+    </div>
+  </div>;
 
   return (
     <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-6 md:mt-10">

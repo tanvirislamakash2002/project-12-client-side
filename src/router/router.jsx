@@ -34,6 +34,8 @@ import Profile from "../pages/Dashboard/Profile";
 import ErrorPage from "../pages/ErrorPage";
 import CharityRoute from "../routes/CharityRoute";
 import UserRoute from "../routes/UserRoute";
+import AboutUs from "../pages/AboutUs";
+import ContactUs from "../pages/ContactUs";
 
 export const router = createBrowserRouter([
     {
@@ -44,6 +46,14 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <Home></Home>
+            },
+            {
+                path: 'about-us',
+                element: <AboutUs></AboutUs>
+            },
+            {
+                path: 'contact-us',
+                element: <ContactUs></ContactUs>
             },
             {
                 path: 'allDonations',

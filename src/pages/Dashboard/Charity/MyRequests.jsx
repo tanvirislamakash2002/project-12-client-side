@@ -61,7 +61,7 @@ const MyRequests = () => {
                   <strong>Food Type:</strong> {req.foodType || 'N/A'}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {req.quantity || 'N/A'}
+                  <strong>Quantity:</strong> {req.quantity && req.quantityUnit ? `${req.quantity} ${req.quantityUnit}` : 'N/A'}
                 </p>
                 <p>
                   <strong>Status:</strong>{' '}
@@ -71,6 +71,8 @@ const MyRequests = () => {
                         ? 'badge-success'
                         : req.status === 'Rejected'
                         ? 'badge-error'
+                        : req.status === 'Picked Up'
+                        ? 'badge-info'
                         : 'badge-warning'
                     }`}
                   >

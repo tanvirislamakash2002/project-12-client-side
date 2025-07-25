@@ -86,8 +86,7 @@ const DashboardLayout = () => {
           )}
 
           {!roleLoading && (role === 'charity' || role === 'user') && (
-            <>
-              {/* <div className="mt-4 mb-1 text-sm text-gray-500 uppercase">Common</div> */}
+            <>              
               <SidebarLink to="/dashboard/transactionHistory" icon={FaMoneyCheckAlt} label="Transaction History" />
               <SidebarLink to="/dashboard/myReviews" icon={FaStarHalfAlt} label="My Reviews" />
               <SidebarLink to="/dashboard/favorites" icon={FaHeart} label="Favorites" />

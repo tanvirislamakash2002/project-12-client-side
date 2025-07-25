@@ -71,33 +71,6 @@ const DonationDetails = () => {
     }
   };
 
-  // const { data: myRequest } = useQuery({
-  //   queryKey: ['mySingleRequest', id, user?.email],
-  //   queryFn: async () => {
-  //     if (!user?.email || !id) return null;
-  //     const res = await axiosSecure.get(
-  //       `/donation-requests/my/single?donationId=${id}&charityEmail=${user.email}`
-  //     );
-  //     return res.data;
-  //   },
-  //   enabled: !!user?.email && !!id,
-  // });
-
-
-  // const handleRequestButtonClick = async () => {
-  //   try {
-  //     const res = await axiosSecure.get(`/donation-requests/check?donationId=${id}&charityEmail=${user.email}`);
-  //     const request = res.data?.request;
-  //     if (request && request.status === 'Pending') {
-  //       toast.info('You have already requested this donation.');
-  //       return;
-  //     }
-  //     setRequestModalOpen(true);
-  //   } catch {
-  //     toast.error('Failed to check request status.');
-  //   }
-  // };
-  // 2. For checking if already requested (new)
   const { data: checkRequest } = useQuery({
     queryKey: ['checkRequest', id, user?.email],
     queryFn: async () => {
@@ -106,7 +79,7 @@ const DonationDetails = () => {
     },
     enabled: !!user?.email && !!id,
   });
-  console.log(checkRequest?.request)
+
   const onSubmit = async (data) => {
     try {
       await axiosSecure.post('/donation-requests', {
@@ -167,17 +140,22 @@ const DonationDetails = () => {
     }
   };
 
-  if (isDonationLoading) return <p className="py-10 text-center text-lg">Loading donation details...</p>;
+  if (isDonationLoading) return <div className="flex w-52 flex-col gap-4">
+    <div className="skeleton h-32 w-full"></div>
+    <div className="skeleton h-4 w-28"></div>
+    <div className="skeleton h-4 w-full"></div>
+    <div className="skeleton h-4 w-full"></div>
+  </div>;
   if (!donation) return <p className="py-10 text-center text-lg">Donation not found.</p>;
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      {/* Title */}
+      
       <h1 className="text-4xl font-extrabold text-center mb-8">{donation.title}</h1>
 
-      {/* Main grid layout */}
+      {/* layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left: Image */}
+        {/* Left section */}
         {donation.image && (
           <div className="rounded-lg overflow-hidden shadow-md">
             <img
@@ -189,9 +167,9 @@ const DonationDetails = () => {
           </div>
         )}
 
-        {/* Middle: Donation & Pickup Info */}
+        {/* Right section */}
         <div className="md:col-span-2 space-y-6">
-          {/* Donation Details */}
+          
           <section className="border rounded-lg p-6 shadow-sm">
             <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Donation Details</h2>
             <p><strong>Food Type:</strong> <span className="text-gray-700">{donation.foodType}</span></p>
@@ -200,14 +178,13 @@ const DonationDetails = () => {
             <p><strong>Pickup Location:</strong> <span className="text-gray-700">{donation.location}</span></p>
           </section>
 
-          {/* Restaurant Info */}
+          
           <section className="border rounded-lg p-6 shadow-sm">
             <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Restaurant Information</h2>
             <p><strong>Name:</strong> <span className="text-gray-700">{donation.restaurantName}</span></p>
-            <p><strong>Email:</strong> <a href={`mailto:${donation.restaurantEmail}`} className="text-blue-600 hover:underline">{donation.restaurantEmail}</a></p>
+            <p><strong>Email:</strong> <span className="text-primary hover:underline">{donation.restaurantEmail}</span></p>
           </section>
 
-          {/* Status */}
           <section className="border rounded-lg p-6 shadow-sm">
             <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Status</h2>
             <span
@@ -222,7 +199,6 @@ const DonationDetails = () => {
             </span>
           </section>
 
-          {/* Actions */}
           <section className="flex flex-wrap gap-4 mt-4">
             {!roleLoading && (role === 'user' || role === 'charity') && (
               <>
@@ -400,7 +376,7 @@ const DonationDetails = () => {
             })}
             className="space-y-4"
           >
-            <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
+            <h3 className="text-lg font-semibold mb-2">Leave a Review <span className='text-primary underline text-sm'>{user?.displayName}</span></h3>
 
             <div>
               <label className="label font-semibold">Description</label>

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 const Modal = ({ children, onClose }) => {
-  // Close on ESC
+  
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') onClose();
@@ -10,7 +10,7 @@ const Modal = ({ children, onClose }) => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  // Stop click bubbling
+  
   const stopPropagation = (e) => e.stopPropagation();
 
   return (
@@ -22,7 +22,7 @@ const Modal = ({ children, onClose }) => {
         className="bg-white rounded-lg p-6 max-w-lg w-full relative overflow-y-auto max-h-[90vh]"
         onClick={stopPropagation}
       >
-        {/* Close button top-right */}
+        
         <button
           className="absolute top-3 right-3 text-gray-500 hover:text-black text-xl"
           onClick={onClose}

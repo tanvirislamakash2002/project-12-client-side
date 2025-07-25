@@ -1,6 +1,6 @@
-import { Link } from "react-router"; // Note: Correct router import
+import { Link } from "react-router"; 
 import Lottie from "lottie-react";
-import forbiddenAnim from "../../src/assets/lottie/forbidden.json"; // adjust path as needed
+import forbiddenAnim from "../../src/assets/lottie/forbidden.json"; 
 
 const Forbidden = () => {
   return (

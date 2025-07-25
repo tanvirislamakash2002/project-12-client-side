@@ -37,10 +37,7 @@ const RequestedDonations = () => {
 
   if (isLoading) {
     return (
-      <div className="text-center py-10 text-gray-600">
-        <span className="loading loading-spinner text-primary"></span>
-        <p>Loading donation requests...</p>
-      </div>
+      <span className="loading loading-dots loading-xl"></span>
     );
   }
 

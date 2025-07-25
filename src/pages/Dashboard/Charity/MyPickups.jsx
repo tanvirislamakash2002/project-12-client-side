@@ -54,7 +54,7 @@ const MyPickups = () => {
                   <p><strong>Restaurant:</strong> {pickup.restaurantName}</p>
                   <p><strong>Location:</strong> {pickup.location}</p>
                   <p><strong>Food Type:</strong> {pickup.foodType}</p>
-                  <p><strong>Quantity:</strong> {pickup.quantity}</p>
+                  <p><strong>Quantity:</strong> {pickup.quantity && pickup.quantityUnit ? `${pickup.quantity} ${pickup.quantityUnit}` : 'N/A'}</p>
                   <p><strong>Pickup Time:</strong> {pickup.pickupTime}</p>
                   <p>
                     <strong>Status:</strong>{' '}
@@ -85,7 +85,7 @@ const MyPickups = () => {
 
                 {pickup.status === 'Picked Up' && (
                   <div className="mt-4 text-center text-green-600 font-semibold">
-                    ✅ Already Picked Up
+                     Already Picked Up
                   </div>
                 )}
               </div>
