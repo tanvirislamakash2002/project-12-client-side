@@ -36,6 +36,7 @@ import CharityRoute from "../routes/CharityRoute";
 import UserRoute from "../routes/UserRoute";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 export const router = createBrowserRouter([
     {
@@ -99,6 +100,10 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
+                element: <Dashboard></Dashboard>
+            },
+            {
+                path:'profile',
                 element: <Profile></Profile>
             },
             // user route
