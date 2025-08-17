@@ -11,6 +11,8 @@ import useAuth from '../../hooks/useAuth';
 import useUserRole from '../../hooks/useUserRole';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import imageCompression from 'browser-image-compression';
+import useAxios from '../../hooks/useAxios';
 
 // Mock data - replace with actual API calls
 const mockProfileData = {
@@ -68,6 +70,7 @@ const mockProfileData = {
 };
 
 const Profile = () => {
+  const axiosInstance = useAxios();
     const axiosSecure = useAxiosSecure();
   const { user, updateUser } = useAuth();
   const { role, roleLoading } = useUserRole();
@@ -94,14 +97,13 @@ const Profile = () => {
   const handleSaveProfile = async () => {
     await axiosSecure.patch(`/users/${user.email}/profile`, {
   name: editForm.displayName,
-  photoURL: editForm.photoURL,
+  photoURL: hostedImageUrl,
 });
     try {
       setIsUploading(true);
-      // Replace with actual API call
       await updateUser({
         displayName: editForm.displayName,
-        photoURL: editForm.photoURL
+        photoURL: hostedImageUrl
       });
 
       Swal.fire({
@@ -125,15 +127,58 @@ const Profile = () => {
     }
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // In real implementation, upload to cloud storage and get URL
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setEditForm(prev => ({ ...prev, photoURL: e.target.result }));
+//   const handleImageUpload = (event) => {
+//     const file = event.target.files[0];
+//     if (file) {
+//       const reader = new FileReader();
+//       reader.onload = (e) => {
+//         setEditForm(prev => ({ ...prev, photoURL: e.target.result }));
+//       };
+//       reader.readAsDataURL(file);
+//     }
+//   };
+  const [uploading, setUploading] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [hostedImageUrl, setHostedImageUrl] = useState(user?.photoURL);
+  const handleImageUpload = async (e) => {
+    const imageFile = e.target.files[0];
+    if (!imageFile) return;
+    try {
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
       };
-      reader.readAsDataURL(file);
+
+      const compressedFile = await imageCompression(imageFile, options);
+      const localPreviewUrl = URL.createObjectURL(compressedFile);
+      setPreviewImage(localPreviewUrl);
+      setProcessing(true); 
+      setUploading(true);
+
+      const formData = new FormData();
+      formData.append('image', compressedFile);
+
+      const res = await axiosInstance.post('/upload-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 180000,
+      });
+
+      const url = res.data?.data?.url;
+
+      if (!url) throw new Error('Image URL not returned');
+
+      setHostedImageUrl(url);
+      setProcessing(false);
+      setUploading(false); 
+    } catch (err) {
+      console.error('Upload error:', err);
+      Swal.fire('Upload Failed', 'Could not upload image', 'error');
+      setPreviewImage('');
+      setHostedImageUrl('');
+      setProcessing(false);
+      setUploading(false);
     }
   };
 
@@ -200,7 +245,7 @@ const Profile = () => {
           <div className="relative">
             <div className="w-32 h-32 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100">
               <img
-                src={isEditing ? editForm.photoURL : user?.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'}
+                src={isEditing ? hostedImageUrl : user?.photoURL}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
