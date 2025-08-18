@@ -15,8 +15,14 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import useAuth from '../../hooks/useAuth';
+import { useMutation } from '@tanstack/react-query';
+import useAxios from '../../hooks/useAxios';
 
 const Login = () => {
+  const { signInUser, signInWithGoogle } = useAuth();
+  const axiosInstance = useAxios()
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -79,51 +85,70 @@ const Login = () => {
       autoClose: 2000,
     });
   };
-
-  const onSubmit = async (data) => {
-    setIsLoading(true);
-    try {
-      // Simulate login process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+  const emailLoginMutation = useMutation({
+    mutationFn: async ({ email, password }) => {
+      const res = await axiosInstance.get(`/check-user-email?email=${email}`);
+      if (!res.data.exists) throw new Error("Email doesn't exist!");
+      await signInUser(email, password);
+      await axiosInstance.post('/login', { email });
+    },
+    onSuccess: () => {
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'Login Successful!',
-        text: 'Welcome to FoodFairy Platform',
+        title: 'You have successfully logged in',
         showConfirmButton: false,
-        timer: 2000
+        timer: 1500
       });
-      
-      // Navigate to dashboard or previous page
       navigate(from);
-    } catch (error) {
-      toast.error("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+    },
+    onError: (error) => {
+      let message = "Login failed";
+      if (error.code === 'auth/user-not-found') {
+        message = "Email doesn't exist in Firebase";
+      } else if (['auth/wrong-password', 'auth/invalid-credential'].includes(error.code)) {
+        message = "Password doesn't match";
+      } else {
+        message = error.message || "Something went wrong";
+      }
+      toast.error(message);
     }
+  });
+ 
+  const googleLoginMutation = useMutation({
+    mutationFn: async () => {
+      const data = await signInWithGoogle();
+      const res = await axiosInstance.get(`/check-user-email?email=${data.user.email}`);
+      if (!res.data.exists) {
+        await axiosInstance.post('/register-user', {
+          name: data.user.displayName,
+          email: data.user.email,
+          photoURL: data.user.photoURL
+        });
+      }
+      await axiosInstance.post('/login', { email: data.user.email });
+    },
+    onSuccess: () => {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'You have successfully logged in with Google',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate(from);
+    },
+    onError: () => {
+      toast.error("Something went wrong with Google login.");
+    }
+  });
+
+  const onSubmit = (data) => {
+    emailLoginMutation.mutate(data);
   };
 
-  const handleGoogleSignIn = async () => {
-    setGoogleLoading(true);
-    try {
-      // Simulate Google login
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'Google Login Successful!',
-        showConfirmButton: false,
-        timer: 2000
-      });
-      
-      navigate(from);
-    } catch (error) {
-      toast.error("Google login failed. Please try again.");
-    } finally {
-      setGoogleLoading(false);
-    }
+  const handleSignInWithGoogle = () => {
+    googleLoginMutation.mutate();
   };
 
   const currentEmail = watch('email');
@@ -294,7 +319,7 @@ const Login = () => {
 
             <button
               type="button"
-              onClick={handleGoogleSignIn}
+              onClick={handleSignInWithGoogle}
               disabled={googleLoading}
               className="btn btn-outline w-full h-12 border-[#E2E8F0] hover:bg-[#F9F9F9] hover:border-[#2E5941]"
             >
