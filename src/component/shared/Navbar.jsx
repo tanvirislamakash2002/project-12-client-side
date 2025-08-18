@@ -39,6 +39,30 @@ const Navbar = () => {
           Home
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/about-us"
+          className={({ isActive }) =>
+            isActive 
+              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200" 
+              : "px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
+          }
+        >
+          About Us
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/contact-us"
+          className={({ isActive }) =>
+            isActive 
+              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200" 
+              : "px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
+          }
+        >
+          Contact Us
+        </NavLink>
+      </li>
       {user && (
         <>
           <li>

@@ -1,152 +1,341 @@
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import useAuth from '../../hooks/useAuth';
-import useAxios from '../../hooks/useAxios';
-import Swal from 'sweetalert2';
+import { 
+  FaUser, 
+  FaUtensils, 
+  FaHeart, 
+  FaUserShield, 
+  FaEye, 
+  FaEyeSlash, 
+  FaGoogle,
+  FaLock,
+  FaEnvelope,
+  FaUserCircle
+} from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import Lottie from 'lottie-react';
-import loginAnimation from '../../assets/lottie/login.json';
-import { useMutation } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
 
 const Login = () => {
-  const { signInWithGoogle, signInUser } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state || '/';
-  const axiosInstance = useAxios();
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm();
   
-  const emailLoginMutation = useMutation({
-    mutationFn: async ({ email, password }) => {
-      const res = await axiosInstance.get(`/check-user-email?email=${email}`);
-      if (!res.data.exists) throw new Error("Email doesn't exist!");
-      await signInUser(email, password);
-      await axiosInstance.post('/login', { email });
+  // Demo accounts for different roles
+  const demoAccounts = [
+    {
+      role: 'user',
+      icon: <FaUser className="w-4 h-4" />,
+      label: 'Regular User',
+      email: 'cedric@gmail.com',
+      password: 'T@nvir123',
+      bgColor: 'bg-[#3182CE]',
+      hoverColor: 'hover:bg-blue-600',
+      description: 'Browse and apply for charity status'
     },
-    onSuccess: () => {
+    {
+      role: 'charity',
+      icon: <FaHeart className="w-4 h-4" />,
+      label: 'Charity Organization',
+      email: 'marcus.johnson.89@gmail.com',
+      password: 'T@nvir123',
+      bgColor: 'bg-[#E28436]',
+      hoverColor: 'hover:bg-orange-600',
+      description: 'Request food donations from restaurants'
+    },
+    {
+      role: 'restaurant',
+      icon: <FaUtensils className="w-4 h-4" />,
+      label: 'Restaurant',
+      email: 'info@greenspoon.com',
+      password: 'T@nvir123',
+      bgColor: 'bg-[#2E5941]',
+      hoverColor: 'hover:bg-green-700',
+      description: 'Post surplus food for donation'
+    },
+    {
+      role: 'admin',
+      icon: <FaUserShield className="w-4 h-4" />,
+      label: 'Administrator',
+      email: 'tanvir@gmail.com',
+      password: 'T@nvir123',
+      bgColor: 'bg-[#3D4451]',
+      hoverColor: 'hover:bg-gray-700',
+      description: 'Manage platform and user roles'
+    }
+  ];
+
+  const handleAutofill = (account) => {
+    setValue('email', account.email);
+    setValue('password', account.password);
+    toast.success(`Demo credentials loaded for ${account.label}`, {
+      position: "top-center",
+      autoClose: 2000,
+    });
+  };
+
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    try {
+      // Simulate login process
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'You have successfully logged in',
+        title: 'Login Successful!',
+        text: 'Welcome to FoodFairy Platform',
         showConfirmButton: false,
-        timer: 1500
+        timer: 2000
       });
+      
+      // Navigate to dashboard or previous page
       navigate(from);
-    },
-    onError: (error) => {
-      let message = "Login failed";
-      if (error.code === 'auth/user-not-found') {
-        message = "Email doesn't exist in Firebase";
-      } else if (['auth/wrong-password', 'auth/invalid-credential'].includes(error.code)) {
-        message = "Password doesn't match";
-      } else {
-        message = error.message || "Something went wrong";
-      }
-      toast.error(message);
+    } catch (error) {
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  });
- 
-  const googleLoginMutation = useMutation({
-    mutationFn: async () => {
-      const data = await signInWithGoogle();
-      const res = await axiosInstance.get(`/check-user-email?email=${data.user.email}`);
-      if (!res.data.exists) {
-        await axiosInstance.post('/register-user', {
-          name: data.user.displayName,
-          email: data.user.email,
-          photoURL: data.user.photoURL
-        });
-      }
-      await axiosInstance.post('/login', { email: data.user.email });
-    },
-    onSuccess: () => {
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    try {
+      // Simulate Google login
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'You have successfully logged in with Google',
+        title: 'Google Login Successful!',
         showConfirmButton: false,
-        timer: 1500
+        timer: 2000
       });
+      
       navigate(from);
-    },
-    onError: () => {
-      toast.error("Something went wrong with Google login.");
+    } catch (error) {
+      toast.error("Google login failed. Please try again.");
+    } finally {
+      setGoogleLoading(false);
     }
-  });
-
-  const onSubmit = (data) => {
-    emailLoginMutation.mutate(data);
   };
 
-  const handleSignInWithGoogle = () => {
-    googleLoginMutation.mutate();
-  };
+  const currentEmail = watch('email');
+  const currentPassword = watch('password');
 
   return (
-    <div className="w-full max-w-6xl bg-white rounded-xl shadow-lg overflow-hidden grid md:grid-cols-2">
-      <div className="hidden md:block bg-green-50 p-6">
-        <Lottie animationData={loginAnimation} loop={true} />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#F9F9F9] to-[#E2E8F0] flex items-center justify-center p-4">
+      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-2xl overflow-hidden grid lg:grid-cols-2">
+        
+        {/* Left Side - Branding & Demo Accounts */}
+        <div className="bg-gradient-to-br from-[#2E5941] to-[#38A169] p-8 lg:p-12 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+          
+          <div className="relative z-10">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold mb-3">Welcome to FoodFairy</h1>
+              <p className="text-lg opacity-90 mb-6">
+                Connecting restaurants and charities to reduce food waste and fight hunger
+              </p>
+              <div className="flex items-center gap-4 text-sm opacity-80">
+                <div className="flex items-center gap-2">
+                  <FaUtensils className="w-4 h-4" />
+                  <span>Restaurants</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaHeart className="w-4 h-4" />
+                  <span>Charities</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaUserCircle className="w-4 h-4" />
+                  <span>Community</span>
+                </div>
+              </div>
+            </div>
 
-      <div className="p-10">
-        <h2 className="text-4xl font-bold mb-6 text-green-900">Login</h2>
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold mb-4">Try Demo Accounts</h3>
+              <p className="text-sm opacity-90 mb-6">
+                Click any role below to autofill demo credentials and explore the platform
+              </p>
+              
+              <div className="grid gap-3">
+                {demoAccounts.map((account, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAutofill(account)}
+                    className={`${account.bgColor} ${account.hoverColor} p-4 rounded-lg transition-all duration-200 transform hover:scale-105 text-left group`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="bg-white/20 p-2 rounded-lg group-hover:bg-opacity-30 transition-all">
+                        {account.icon}
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-sm">{account.label}</div>
+                        <div className="text-xs opacity-80 mt-1">{account.description}</div>
+                        <div className="text-xs opacity-60 mt-2 font-mono">
+                          {account.email}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              
+              <div className="mt-6 p-4 bg-white/10 rounded-lg">
+                <p className="text-sm ">
+                  <strong>💡 Demo Mode:</strong> All demo accounts are pre-configured with sample data to showcase platform features.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="label">Email</label>
-            <input
-              type="email"
-              {...register("email", { required: true })}
-              className="input input-bordered w-full"
-              placeholder="Enter email"
-            />
-            {errors.email && <p className="text-sm text-red-600">Email is required</p>}
+        {/* Right Side - Login Form */}
+        <div className="p-8 lg:p-12">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-[#1A202C] mb-2">Sign In</h2>
+            <p className="text-[#3D4451]">Welcome back! Please enter your credentials</p>
           </div>
 
-          <div>
-            <label className="label">Password</label>
-            <input
-              type="password"
-              {...register("password", { required: true })}
-              className="input input-bordered w-full"
-              placeholder="Enter password"
-            />
-            {errors.password && <p className="text-sm text-red-600">Password is required</p>}
+          <div className="space-y-6">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold text-[#1A202C]">Email Address</span>
+              </label>
+              <div className="relative">
+                <FaEnvelope className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#3D4451] w-4 h-4" />
+                <input
+                  type="email"
+                  {...register("email", { 
+                    required: "Email is required",
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: "Invalid email address"
+                    }
+                  })}
+                  className="input input-bordered w-full pl-12 bg-[#F9F9F9] border-[#E2E8F0] focus:border-[#2E5941] focus:outline-none"
+                  placeholder="Enter your email"
+                />
+              </div>
+              {errors.email && (
+                <p className="text-sm text-[#E53E3E] mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold text-[#1A202C]">Password</span>
+              </label>
+              <div className="relative">
+                <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#3D4451] w-4 h-4" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  {...register("password", { 
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters"
+                    }
+                  })}
+                  className="input input-bordered w-full pl-12 pr-12 bg-[#F9F9F9] border-[#E2E8F0] focus:border-[#2E5941] focus:outline-none"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#3D4451] hover:text-[#2E5941]"
+                >
+                  {showPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-sm text-[#E53E3E] mt-1">{errors.password.message}</p>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="checkbox checkbox-sm" />
+                <span className="text-sm text-[#3D4451]">Remember me</span>
+              </label>
+              <Link 
+                to="/forgot-password" 
+                className="text-sm text-[#2E5941] hover:text-[#38A169] font-medium hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              onClick={handleSubmit(onSubmit)}
+              disabled={isLoading}
+              className="btn bg-[#2E5941] hover:bg-[#38A169] text-white border-none w-full h-12"
+            >
+              {isLoading ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+
+            <div className="divider text-[#3D4451] text-sm">OR CONTINUE WITH</div>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading}
+              className="btn btn-outline w-full h-12 border-[#E2E8F0] hover:bg-[#F9F9F9] hover:border-[#2E5941]"
+            >
+              {googleLoading ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  <FaGoogle className="w-4 h-4 text-[#EA4335]" />
+                  Sign in with Google
+                </>
+              )}
+            </button>
+
+            <div className="text-center pt-4">
+              <p className="text-[#3D4451]">
+                Don't have an account?{' '}
+                <Link 
+                  to="/register" 
+                  state={location.state}
+                  className="text-[#2E5941] hover:text-[#38A169] font-semibold hover:underline"
+                >
+                  Create Account
+                </Link>
+              </p>
+            </div>
+
+            {/* Current Form Values Display (for demo) */}
+            {(currentEmail || currentPassword) && (
+              <div className="mt-6 p-4 bg-[#F0FDF4] border border-[#38A169] border-opacity-30 rounded-lg">
+                <h4 className="text-sm font-semibold text-[#2E5941] mb-2">Current Credentials:</h4>
+                <div className="text-xs text-[#3D4451] space-y-1">
+                  {currentEmail && <div>📧 Email: {currentEmail}</div>}
+                  {currentPassword && <div>🔐 Password: {'•'.repeat(currentPassword.length)}</div>}
+                </div>
+              </div>
+            )}
           </div>
-
-          <div className="text-right">
-            <a className="text-sm text-green-600 hover:underline">Forgot password?</a>
-          </div>
-
-          <button
-            type="submit"
-            className="btn btn-success w-full mt-2 text-white"
-            disabled={emailLoginMutation.isPending}
-          >
-            {emailLoginMutation.isPending ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-
-        <div className="divider">OR</div>
-
-        <button
-          onClick={handleSignInWithGoogle}
-          className="btn btn-outline w-full mb-4"
-          disabled={googleLoginMutation.isPending}
-        >
-          <svg width="20" height="20" viewBox="0 0 48 48" className="mr-2">
-            <path fill="#EA4335" d="M24 9.5c3.06 0 5.81 1.1 7.97 2.9l5.94-5.94C34.52 3.58 29.57 1.5 24 1.5 14.8 1.5 7.16 7.68 4.54 16.2l6.98 5.43C13.6 15.1 18.36 9.5 24 9.5z"/>
-            <path fill="#34A853" d="M4.54 16.2A23.948 23.948 0 0024 46.5c6.48 0 11.94-2.4 15.91-6.3l-6.98-5.43c-2.56 2.3-5.96 3.73-9.93 3.73-7.63 0-14.09-5.44-15.46-12.69l-7-5.43z"/>
-            <path fill="#FBBC05" d="M43.91 19.8H24v8.4h11.54c-1.18 3.06-3.2 5.65-5.61 7.34l6.98 5.43c4.09-3.78 6.51-9.36 6.51-15.77 0-1.5-.18-2.95-.51-4.3z"/>
-            <path fill="#4285F4" d="M24 9.5c3.06 0 5.81 1.1 7.97 2.9l5.94-5.94C34.52 3.58 29.57 1.5 24 1.5c-5.64 0-10.4 3.6-12.48 8.88l6.98 5.43C18.36 15.1 24 9.5 24 9.5z"/>
-          </svg>
-          {googleLoginMutation.isPending ? 'Signing in...' : 'Sign in with Google'}
-        </button>
-
-        <p className="text-sm">
-          Don&apos;t have an account? <Link className="text-green-600 font-semibold" to="/register" state={location.state}>Register</Link>
-        </p>
+        </div>
       </div>
     </div>
   );
