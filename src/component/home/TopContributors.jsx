@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import TopSkeleton from './loadingScreen/TopSkeleton';
 
 const TopContributors = () => {
   const axiosSecure = useAxiosSecure()
@@ -13,12 +14,7 @@ const TopContributors = () => {
   });
 
   if (isLoading)
-    return <div className="flex w-52 flex-col gap-4 mx-auto">
-      <div className="skeleton h-32 w-full"></div>
-      <div className="skeleton h-4 w-28"></div>
-      <div className="skeleton h-4 w-full"></div>
-      <div className="skeleton h-4 w-full"></div>
-    </div>;
+    return <TopSkeleton></TopSkeleton>;
 
   if (!topRestaurants || topRestaurants.length === 0) return null;
 

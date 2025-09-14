@@ -6,6 +6,7 @@ import useAuth from '../hooks/useAuth';
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { IoFilter } from "react-icons/io5";
+import AllDonationSkeleton from '../component/home/loadingScreen/AllDonationSkeleton';
 const AllDonations = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading } = useAuth();
@@ -53,12 +54,7 @@ const AllDonations = () => {
       </h2>
           {/* Donations or loading state */}
           {isLoading ? (
-            <div className="flex w-52 flex-col gap-4">
-              <div className="skeleton h-32 w-full"></div>
-              <div className="skeleton h-4 w-28"></div>
-              <div className="skeleton h-4 w-full"></div>
-              <div className="skeleton h-4 w-full"></div>
-            </div>
+            <AllDonationSkeleton></AllDonationSkeleton>
           ) : donations.length === 0 ? (
             <div className="text-center text-gray-500 py-10 text-lg">
               No verified donations found.

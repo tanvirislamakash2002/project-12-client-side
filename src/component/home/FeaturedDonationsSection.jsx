@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import FeaturedSkeleton from './loadingScreen/FeaturedSkeleton';
 
 const statusColors = {
   Pending: 'bg-yellow-100 text-yellow-700',
@@ -19,12 +20,7 @@ const FeaturedDonationsSection = () => {
     },
   });
 
-  if (isLoading) return <div className="flex w-52 flex-col gap-4 mx-auto">
-  <div className="skeleton h-32 w-full"></div>
-  <div className="skeleton h-4 w-28"></div>
-  <div className="skeleton h-4 w-full"></div>
-  <div className="skeleton h-4 w-full"></div>
-</div>;
+  if (isLoading) return <FeaturedSkeleton></FeaturedSkeleton>;
 
   if (!featured || featured.length === 0) return null;
   

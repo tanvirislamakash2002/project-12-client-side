@@ -19,8 +19,15 @@ import {
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import { FaShield } from 'react-icons/fa6';
+import { useMutation } from '@tanstack/react-query';
+import useAuth from '../../hooks/useAuth';
+import useAxios from '../../hooks/useAxios';
+import imageCompression from 'browser-image-compression';
 
 const Register = () => {
+  const { updateUser, createUser, signInWithGoogle } = useAuth();
+  const axiosInstance = useAxios()
+
   const [showPassword, setShowPassword] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -53,48 +60,75 @@ const Register = () => {
 
   const passwordValidation = password ? validatePassword(password) : {};
 
+  const mutation = useMutation({
+    mutationFn: async ({ name, email, password, photoURL }) => {
+      await createUser(email, password);
+      await updateUser({ displayName: name, photoURL });
+      return axiosInstance.post('/register-user', { name, email, photoURL });
+    },
+    onSuccess: () => {
+      Swal.fire({ title: 'Registration Successful', timer: 1400, icon: 'success' });
+      navigate(from);
+    },
+    onError: (error) => {
+      Swal.fire({
+        title: 'Registration Failed',
+        text: error?.response?.data?.error || error.message,
+        icon: 'error'
+      });
+    }
+  });
+
+  const onSubmit = async (data) => {
+    const { name, email, password } = data;
+    mutation.mutate({ name, email, password, photoURL: hostedImageUrl });
+  };
+
   const handleImageUpload = async (e) => {
     const imageFile = e.target.files[0];
+
+    console.log(imageFile)
     if (!imageFile) return;
 
-    // Validate file type
-    if (!imageFile.type.startsWith('image/')) {
-      toast.error('Please select a valid image file');
-      return;
-    }
-
-    // Validate file size (5MB max)
-    if (imageFile.size > 5 * 1024 * 1024) {
-      toast.error('Image size should be less than 5MB');
-      return;
-    }
-
     try {
-      // Create preview
-      const localPreviewUrl = URL.createObjectURL(imageFile);
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+
+      const compressedFile = await imageCompression(imageFile, options);
+      const localPreviewUrl = URL.createObjectURL(compressedFile);
       setPreviewImage(localPreviewUrl);
 
-      setProcessing(true);
+      setProcessing(true); 
       setUploading(true);
       setUploadProgress(0);
 
-      // Simulate image compression and upload
-      for (let i = 0; i <= 100; i += 10) {
-        setUploadProgress(i);
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+      const formData = new FormData();
+      formData.append('image', compressedFile);
 
-      // Simulate getting hosted URL
-      const mockUrl = `https://example.com/uploads/${Date.now()}_${imageFile.name}`;
-      setHostedImageUrl(mockUrl);
-      
+      const res = await axiosInstance.post('/upload-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(percent);
+          }
+        },
+        timeout: 180000,
+      });
+
+      const url = res.data?.data?.url;
+
+      if (!url) throw new Error('Image URL not returned');
+
+      setHostedImageUrl(url);
       setProcessing(false);
-      setUploading(false);
-      toast.success('Image uploaded successfully!');
-
+      setUploading(false); 
     } catch (err) {
       console.error('Upload error:', err);
-      toast.error('Failed to upload image');
+      Swal.fire('Upload Failed', 'Could not upload image', 'error');
       setPreviewImage('');
       setHostedImageUrl('');
       setProcessing(false);
@@ -103,54 +137,41 @@ const Register = () => {
     }
   };
 
-  const onSubmit = async (data) => {
-    if (!hostedImageUrl) {
-      toast.error('Please upload a profile photo');
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      // Simulate registration process
-      await new Promise(resolve => setTimeout(resolve, 2500));
-      
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'Registration Successful!',
-        text: 'Welcome to FoodBridge Platform',
-        showConfirmButton: false,
-        timer: 2000
-      });
-      
-      navigate(from);
-    } catch (error) {
-      toast.error('Registration failed. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleGoogleSignUp = async () => {
-    setGoogleLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'Google Registration Successful!',
-        showConfirmButton: false,
-        timer: 2000
-      });
-      
-      navigate(from);
-    } catch (error) {
-      toast.error('Google registration failed. Please try again.');
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
+    const googleLoginMutation = useMutation({
+      mutationFn: async () => {
+        const data = await signInWithGoogle();
+        const res = await axiosInstance.get(`/check-user-email?email=${data.user.email}`);
+        if (!res.data.exists) {
+          await axiosInstance.post('/register-user', {
+            name: data.user.displayName,
+            email: data.user.email,
+            photoURL: data.user.photoURL
+          });
+        }
+        await axiosInstance.post('/login', { email: data.user.email });
+      },
+      onSuccess: () => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'You have successfully logged in with Google',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        navigate(from);
+      },
+      onError: () => {
+        toast.error("Something went wrong with Google login.");
+      }
+    });
+  
+    // const onSubmit = (data) => {
+    //   emailLoginMutation.mutate(data);
+    // };
+  
+    const handleSignInWithGoogle = () => {
+      googleLoginMutation.mutate();
+    };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F9F9F9] to-[#E2E8F0] flex items-center justify-center p-4">
@@ -453,7 +474,7 @@ const Register = () => {
             {/* Google Sign Up */}
             <button
               type="button"
-              onClick={handleGoogleSignUp}
+              onClick={handleSignInWithGoogle}
               disabled={googleLoading}
               className="btn btn-outline w-full h-12 border-[#E2E8F0] hover:bg-[#F9F9F9] hover:border-[#2E5941]"
             >
