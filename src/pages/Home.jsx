@@ -4,6 +4,7 @@ import FeaturedDonationsSection from '../component/home/FeaturedDonationsSection
 import LatestCharityRequests from '../component/home/LatestCharityRequests';
 import TopContributors from '../component/home/TopContributors';
 import DonationTips from '../component/home/DonationTips';
+import HowItWorks from './Home/components/HowItWorks';
 
 const Home = () => {
     return (
@@ -11,6 +12,7 @@ const Home = () => {
             <div className="">
                 <Banner></Banner>
             </div>
+            <HowItWorks></HowItWorks>
             <div className="">
                 <FeaturedDonationsSection></FeaturedDonationsSection>
             </div>

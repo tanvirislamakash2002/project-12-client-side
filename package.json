@@ -21,6 +21,7 @@
     "firebase": "^11.10.0",
     "framer-motion": "^12.23.6",
     "lottie-react": "^2.4.1",
+    "lucide-react": "^0.548.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.59.0",
