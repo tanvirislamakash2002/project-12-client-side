@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
- @plugin "daisyui" {
-   themes: light --default, dark;
- }
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
 
 @plugin "daisyui/theme" {
   name: "light";
@@ -21,10 +21,49 @@
 
   --color-base-100: #F9F9F9;
   --color-base-200: #E2E8F0;
+  --color-base-300: #CBD5E0;
   --color-base-content: #1A202C;
 
   --color-info: #3182CE;
   --color-success: #38A169;
   --color-warning: #D69E2E;
   --color-error: #E53E3E;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-primary: #4ADE80;
+  --color-primary-content: #0A2E1C;
+  
+  --color-secondary: #FB923C;
+  --color-secondary-content: #4A1E06;
+  
+  --color-accent: #FDBA74;
+  --color-accent-content: #422006;
+  
+  --color-neutral: #374151;
+  --color-neutral-content: #D1D5DB;
+  
+  --color-base-100: #1A202C;
+  --color-base-200: #2D3748;
+  --color-base-300: #4A5568;
+  --color-base-content: #E2E8F0;
+  
+  --color-info: #63B3ED;
+  --color-success: #68D391;
+  --color-warning: #F6E05E;
+  --color-error: #FC8181;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom dark mode styles */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+.dark {
+  color-scheme: dark;
 }

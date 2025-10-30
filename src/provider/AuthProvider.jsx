@@ -8,7 +8,22 @@ import { useJwtToken } from '../hooks/useJwtToken';
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-
+    const [darkMode, setDarkMode] = useState(false)
+    
+      useEffect(() => {
+        if (darkMode) {
+            console.log('dark moe activate');
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+          if (darkMode) {
+    console.log('dark mode activate');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+      }, [darkMode]);
 
     // Register
     const createUser = (email, password) => {
@@ -58,6 +73,8 @@ const AuthProvider = ({ children }) => {
     }, [fetchJwtToken]);
 
     const authData = {
+        darkMode,
+        setDarkMode,
         createUser,
         updateUser,
         signInUser,

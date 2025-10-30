@@ -3,9 +3,10 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import logo from '../../assets/Logo/logoH.png';
+import {  MdLightMode, MdDarkMode } from 'react-icons/md';
 
 const Navbar = () => {
-  const { user, signOutUser } = useAuth();
+  const { user, signOutUser, darkMode, setDarkMode } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state || '/';
@@ -31,8 +32,8 @@ const Navbar = () => {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            isActive 
-              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200" 
+            isActive
+              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200"
               : "px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
           }
         >
@@ -43,8 +44,8 @@ const Navbar = () => {
         <NavLink
           to="/about-us"
           className={({ isActive }) =>
-            isActive 
-              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200" 
+            isActive
+              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200"
               : "px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
           }
         >
@@ -55,8 +56,8 @@ const Navbar = () => {
         <NavLink
           to="/contact-us"
           className={({ isActive }) =>
-            isActive 
-              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200" 
+            isActive
+              ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200"
               : "px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
           }
         >
@@ -69,8 +70,8 @@ const Navbar = () => {
             <NavLink
               to="/allDonations"
               className={({ isActive }) =>
-                isActive 
-                  ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200" 
+                isActive
+                  ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200"
                   : "px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
               }
             >
@@ -81,8 +82,8 @@ const Navbar = () => {
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                isActive 
-                  ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200" 
+                isActive
+                  ? "text-primary font-semibold bg-primary/10 px-4 py-2 rounded-lg transition-all duration-200"
                   : "px-4 py-2 rounded-lg hover:text-primary hover:bg-primary/5 transition-all duration-200"
               }
             >
@@ -109,8 +110,8 @@ const Navbar = () => {
               {navLinks}
               {user && (
                 <li className="mt-3 pt-3 border-t border-gray-100">
-                  <button 
-                    onClick={handleSignOut} 
+                  <button
+                    onClick={handleSignOut}
                     className="text-error hover:bg-error/10 px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,6 +144,18 @@ const Navbar = () => {
 
         {/* End */}
         <div className="navbar-end space-x-3">
+          {/* dark mode  */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="btn btn-ghost btn-circle"
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? (
+              <MdLightMode className="w-5 h-5 text-yellow-400" />
+            ) : (
+              <MdDarkMode className="w-5 h-5 text-gray-600" />
+            )}
+          </button>
           {user ? (
             <div className="flex items-center gap-4">
               <div className="text-right hidden md:block">
@@ -152,9 +165,9 @@ const Navbar = () => {
               <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar hover:ring-2 hover:ring-primary/20 transition-all duration-200">
                   <div className="w-11 h-11 rounded-full border-2 border-primary/20 overflow-hidden">
-                    <img 
-                      src={user.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'} 
-                      alt="Profile" 
+                    <img
+                      src={user.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'}
+                      alt="Profile"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -175,8 +188,8 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li className="mt-2 pt-2 border-t border-gray-100">
-                    <button 
-                      onClick={handleSignOut} 
+                    <button
+                      onClick={handleSignOut}
                       className="text-error hover:bg-error/10 px-4 py-2 rounded-lg transition-all duration-200 w-full flex items-center gap-2"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,14 +203,14 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex gap-3">
-              <Link 
-                to="/login" 
+              <Link
+                to="/login"
                 className="btn btn-ghost btn-sm px-6 hover:bg-primary/10 hover:text-primary transition-all duration-200 rounded-full"
               >
                 Sign In
               </Link>
-              <Link 
-                to="/register" 
+              <Link
+                to="/register"
                 className="btn btn-primary btn-sm px-6 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
               >
                 Get Started
