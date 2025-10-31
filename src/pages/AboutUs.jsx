@@ -279,35 +279,35 @@ const AboutUsPage = () => {
   </section>
 
       {/* Team */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Passionate individuals united by a common goal: creating a world without hunger or waste.
-            </p>
+        <section className="py-20">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">Meet Our Team</h2>
+        <p className="text-xl text-gray-600 dark:text-base-content/80 max-w-3xl mx-auto">
+          Passionate individuals united by a common goal: creating a world without hunger or waste.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {teamMembers.map((member, index) => (
+          <div key={index} className="group">
+            <div className="relative mb-6">
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-full h-80 object-cover rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-base-content mb-2">{member.name}</h3>
+              <p className="text-primary font-semibold mb-3">{member.role}</p>
+              <p className="text-gray-600 dark:text-base-content/80 leading-relaxed">{member.bio}</p>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {teamMembers.map((member, index) => (
-              <div key={index} className="group">
-                <div className="relative mb-6">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-80 object-cover rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-primary font-semibold mb-3">{member.role}</p>
-                  <p className="text-gray-600 leading-relaxed">{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
+  </section>
 
       {/* Testimonials */}
       <section className="py-20 bg-gradient-to-r from-primary/5 to-secondary/5">
