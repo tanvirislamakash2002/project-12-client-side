@@ -169,29 +169,30 @@ const AboutUsPage = () => {
   </section>
 
       {/* Impact Statistics */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Growing Impact</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Every day, we're making a difference in communities across the nation by connecting resources with needs.
-            </p>
+        <section className="py-16 bg-gray-50 dark:bg-base-200">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">Our Growing Impact</h2>
+        <p className="text-xl text-gray-600 dark:text-base-content/80 max-w-3xl mx-auto">
+          Every day, we're making a difference in communities across the nation by connecting resources with needs.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {impactStats.map((stat, index) => (
+          <div key={index} className="bg-white dark:bg-base-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 text-center group border border-gray-100 dark:border-base-300">
+            <div className="inline-flex p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300 mb-4">
+              <stat.icon className="w-8 h-8 text-primary" />
+            </div>
+            <div className="text-4xl font-bold text-gray-900 dark:text-base-content mb-2">
+              {stat.value.toLocaleString()}{stat.suffix}
+            </div>
+            <p className="text-gray-600 dark:text-base-content/80 font-medium">{stat.label}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {impactStats.map((stat, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 text-center group">
-                <div className="inline-flex p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300 mb-4">
-                  <stat.icon className="w-8 h-8 text-primary" />
-                </div>
-                <div className="text-4xl font-bold text-gray-900 mb-2">
-                  {stat.value.toLocaleString()}{stat.suffix}
-                </div>
-                <p className="text-gray-600 font-medium">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
+  </section>
+
 
       {/* Mission & Story */}
       <section className="py-20">
