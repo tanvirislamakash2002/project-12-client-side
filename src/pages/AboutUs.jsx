@@ -195,65 +195,65 @@ const AboutUsPage = () => {
 
 
       {/* Mission & Story */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Mission</h2>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                Food waste is one of the most pressing issues of our time, with over 40% of food in America going to waste 
-                while millions of people face hunger. We saw an opportunity to create a bridge between abundance and need.
-              </p>
-              <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                Our platform empowers restaurants to easily donate surplus food to verified charity organizations, 
-                creating a seamless process that benefits everyone involved - from reducing waste to feeding communities.
-              </p>
-              <div className="flex flex-col gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="p-2 bg-green-100 rounded-lg flex-shrink-0">
-                    <FaRecycle className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Reduce Waste</h3>
-                    <p className="text-gray-600">Transform surplus food into community nourishment</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
-                    <FaHandHoldingHeart className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Feed Communities</h3>
-                    <p className="text-gray-600">Ensure nutritious meals reach those who need them most</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="p-2 bg-purple-100 rounded-lg flex-shrink-0">
-                    <FaUserFriends className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Build Connections</h3>
-                    <p className="text-gray-600">Foster stronger relationships between businesses and communities</p>
-                  </div>
-                </div>
+ <section className="py-20">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-6">Our Mission</h2>
+          <p className="text-lg text-gray-700 dark:text-base-content/80 mb-6 leading-relaxed">
+            Food waste is one of the most pressing issues of our time, with over 40% of food in America going to waste 
+            while millions of people face hunger. We saw an opportunity to create a bridge between abundance and need.
+          </p>
+          <p className="text-lg text-gray-700 dark:text-base-content/80 mb-8 leading-relaxed">
+            Our platform empowers restaurants to easily donate surplus food to verified charity organizations, 
+            creating a seamless process that benefits everyone involved - from reducing waste to feeding communities.
+          </p>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-green-100 dark:bg-success/20 rounded-lg flex-shrink-0">
+                <FaRecycle className="w-5 h-5 text-green-600 dark:text-success" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-base-content mb-1">Reduce Waste</h3>
+                <p className="text-gray-600 dark:text-base-content/80">Transform surplus food into community nourishment</p>
               </div>
             </div>
-            <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&h=500&fit=crop"
-                alt="Volunteers preparing food"
-                className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
-              />
-              <div className="absolute top-6 right-6 bg-white p-4 rounded-xl shadow-lg">
-                <div className="flex items-center gap-2">
-                  <FaLeaf className="w-5 h-5 text-green-500" />
-                  <span className="font-semibold text-gray-900">Eco-Friendly</span>
-                </div>
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-blue-100 dark:bg-info/20 rounded-lg flex-shrink-0">
+                <FaHandHoldingHeart className="w-5 h-5 text-blue-600 dark:text-info" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-base-content mb-1">Feed Communities</h3>
+                <p className="text-gray-600 dark:text-base-content/80">Ensure nutritious meals reach those who need them most</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-purple-100 dark:bg-primary/20 rounded-lg flex-shrink-0">
+                <FaUserFriends className="w-5 h-5 text-purple-600 dark:text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-base-content mb-1">Build Connections</h3>
+                <p className="text-gray-600 dark:text-base-content/80">Foster stronger relationships between businesses and communities</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
+        <div className="relative">
+          <img
+            src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&h=500&fit=crop"
+            alt="Volunteers preparing food"
+            className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
+          />
+          <div className="absolute top-6 right-6 bg-white dark:bg-base-200 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-base-300">
+            <div className="flex items-center gap-2">
+              <FaLeaf className="w-5 h-5 text-green-500 dark:text-success" />
+              <span className="font-semibold text-gray-900 dark:text-base-content">Eco-Friendly</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
       {/* Values */}
       <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
