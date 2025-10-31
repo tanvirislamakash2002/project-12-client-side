@@ -256,27 +256,27 @@ const AboutUsPage = () => {
   </section>
 
       {/* Values */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              These core principles guide everything we do and every decision we make.
-            </p>
+       <section className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-base-200 dark:to-base-100">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">Our Values</h2>
+        <p className="text-xl text-gray-600 dark:text-base-content/80 max-w-3xl mx-auto">
+          These core principles guide everything we do and every decision we make.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {values.map((value, index) => (
+          <div key={index} className="bg-white dark:bg-base-200 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-100 dark:border-base-300">
+            <div className="inline-flex p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300 mb-6">
+              <value.icon className="w-6 h-6 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-base-content mb-4">{value.title}</h3>
+            <p className="text-gray-600 dark:text-base-content/80 leading-relaxed">{value.description}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <div key={index} className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group">
-                <div className="inline-flex p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300 mb-6">
-                  <value.icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{value.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
+  </section>
 
       {/* Team */}
       <section className="py-20">
