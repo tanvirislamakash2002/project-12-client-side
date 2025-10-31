@@ -119,9 +119,9 @@ const AboutUsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-       <section className="relative bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 py-20 dark:from-primary/20 dark:via-secondary/10 dark:to-accent/20">
+<div className="min-h-screen bg-white dark:bg-base-100">
+  {/* Hero Section */}
+  <section className="relative bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 py-20 dark:from-primary/20 dark:via-secondary/10 dark:to-accent/20">
     <div className="absolute inset-0 bg-white/50 dark:bg-base-100/50"></div>
     <div className="relative max-w-7xl mx-auto px-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -168,8 +168,8 @@ const AboutUsPage = () => {
     </div>
   </section>
 
-      {/* Impact Statistics */}
-        <section className="py-16 bg-gray-50 dark:bg-base-200">
+  {/* Impact Statistics */}
+  <section className="py-16 bg-gray-50 dark:bg-base-200">
     <div className="max-w-7xl mx-auto px-6">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">Our Growing Impact</h2>
@@ -193,9 +193,8 @@ const AboutUsPage = () => {
     </div>
   </section>
 
-
-      {/* Mission & Story */}
- <section className="py-20">
+  {/* Mission & Story */}
+  <section className="py-20">
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
@@ -255,8 +254,8 @@ const AboutUsPage = () => {
     </div>
   </section>
 
-      {/* Values */}
-       <section className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-base-200 dark:to-base-100">
+  {/* Values */}
+  <section className="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-base-200 dark:to-base-100">
     <div className="max-w-7xl mx-auto px-6">
       <div className="text-center mb-16">
         <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">Our Values</h2>
@@ -278,8 +277,8 @@ const AboutUsPage = () => {
     </div>
   </section>
 
-      {/* Team */}
-        <section className="py-20">
+  {/* Team */}
+  <section className="py-20">
     <div className="max-w-7xl mx-auto px-6">
       <div className="text-center mb-16">
         <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">Meet Our Team</h2>
@@ -309,8 +308,8 @@ const AboutUsPage = () => {
     </div>
   </section>
 
-      {/* Testimonials */}
-        <section className="py-20 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
+  {/* Testimonials */}
+  <section className="py-20 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
     <div className="max-w-7xl mx-auto px-6">
       <div className="text-center mb-16">
         <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">What Our Community Says</h2>
@@ -338,8 +337,8 @@ const AboutUsPage = () => {
     </div>
   </section>
 
-      {/* Call to Action */}
-       <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
+  {/* Call to Action */}
+  <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
     <div className="max-w-7xl mx-auto px-6 text-center">
       <h2 className="text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
       <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
@@ -357,8 +356,8 @@ const AboutUsPage = () => {
     </div>
   </section>
 
-      {/* Contact Information */}
-       <section className="py-16 bg-gray-900 dark:bg-base-300 text-white">
+  {/* Contact Information */}
+  <section className="py-16 bg-gray-900 dark:bg-base-300 text-white">
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
         <div className="flex flex-col items-center">
@@ -385,7 +384,7 @@ const AboutUsPage = () => {
       </div>
     </div>
   </section>
-    </div>
+</div>
   );
 };
 
