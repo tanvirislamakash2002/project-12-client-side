@@ -19,42 +19,42 @@ const TopContributors = () => {
   if (!topRestaurants || topRestaurants.length === 0) return null;
 
   return (
-    <section className="bg-gray-50 py-16">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">
-          🍽️ Top Restaurant Contributors
-        </h2>
+<section className="bg-gray-50 dark:bg-base-200 py-16">
+  <div className="max-w-7xl mx-auto px-4">
+    <h2 className="text-4xl font-bold text-center mb-12 dark:text-base-content">
+      🍽️ Top Restaurant Contributors
+    </h2>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {topRestaurants.map((rest, idx) => (
-            <div
-              key={idx}
-              className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition duration-200 text-center"
-            >
-              <img
-                src={
-                  rest.logo || 'https://via.placeholder.com/150?text=Restaurant+Logo'
-                }
-                alt={rest.restaurantName}
-                className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-primary"
-              />
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {topRestaurants.map((rest, idx) => (
+        <div
+          key={idx}
+          className="bg-white dark:bg-base-100 p-6 rounded-2xl shadow hover:shadow-lg transition duration-200 text-center border border-gray-100 dark:border-base-300"
+        >
+          <img
+            src={
+              rest.logo || 'https://via.placeholder.com/150?text=Restaurant+Logo'
+            }
+            alt={rest.restaurantName}
+            className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-primary dark:border-primary"
+          />
 
-              <h3 className="text-xl font-bold text-gray-800">{rest.restaurantName}</h3>
-              <p className="text-gray-500 text-sm mb-3">{rest.location}</p>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-base-content">{rest.restaurantName}</h3>
+          <p className="text-gray-500 dark:text-base-content/70 text-sm mb-3">{rest.location}</p>
 
-              <div className="flex justify-center gap-4 mt-4">
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                  {rest.totalDonations} Donations
-                </span>
-                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                  {rest.totalQuantity} lbs
-                </span>
-              </div>
-            </div>
-          ))}
+          <div className="flex justify-center gap-4 mt-4">
+            <span className="bg-green-100 dark:bg-success/20 text-green-700 dark:text-success px-3 py-1 rounded-full text-sm font-medium">
+              {rest.totalDonations} Donations
+            </span>
+            <span className="bg-blue-100 dark:bg-info/20 text-blue-700 dark:text-info px-3 py-1 rounded-full text-sm font-medium">
+              {rest.totalQuantity} lbs
+            </span>
+          </div>
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
+  </div>
+</section>
   );
 };
 
