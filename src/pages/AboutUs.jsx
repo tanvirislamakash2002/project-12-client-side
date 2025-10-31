@@ -339,23 +339,23 @@ const AboutUsPage = () => {
   </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
-            Join thousands of restaurants, charities, and individuals who are already part of our growing community. 
-            Together, we can eliminate hunger and reduce food waste.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/register" className="btn btn-white btn-lg px-8 rounded-full text-primary hover:bg-gray-100 transform hover:-translate-y-1 transition-all duration-300">
-              Get Started Today
-            </Link>
-            <Link to="/allDonations" className="btn btn-outline btn-lg px-8 rounded-full border-white text-white hover:bg-white hover:text-primary">
-              Browse Available Food
-            </Link>
-          </div>
-        </div>
-      </section>
+       <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
+    <div className="max-w-7xl mx-auto px-6 text-center">
+      <h2 className="text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
+      <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
+        Join thousands of restaurants, charities, and individuals who are already part of our growing community. 
+        Together, we can eliminate hunger and reduce food waste.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <Link to="/register" className="btn btn-white btn-lg px-8 rounded-full text-primary hover:bg-gray-100 transform hover:-translate-y-1 transition-all duration-300">
+          Get Started Today
+        </Link>
+        <Link to="/allDonations" className="btn btn-outline btn-lg px-8 rounded-full border-white text-white hover:bg-white hover:text-primary">
+          Browse Available Food
+        </Link>
+      </div>
+    </div>
+  </section>
 
       {/* Contact Information */}
       <section className="py-16 bg-gray-900 text-white">
