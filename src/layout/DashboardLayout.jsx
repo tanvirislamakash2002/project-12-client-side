@@ -13,6 +13,7 @@ import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
 import { ToastContainer } from 'react-toastify';
 import logo from '../assets/Logo/logoH.png'
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 const SidebarLink = ({ to, icon: Icon, label, badge = null, sidebarCollapsed }) => (
   <li className="mb-1">
@@ -54,7 +55,7 @@ const SectionHeader = ({ title, sidebarCollapsed }) => (
 );
 
 const DashboardLayout = () => {
-  const { signOutUser, user } = useAuth();
+  const { signOutUser, user, darkMode, setDarkMode } = useAuth();
   const { role, roleLoading } = useUserRole();
   const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -134,7 +135,19 @@ const DashboardLayout = () => {
                   Welcome back, {user?.displayName || 'User'}
                 </p>
               </div>
+              {/* dark mode  */}
               <div className="flex items-center gap-4">
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className="btn btn-ghost btn-circle dark:hover:bg-neutral-700"
+                aria-label="Toggle dark mode"
+              >
+                {darkMode ? (
+                  <MdLightMode className="w-5 h-5 text-yellow-400" />
+                ) : (
+                  <MdDarkMode className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                )}
+              </button>
                 <div className={`badge ${getRoleBadgeColor(role)} badge-lg`}>
                   {getRoleDisplayName(role)}
                 </div>
