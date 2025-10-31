@@ -358,33 +358,33 @@ const AboutUsPage = () => {
   </section>
 
       {/* Contact Information */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="p-3 bg-primary/20 rounded-full mb-4">
-                <FaMapMarkerAlt className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Our Location</h3>
-              <p className="text-gray-300">123 Community Street<br />New York, NY 10001</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="p-3 bg-primary/20 rounded-full mb-4">
-                <FaPhone className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Call Us</h3>
-              <p className="text-gray-300">+1 (555) 123-FOOD<br />Mon-Fri 9AM-6PM</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="p-3 bg-primary/20 rounded-full mb-4">
-                <FaEnvelope className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Email Us</h3>
-              <p className="text-gray-300">hello@foodbridge.org<br />support@foodbridge.org</p>
-            </div>
+       <section className="py-16 bg-gray-900 dark:bg-base-300 text-white">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div className="flex flex-col items-center">
+          <div className="p-3 bg-primary/20 rounded-full mb-4">
+            <FaMapMarkerAlt className="w-6 h-6 text-primary" />
           </div>
+          <h3 className="text-lg font-semibold mb-2">Our Location</h3>
+          <p className="text-gray-300">123 Community Street<br />New York, NY 10001</p>
         </div>
-      </section>
+        <div className="flex flex-col items-center">
+          <div className="p-3 bg-primary/20 rounded-full mb-4">
+            <FaPhone className="w-6 h-6 text-primary" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Call Us</h3>
+          <p className="text-gray-300">+1 (555) 123-FOOD<br />Mon-Fri 9AM-6PM</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="p-3 bg-primary/20 rounded-full mb-4">
+            <FaEnvelope className="w-6 h-6 text-primary" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Email Us</h3>
+          <p className="text-gray-300">hello@foodbridge.org<br />support@foodbridge.org</p>
+        </div>
+      </div>
+    </div>
+  </section>
     </div>
   );
 };
