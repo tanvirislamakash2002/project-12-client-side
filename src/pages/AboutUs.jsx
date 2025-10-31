@@ -121,52 +121,52 @@ const AboutUsPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 py-20">
-        <div className="absolute inset-0 bg-white/50"></div>
-        <div className="relative max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                Bridging the Gap Between 
-                <span className="text-primary"> Surplus</span> and 
-                <span className="text-secondary"> Need</span>
-              </h1>
-              <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                We connect restaurants with surplus food to charity organizations and communities in need, 
-                creating a sustainable solution to hunger while reducing food waste.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/register" className="btn btn-primary btn-lg px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-                  Join Our Mission
-                  <FaArrowRight className="ml-2" />
-                </Link>
-                <Link to="/allDonations" className="btn btn-outline btn-primary btn-lg px-8 rounded-full">
-                  See Available Food
-                </Link>
+       <section className="relative bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 py-20 dark:from-primary/20 dark:via-secondary/10 dark:to-accent/20">
+    <div className="absolute inset-0 bg-white/50 dark:bg-base-100/50"></div>
+    <div className="relative max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-base-content mb-6 leading-tight">
+            Bridging the Gap Between 
+            <span className="text-primary"> Surplus</span> and 
+            <span className="text-secondary"> Need</span>
+          </h1>
+          <p className="text-xl text-gray-700 dark:text-base-content/80 mb-8 leading-relaxed">
+            We connect restaurants with surplus food to charity organizations and communities in need, 
+            creating a sustainable solution to hunger while reducing food waste.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link to="/register" className="btn btn-primary btn-lg px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+              Join Our Mission
+              <FaArrowRight className="ml-2" />
+            </Link>
+            <Link to="/allDonations" className="btn btn-outline btn-primary btn-lg px-8 rounded-full dark:border-primary dark:text-primary">
+              See Available Food
+            </Link>
+          </div>
+        </div>
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl transform rotate-3"></div>
+          <img
+            src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&h=400&fit=crop"
+            alt="Community sharing meal"
+            className="relative rounded-3xl shadow-2xl w-full h-[400px] object-cover"
+          />
+          <div className="absolute -bottom-6 -left-6 bg-white dark:bg-base-200 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-base-300">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-100 dark:bg-success/20 rounded-lg">
+                <FaHeart className="w-5 h-5 text-green-600 dark:text-success" />
               </div>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl transform rotate-3"></div>
-              <img
-                src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&h=400&fit=crop"
-                alt="Community sharing meal"
-                className="relative rounded-3xl shadow-2xl w-full h-[400px] object-cover"
-              />
-              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg border border-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <FaHeart className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900">25,000+</p>
-                    <p className="text-sm text-gray-600">Meals Shared</p>
-                  </div>
-                </div>
+              <div>
+                <p className="font-bold text-gray-900 dark:text-base-content">25,000+</p>
+                <p className="text-sm text-gray-600 dark:text-base-content/70">Meals Shared</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
       {/* Impact Statistics */}
       <section className="py-16 bg-gray-50">
