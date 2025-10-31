@@ -15,31 +15,32 @@ import { ToastContainer } from 'react-toastify';
 import logo from '../assets/Logo/logoH.png'
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
-const SidebarLink = ({ to, icon: Icon, label, badge = null, sidebarCollapsed }) => (
-  <li className="mb-1">
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group relative ${isActive
-          ? 'bg-primary text-white shadow-lg shadow-primary/20'
-          : 'hover:bg-primary/10 hover:text-primary text-neutral-600'
-        }`
-      }
-    >
-      <Icon className="w-5 h-5 flex-shrink-0" />
-      {!sidebarCollapsed && (
-        <span className="ml-3 font-medium transition-all duration-200">
-          {label}
-        </span>
-      )}
+const SidebarLink = ({ to, icon: Icon, label, badge = null, sidebarCollapsed, exact = false }) => (
+<li className="mb-1">
+  <NavLink
+    to={to}
+    end={exact}
+    className={({ isActive }) =>
+      `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group relative ${isActive
+        ? 'bg-primary text-white shadow-lg shadow-primary/20 dark:bg-primary dark:text-primary-content'
+        : 'hover:bg-primary/10 hover:text-primary text-neutral-600 dark:text-neutral-300 dark:hover:bg-primary/20 dark:hover:text-primary-content'
+      }`
+    }
+  >
+    <Icon className="w-5 h-5 flex-shrink-0" />
+    {!sidebarCollapsed && (
+      <span className="ml-3 font-medium transition-all duration-200">
+        {label}
+      </span>
+    )}
 
-      {!sidebarCollapsed && badge && (
-        <span className="ml-auto bg-secondary text-white text-xs px-2 py-1 rounded-full">
-          {badge}
-        </span>
-      )}
-    </NavLink>
-  </li>
+    {!sidebarCollapsed && badge && (
+      <span className="ml-auto bg-secondary text-white text-xs px-2 py-1 rounded-full dark:bg-secondary dark:text-secondary-content">
+        {badge}
+      </span>
+    )}
+  </NavLink>
+</li>
 );
 
 
@@ -252,6 +253,7 @@ const DashboardLayout = () => {
                     to="/dashboard"
                     icon={FaTachometerAlt}
                     label="Dashboard"
+                    exact={true}
                   />
                   <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="My Profile" />
                   <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/requestCharityRole" icon={FaUserCheck} label="Become a Charity" />
@@ -266,6 +268,7 @@ const DashboardLayout = () => {
                     to="/dashboard"
                     icon={FaTachometerAlt}
                     label="Dashboard"
+                    exact={true}
                   />
                   <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Organization Profile" />
                   <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myRequests" icon={FaClipboardList} label="My Requests" />
@@ -291,6 +294,7 @@ const DashboardLayout = () => {
                     to="/dashboard"
                     icon={FaTachometerAlt}
                     label="Dashboard"
+                    exact={true}
                   />
                   <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Restaurant Profile" />
                   <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/donationStats" icon={IoIosStats} label="Donation Statistics" />
@@ -310,6 +314,7 @@ const DashboardLayout = () => {
                     to="/dashboard"
                     icon={FaTachometerAlt}
                     label="Dashboard"
+                    exact={true}
                   />
                   <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Admin Profile" />
 
