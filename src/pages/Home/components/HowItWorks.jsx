@@ -98,17 +98,17 @@ const HowItWorks = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-base-100 dark:bg-neutral py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-base-100 dark:bg-base-100 py-16 px-4 sm:px-6 lg:px-8">
       {/* Section Header */}
       <div className="max-w-7xl mx-auto text-center mb-16">
         <div className="inline-flex items-center gap-2 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-content px-4 py-2 rounded-full mb-4">
           <CheckCircle className="w-4 h-4" />
           <span className="text-sm font-semibold">Simple & Effective</span>
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold text-base-content dark:text-base-100 mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-base-content dark:text-base-content mb-4">
           How We Connect Food to Those in Need
         </h2>
-        <p className="text-lg text-neutral dark:text-base-200 max-w-3xl mx-auto">
+        <p className="text-lg text-neutral dark:text-base-content/80 max-w-3xl mx-auto">
           Our seamless three-step process ensures surplus food reaches communities efficiently, 
           safely, and with full transparency at every stage.
         </p>
@@ -122,13 +122,13 @@ const HowItWorks = () => {
 
       {/* Mobile Tab Selector */}
       <div className="max-w-7xl mx-auto mb-8 lg:hidden">
-        <div className="flex gap-2 bg-base-200 dark:bg-neutral-content/10 p-2 rounded-lg">
+        <div className="flex gap-2 bg-base-200 dark:bg-base-200 p-2 rounded-lg">
           <button
             onClick={() => setActiveTab('donor')}
             className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
               activeTab === 'donor'
                 ? 'bg-primary text-primary-content shadow-md'
-                : 'text-base-content dark:text-base-100'
+                : 'text-base-content dark:text-base-content'
             }`}
           >
             <Store className="w-5 h-5 mx-auto mb-1" />
@@ -139,7 +139,7 @@ const HowItWorks = () => {
             className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
               activeTab === 'charity'
                 ? 'bg-primary text-primary-content shadow-md'
-                : 'text-base-content dark:text-base-100'
+                : 'text-base-content dark:text-base-content'
             }`}
           >
             <Heart className="w-5 h-5 mx-auto mb-1" />
@@ -154,16 +154,16 @@ const HowItWorks = () => {
           
           {/* LEFT COLUMN - Food Donors */}
           <div className={`${activeTab === 'donor' ? 'block' : 'hidden'} lg:block`}>
-            <div className="bg-white dark:bg-neutral-content/5 rounded-2xl p-8 shadow-xl border border-base-200 dark:border-neutral-content/10 h-full">
+            <div className="bg-white dark:bg-base-200 rounded-2xl p-8 shadow-xl border border-base-200 dark:border-neutral-content/10 h-full">
               <div className="flex items-center gap-3 mb-8">
                 <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-xl">
                   <Store className="w-8 h-8 text-primary dark:text-primary-content" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-base-content dark:text-base-100">
+                  <h3 className="text-2xl font-bold text-base-content dark:text-base-content">
                     For Food Donors
                   </h3>
-                  <p className="text-sm text-neutral dark:text-base-200">Restaurants & Food Businesses</p>
+                  <p className="text-sm text-neutral dark:text-base-content/80">Restaurants & Food Businesses</p>
                 </div>
               </div>
 
@@ -186,7 +186,7 @@ const HowItWorks = () => {
                       <div className="flex-grow">
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <h4 className="text-lg font-bold text-base-content dark:text-base-100 mb-1">
+                            <h4 className="text-lg font-bold text-base-content dark:text-base-content mb-1">
                               {step.title}
                             </h4>
                             <div className="flex items-center gap-2 text-xs text-accent dark:text-accent-content mb-2">
@@ -199,7 +199,7 @@ const HowItWorks = () => {
                         
                         <ul className="space-y-1 mb-3">
                           {step.details.map((detail, idx) => (
-                            <li key={idx} className="text-sm text-neutral dark:text-base-200 flex items-start gap-2">
+                            <li key={idx} className="text-sm text-neutral dark:text-base-content/80 flex items-start gap-2">
                               <ArrowRight className="w-4 h-4 mt-0.5 text-secondary flex-shrink-0" />
                               <span>{detail}</span>
                             </li>
@@ -212,7 +212,7 @@ const HowItWorks = () => {
                           <div className="bg-success/10 dark:bg-success/20 text-success dark:text-success-content text-xs px-3 py-2 rounded-lg mb-2">
                             ✓ {step.value}
                           </div>
-                          <div className="text-xs text-neutral dark:text-base-200 font-semibold">
+                          <div className="text-xs text-neutral dark:text-base-content/80 font-semibold">
                             {step.stat}
                           </div>
                         </div>
@@ -241,11 +241,11 @@ const HowItWorks = () => {
               {/* Circular Infographic */}
               <div className="relative w-48 h-48 mb-8">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-secondary opacity-10 dark:opacity-20 animate-pulse"></div>
-                <div className="absolute inset-4 rounded-full bg-white dark:bg-neutral-content/5 shadow-inner flex items-center justify-center">
+                <div className="absolute inset-4 rounded-full bg-white dark:bg-base-200 shadow-inner flex items-center justify-center">
                   <div className="text-center">
                     <Users className="w-12 h-12 text-primary dark:text-primary-content mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-base-content dark:text-base-100">2,500+</div>
-                    <div className="text-xs text-neutral dark:text-base-200">Active Partners</div>
+                    <div className="text-2xl font-bold text-base-content dark:text-base-content">2,500+</div>
+                    <div className="text-xs text-neutral dark:text-base-content/80">Active Partners</div>
                   </div>
                 </div>
                 <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-secondary text-secondary-content px-3 py-1 rounded-full text-xs font-bold shadow-lg">
@@ -256,7 +256,7 @@ const HowItWorks = () => {
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-base-content dark:text-base-100 mb-6 text-center">
+              <h3 className="text-xl font-bold text-base-content dark:text-base-content mb-6 text-center">
                 Platform Features
               </h3>
 
@@ -264,12 +264,12 @@ const HowItWorks = () => {
                 {platformFeatures.map((feature, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 bg-white dark:bg-neutral-content/5 px-4 py-3 rounded-lg shadow-sm hover:shadow-md transition-all hover:scale-105"
+                    className="flex items-center gap-3 bg-white dark:bg-base-200 px-4 py-3 rounded-lg shadow-sm hover:shadow-md transition-all hover:scale-105"
                   >
                     <div className="bg-primary/10 dark:bg-primary/20 p-2 rounded-lg">
                       <feature.icon className="w-5 h-5 text-primary dark:text-primary-content" />
                     </div>
-                    <span className="text-sm font-semibold text-base-content dark:text-base-100">
+                    <span className="text-sm font-semibold text-base-content dark:text-base-content">
                       {feature.text}
                     </span>
                   </div>
@@ -291,16 +291,16 @@ const HowItWorks = () => {
 
           {/* RIGHT COLUMN - Charity Partners */}
           <div className={`${activeTab === 'charity' ? 'block' : 'hidden'} lg:block`}>
-            <div className="bg-white dark:bg-neutral-content/5 rounded-2xl p-8 shadow-xl border border-base-200 dark:border-neutral-content/10 h-full">
+            <div className="bg-white dark:bg-base-200 rounded-2xl p-8 shadow-xl border border-base-200 dark:border-neutral-content/10 h-full">
               <div className="flex items-center gap-3 mb-8">
                 <div className="bg-secondary/10 dark:bg-secondary/20 p-3 rounded-xl">
                   <Heart className="w-8 h-8 text-secondary dark:text-secondary-content" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-base-content dark:text-base-100">
+                  <h3 className="text-2xl font-bold text-base-content dark:text-base-content">
                     For Charity Partners
                   </h3>
-                  <p className="text-sm text-neutral dark:text-base-200">Non-Profit Organizations</p>
+                  <p className="text-sm text-neutral dark:text-base-content/80">Non-Profit Organizations</p>
                 </div>
               </div>
 
@@ -323,7 +323,7 @@ const HowItWorks = () => {
                       <div className="flex-grow">
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <h4 className="text-lg font-bold text-base-content dark:text-base-100 mb-1">
+                            <h4 className="text-lg font-bold text-base-content dark:text-base-content mb-1">
                               {step.title}
                             </h4>
                             <div className="flex items-center gap-2 text-xs text-accent dark:text-accent-content mb-2">
@@ -336,7 +336,7 @@ const HowItWorks = () => {
                         
                         <ul className="space-y-1 mb-3">
                           {step.details.map((detail, idx) => (
-                            <li key={idx} className="text-sm text-neutral dark:text-base-200 flex items-start gap-2">
+                            <li key={idx} className="text-sm text-neutral dark:text-base-content/80 flex items-start gap-2">
                               <ArrowRight className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
                               <span>{detail}</span>
                             </li>
@@ -349,7 +349,7 @@ const HowItWorks = () => {
                           <div className="bg-success/10 dark:bg-success/20 text-success dark:text-success-content text-xs px-3 py-2 rounded-lg mb-2">
                             ✓ {step.value}
                           </div>
-                          <div className="text-xs text-neutral dark:text-base-200 font-semibold">
+                          <div className="text-xs text-neutral dark:text-base-content/80 font-semibold">
                             {step.stat}
                           </div>
                         </div>
@@ -373,23 +373,23 @@ const HowItWorks = () => {
         </div>
 
         {/* Bottom Stats Bar */}
-        <div className="mt-12 bg-white dark:bg-neutral-content/5 rounded-2xl p-8 shadow-xl border border-base-200 dark:border-neutral-content/10">
+        <div className="mt-12 bg-white dark:bg-base-200 rounded-2xl p-8 shadow-xl border border-base-200 dark:border-neutral-content/10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-primary dark:text-primary-content mb-1">1M+</div>
-              <div className="text-sm text-neutral dark:text-base-200">Meals Saved</div>
+              <div className="text-sm text-neutral dark:text-base-content/80">Meals Saved</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-secondary dark:text-secondary-content mb-1">2,500+</div>
-              <div className="text-sm text-neutral dark:text-base-200">Active Partners</div>
+              <div className="text-sm text-neutral dark:text-base-content/80">Active Partners</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-accent dark:text-accent-content mb-1">98%</div>
-              <div className="text-sm text-neutral dark:text-base-200">Success Rate</div>
+              <div className="text-sm text-neutral dark:text-base-content/80">Success Rate</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-success dark:text-success-content mb-1">50+</div>
-              <div className="text-sm text-neutral dark:text-base-200">Cities Served</div>
+              <div className="text-sm text-neutral dark:text-base-content/80">Cities Served</div>
             </div>
           </div>
         </div>

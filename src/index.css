@@ -32,27 +32,35 @@
 
 @plugin "daisyui/theme" {
   name: "dark";
-  --color-primary: #4ADE80;
-  --color-primary-content: #0A2E1C;
+  --color-primary: #10B981;
+  --color-primary-content: #FFFFFF;
   
-  --color-secondary: #FB923C;
-  --color-secondary-content: #4A1E06;
+  --color-secondary: #F97316;
+  --color-secondary-content: #FFFFFF;
   
-  --color-accent: #FDBA74;
-  --color-accent-content: #422006;
+  /* FIXED: Darker accent color with light text */
+  --color-accent: #D97706;
+  --color-accent-content: #FFFFFF;
   
   --color-neutral: #374151;
-  --color-neutral-content: #D1D5DB;
+  --color-neutral-content: #F9FAFB;
   
-  --color-base-100: #1A202C;
-  --color-base-200: #2D3748;
-  --color-base-300: #4A5568;
-  --color-base-content: #E2E8F0;
+  --color-base-100: #111827;
+  --color-base-200: #1F2937;
+  --color-base-300: #374151;
+  --color-base-content: #F3F4F6;
   
-  --color-info: #63B3ED;
-  --color-success: #68D391;
-  --color-warning: #F6E05E;
-  --color-error: #FC8181;
+  --color-info: #3B82F6;
+  --color-info-content: #FFFFFF;
+  
+  --color-success: #10B981;
+  --color-success-content: #FFFFFF;
+  
+  --color-warning: #F59E0B;
+  --color-warning-content: #1F2937;
+  
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
