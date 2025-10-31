@@ -47,11 +47,11 @@ const SidebarLink = ({ to, icon: Icon, label, badge = null, sidebarCollapsed, ex
 
 const SectionHeader = ({ title, sidebarCollapsed }) => (
   !sidebarCollapsed && (
-    <div className="px-4 py-3 mb-2">
-      <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
-        {title}
-      </h3>
-    </div>
+<div className="px-4 py-3 mb-2">
+  <h3 className="text-xs font-semibold text-neutral-400 dark:text-base-content/60 uppercase tracking-wider">
+    {title}
+  </h3>
+</div>
   )
 );
 
@@ -88,8 +88,8 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="drawer lg:drawer-open min-h-screen bg-base-200/30">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+    <div className="drawer lg:drawer-open min-h-screen bg-base-200/30 dark:bg-base-200">
+  <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       {/* Main Content */}
       <div className="drawer-content flex flex-col">
@@ -331,15 +331,15 @@ const DashboardLayout = () => {
     </nav>
 
     {/* Logout Button */}
-    <div className="p-4 border-t border-base-200 dark:border-base-300">
-      <button
-        onClick={handleSignOut}
-        className="btn btn-ghost w-full justify-start text-error hover:bg-error/10 hover:text-error dark:hover:bg-error/20 rounded-xl transition-all duration-200"
-      >
-        <FaSignOutAlt className="w-5 h-5 mr-3" />
-        {!sidebarCollapsed && "Sign Out"}
-      </button>
-    </div>
+<div className="p-4 border-t border-base-200 dark:border-base-300">
+  <button
+    onClick={handleSignOut}
+    className="btn btn-ghost w-full justify-start text-error hover:bg-error/10 hover:text-error dark:hover:bg-error/20 rounded-xl transition-all duration-200"
+  >
+    <FaSignOutAlt className="w-5 h-5 mr-3" />
+    {!sidebarCollapsed && "Sign Out"}
+  </button>
+</div>
   </aside>
 </div>
     </div>
