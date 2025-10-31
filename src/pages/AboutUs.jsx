@@ -310,33 +310,33 @@ const AboutUsPage = () => {
   </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-gradient-to-r from-primary/5 to-secondary/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Community Says</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Hear from the restaurants, charities, and donors who make our mission possible.
-            </p>
+        <section className="py-20 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-base-content mb-4">What Our Community Says</h2>
+        <p className="text-xl text-gray-600 dark:text-base-content/80 max-w-3xl mx-auto">
+          Hear from the restaurants, charities, and donors who make our mission possible.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {testimonials.map((testimonial, index) => (
+          <div key={index} className="bg-white dark:bg-base-200 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-base-300">
+            <div className="flex items-center mb-4">
+              {[...Array(testimonial.rating)].map((_, i) => (
+                <FaStar key={i} className="w-5 h-5 text-yellow-400" />
+              ))}
+            </div>
+            <FaQuoteLeft className="w-6 h-6 text-primary/30 mb-4" />
+            <p className="text-gray-700 dark:text-base-content/80 mb-6 leading-relaxed italic">"{testimonial.quote}"</p>
+            <div>
+              <p className="font-bold text-gray-900 dark:text-base-content">{testimonial.author}</p>
+              <p className="text-gray-600 dark:text-base-content/70 text-sm">{testimonial.role}</p>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <FaStar key={i} className="w-5 h-5 text-yellow-400" />
-                  ))}
-                </div>
-                <FaQuoteLeft className="w-6 h-6 text-primary/30 mb-4" />
-                <p className="text-gray-700 mb-6 leading-relaxed italic">"{testimonial.quote}"</p>
-                <div>
-                  <p className="font-bold text-gray-900">{testimonial.author}</p>
-                  <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
+  </section>
 
       {/* Call to Action */}
       <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
