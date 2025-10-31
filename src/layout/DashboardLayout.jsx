@@ -93,29 +93,130 @@ const DashboardLayout = () => {
 
       {/* Main Content */}
       <div className="drawer-content flex flex-col">
-        {/* Mobile Header */}
-        <div className="navbar bg-white shadow-sm lg:hidden px-6 border-b border-base-200">
-          <div className="flex-none">
-            <label htmlFor="my-drawer-2" className="btn btn-ghost hover:bg-primary/10">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </label>
-          </div>
+  {/* Mobile Header */}
+  <div className="navbar bg-white dark:bg-base-100 shadow-sm lg:hidden px-6 border-b border-base-200 dark:border-base-300">
+    <div className="flex-none">
+      <label htmlFor="my-drawer-2" className="btn btn-ghost hover:bg-primary/10 dark:hover:bg-primary/20">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 dark:text-base-content" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </label>
+    </div>
 
-          <div className="flex-1 flex justify-center">
-            <Link to="/" className="flex items-center">
+    <div className="flex-1 flex justify-center">
+      <Link to="/" className="flex items-center">
+        <img
+          src={logo}
+          alt="Logo"
+          className="h-10 w-auto object-contain"
+        />
+      </Link>
+    </div>
+
+    <div className="flex-none">
+      <div className="avatar">
+        <div className="w-8 h-8 rounded-full border border-primary/20 dark:border-primary/30">
+          <img
+            src={user?.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'}
+            alt="Profile"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Desktop Header */}
+  <div className="hidden lg:block bg-white dark:bg-base-100 shadow-sm border-b border-base-200 dark:border-base-300">
+    <div className="px-8 py-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-800 dark:text-base-content">Dashboard</h1>
+          <p className="text-sm text-neutral-500 dark:text-base-content/70 mt-1">
+            Welcome back, {user?.displayName || 'User'}
+          </p>
+        </div>
+        {/* dark mode  */}
+        <div className="flex items-center gap-4">
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="btn btn-ghost btn-circle dark:hover:bg-neutral-700"
+          aria-label="Toggle dark mode"
+        >
+          {darkMode ? (
+            <MdLightMode className="w-5 h-5 text-yellow-400" />
+          ) : (
+            <MdDarkMode className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          )}
+        </button>
+          <div className={`badge ${getRoleBadgeColor(role)} badge-lg`}>
+            {getRoleDisplayName(role)}
+          </div>
+          <div className="avatar">
+            <div className="w-10 h-10 rounded-full border-2 border-primary/20 dark:border-primary/30">
               <img
-                src={logo}
-                alt="Logo"
-                className="h-10 w-auto object-contain"
+                src={user?.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'}
+                alt="Profile"
+                className="w-full h-full object-cover"
               />
-            </Link>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <div className="flex-none">
+  {/* Main Content Area */}
+  <main className="flex-1 p-6 lg:p-8 bg-base-200/30 dark:bg-base-200">
+    <div className="max-w-7xl mx-auto">
+      <Outlet />
+    </div>
+  </main>
+
+  <ToastContainer
+    position="bottom-right"
+    className="z-50"
+  />
+</div>
+
+      {/* Sidebar */}
+      <div className="drawer-side z-40">
+  <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+  <aside
+    className={`bg-white dark:bg-base-100 shadow-xl min-h-full transition-all duration-300 flex flex-col border-r border-base-200 dark:border-base-300
+      ${sidebarCollapsed ? 'w-20' : 'w-72'} 
+      lg:${sidebarCollapsed ? 'w-20' : 'w-80'}
+    `}
+  >
+
+    {/* Sidebar Header */}
+    <div className="p-6 border-b border-base-200 dark:border-base-300">
+      <div className="flex items-center justify-between">
+        {!sidebarCollapsed && (
+          <div className="flex items-center gap-3">
+            <img
+              src={logo}
+              alt="Logo"
+              className="h-10 w-auto object-contain"
+            />
+          </div>
+        )}
+        <button
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="btn btn-ghost btn-sm p-2 hover:bg-primary/10 dark:hover:bg-primary/20 dark:text-base-content"
+        >
+          {sidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+        </button>
+      </div>
+    </div>
+
+    {/* User Info Card */}
+    {!sidebarCollapsed && (
+      <div className="p-6 border-b border-base-200 dark:border-base-300">
+        <div className="bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 rounded-xl p-4">
+          <div className="flex items-center gap-3">
             <div className="avatar">
-              <div className="w-8 h-8 rounded-full border border-primary/20">
+              <div className="w-12 h-12 rounded-full border-2 border-white dark:border-base-100 shadow-lg">
                 <img
                   src={user?.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'}
                   alt="Profile"
@@ -123,226 +224,124 @@ const DashboardLayout = () => {
                 />
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Desktop Header */}
-        <div className="hidden lg:block bg-white shadow-sm border-b border-base-200">
-          <div className="px-8 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-neutral-800">Dashboard</h1>
-                <p className="text-sm text-neutral-500 mt-1">
-                  Welcome back, {user?.displayName || 'User'}
-                </p>
-              </div>
-              {/* dark mode  */}
-              <div className="flex items-center gap-4">
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="btn btn-ghost btn-circle dark:hover:bg-neutral-700"
-                aria-label="Toggle dark mode"
-              >
-                {darkMode ? (
-                  <MdLightMode className="w-5 h-5 text-yellow-400" />
-                ) : (
-                  <MdDarkMode className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                )}
-              </button>
-                <div className={`badge ${getRoleBadgeColor(role)} badge-lg`}>
-                  {getRoleDisplayName(role)}
-                </div>
-                <div className="avatar">
-                  <div className="w-10 h-10 rounded-full border-2 border-primary/20">
-                    <img
-                      src={user?.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-neutral-800 dark:text-base-content truncate">
+                {user?.displayName || 'User'}
+              </p>
+              <div className={`badge ${getRoleBadgeColor(role)} badge-sm mt-1`}>
+                {getRoleDisplayName(role)}
               </div>
             </div>
           </div>
         </div>
-
-        {/* Main Content Area */}
-        <main className="flex-1 p-6 lg:p-8 bg-base-200/30">
-          <div className="max-w-7xl mx-auto">
-            <Outlet />
-          </div>
-        </main>
-
-        <ToastContainer
-          position="bottom-right"
-          className="z-50"
-        />
       </div>
+    )}
 
-      {/* Sidebar */}
-      <div className="drawer-side z-40">
-        <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-        <aside
-          className={`bg-white shadow-xl min-h-full transition-all duration-300 flex flex-col border-r border-base-200
-    ${sidebarCollapsed ? 'w-20' : 'w-72'} 
-    lg:${sidebarCollapsed ? 'w-20' : 'w-80'}
-  `}
-        >
+    {/* Navigation Menu */}
+    <nav className="flex-1 p-4 overflow-y-auto">
+      <ul className="space-y-2">
+        {/* Home Link */}
+        <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/" icon={FaHome} label="Back to Home" />
 
-          {/* Sidebar Header */}
-          <div className="p-6 border-b border-base-200">
-            <div className="flex items-center justify-between">
-              {!sidebarCollapsed && (
-                <div className="flex items-center gap-3">
-                  <img
-                    src={logo}
-                    alt="Logo"
-                    className="h-10 w-auto object-contain"
-                  />
-                </div>
-              )}
-              <button
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="btn btn-ghost btn-sm p-2 hover:bg-primary/10"
-              >
-                {sidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
-              </button>
-            </div>
-          </div>
+        {/* User Role Navigation */}
+        {!roleLoading && role === 'user' && (
+          <>
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="User Dashboard" />
+            <SidebarLink
+              sidebarCollapsed={sidebarCollapsed}
+              to="/dashboard"
+              icon={FaTachometerAlt}
+              label="Dashboard"
+              exact={true}
+            />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="My Profile" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/requestCharityRole" icon={FaUserCheck} label="Become a Charity" />
+          </>
+        )}
 
-          {/* User Info Card */}
-          {!sidebarCollapsed && (
-            <div className="p-6 border-b border-base-200">
-              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="avatar">
-                    <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg">
-                      <img
-                        src={user?.photoURL || 'https://i.ibb.co/2nF9mZh/default-avatar.png'}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-neutral-800 truncate">
-                      {user?.displayName || 'User'}
-                    </p>
-                    <div className={`badge ${getRoleBadgeColor(role)} badge-sm mt-1`}>
-                      {getRoleDisplayName(role)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+        {!roleLoading && role === 'charity' && (
+          <>
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Charity Management" />
+            <SidebarLink
+              sidebarCollapsed={sidebarCollapsed}
+              to="/dashboard"
+              icon={FaTachometerAlt}
+              label="Dashboard"
+              exact={true}
+            />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Organization Profile" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myRequests" icon={FaClipboardList} label="My Requests" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myPickups" icon={FaBoxesPacking} label="Scheduled Pickups" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/receivedDonations" icon={FaBoxOpen} label="Received Donations" />
+          </>
+        )}
 
-          {/* Navigation Menu */}
-          <nav className="flex-1 p-4 overflow-y-auto">
-            <ul className="space-y-2">
-              {/* Home Link */}
-              <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/" icon={FaHome} label="Back to Home" />
+        {!roleLoading && (role === 'charity' || role === 'user') && (
+          <>
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Activity & History" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/transactionHistory" icon={FaMoneyCheckAlt} label="Transactions" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myReviews" icon={FaStarHalfAlt} label="My Reviews" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/favorites" icon={FaHeart} label="Favorites" />
+          </>
+        )}
 
+        {!roleLoading && role === 'restaurant' && (
+          <>
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Restaurant Dashboard" />
+            <SidebarLink
+              sidebarCollapsed={sidebarCollapsed}
+              to="/dashboard"
+              icon={FaTachometerAlt}
+              label="Dashboard"
+              exact={true}
+            />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Restaurant Profile" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/donationStats" icon={IoIosStats} label="Donation Statistics" />
 
-              {/* User Role Navigation */}
-              {!roleLoading && role === 'user' && (
-                <>
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="User Dashboard" />
-                  <SidebarLink
-                    sidebarCollapsed={sidebarCollapsed}
-                    to="/dashboard"
-                    icon={FaTachometerAlt}
-                    label="Dashboard"
-                    exact={true}
-                  />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="My Profile" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/requestCharityRole" icon={FaUserCheck} label="Become a Charity" />
-                </>
-              )}
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Donation Management" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myDonations" icon={FaHandsHelping} label="My Donations" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/addDonation" icon={FaPlusCircle} label="Add New Donation" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/requestedDonations" icon={FaTasks} label="Donation Requests" />
+          </>
+        )}
 
-              {!roleLoading && role === 'charity' && (
-                <>
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Charity Management" />
-                  <SidebarLink
-                    sidebarCollapsed={sidebarCollapsed}
-                    to="/dashboard"
-                    icon={FaTachometerAlt}
-                    label="Dashboard"
-                    exact={true}
-                  />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Organization Profile" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myRequests" icon={FaClipboardList} label="My Requests" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myPickups" icon={FaBoxesPacking} label="Scheduled Pickups" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/receivedDonations" icon={FaBoxOpen} label="Received Donations" />
-                </>
-              )}
+        {!roleLoading && role === 'admin' && (
+          <>
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Admin Dashboard" />
+            <SidebarLink
+              sidebarCollapsed={sidebarCollapsed}
+              to="/dashboard"
+              icon={FaTachometerAlt}
+              label="Dashboard"
+              exact={true}
+            />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Admin Profile" />
 
-              {!roleLoading && (role === 'charity' || role === 'user') && (
-                <>
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Activity & History" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/transactionHistory" icon={FaMoneyCheckAlt} label="Transactions" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myReviews" icon={FaStarHalfAlt} label="My Reviews" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/favorites" icon={FaHeart} label="Favorites" />
-                </>
-              )}
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Content Management" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageDonations" icon={FaHandHoldingUsd} label="Manage Donations" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/featureDonations" icon={FaStar} label="Featured Donations" />
 
-              {!roleLoading && role === 'restaurant' && (
-                <>
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Restaurant Dashboard" />
-                  <SidebarLink
-                    sidebarCollapsed={sidebarCollapsed}
-                    to="/dashboard"
-                    icon={FaTachometerAlt}
-                    label="Dashboard"
-                    exact={true}
-                  />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Restaurant Profile" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/donationStats" icon={IoIosStats} label="Donation Statistics" />
+            <SectionHeader sidebarCollapsed={sidebarCollapsed} title="User Management" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageUsers" icon={FaUsersCog} label="Manage Users" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageRoleRequests" icon={FaUserTag} label="Role Requests" />
+            <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageRequests" icon={FaClipboardList} label="General Requests" />
+          </>
+        )}
+      </ul>
+    </nav>
 
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Donation Management" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/myDonations" icon={FaHandsHelping} label="My Donations" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/addDonation" icon={FaPlusCircle} label="Add New Donation" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/requestedDonations" icon={FaTasks} label="Donation Requests" />
-                </>
-              )}
-
-              {!roleLoading && role === 'admin' && (
-                <>
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Admin Dashboard" />
-                  <SidebarLink
-                    sidebarCollapsed={sidebarCollapsed}
-                    to="/dashboard"
-                    icon={FaTachometerAlt}
-                    label="Dashboard"
-                    exact={true}
-                  />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/profile" icon={FaUser} label="Admin Profile" />
-
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="Content Management" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageDonations" icon={FaHandHoldingUsd} label="Manage Donations" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/featureDonations" icon={FaStar} label="Featured Donations" />
-
-                  <SectionHeader sidebarCollapsed={sidebarCollapsed} title="User Management" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageUsers" icon={FaUsersCog} label="Manage Users" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageRoleRequests" icon={FaUserTag} label="Role Requests" />
-                  <SidebarLink sidebarCollapsed={sidebarCollapsed} to="/dashboard/manageRequests" icon={FaClipboardList} label="General Requests" />
-                </>
-              )}
-            </ul>
-          </nav>
-
-          {/* Logout Button */}
-          <div className="p-4 border-t border-base-200">
-            <button
-              onClick={handleSignOut}
-              className="btn btn-ghost w-full justify-start text-error hover:bg-error/10 hover:text-error rounded-xl transition-all duration-200"
-            >
-              <FaSignOutAlt className="w-5 h-5 mr-3" />
-              {!sidebarCollapsed && "Sign Out"}
-            </button>
-          </div>
-        </aside>
-      </div>
+    {/* Logout Button */}
+    <div className="p-4 border-t border-base-200 dark:border-base-300">
+      <button
+        onClick={handleSignOut}
+        className="btn btn-ghost w-full justify-start text-error hover:bg-error/10 hover:text-error dark:hover:bg-error/20 rounded-xl transition-all duration-200"
+      >
+        <FaSignOutAlt className="w-5 h-5 mr-3" />
+        {!sidebarCollapsed && "Sign Out"}
+      </button>
+    </div>
+  </aside>
+</div>
     </div>
   );
 };
