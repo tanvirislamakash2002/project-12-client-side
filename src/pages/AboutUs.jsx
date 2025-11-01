@@ -140,7 +140,7 @@ const AboutUsPage = () => {
               Join Our Mission
               <FaArrowRight className="ml-2" />
             </Link>
-            <Link to="/allDonations" className="btn btn-outline btn-primary btn-lg px-8 rounded-full dark:border-primary dark:text-primary">
+            <Link to="/allDonations" className="btn btn-outline btn-primary btn-lg px-8 rounded-full dark:border-primary dark:text-primary dark:hover:text-black">
               See Available Food
             </Link>
           </div>

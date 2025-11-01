@@ -162,7 +162,7 @@ const ImpactStatistics = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 dark:from-green-500 dark:to-blue-600 rounded-2xl mb-6 shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary/80 to-secondary/80 dark:from-primary/50 dark:to-secondary/50 rounded-2xl mb-6 shadow-lg">
             <TrendingUp className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -236,7 +236,7 @@ const ImpactStatistics = () => {
 
         {/* Call to Action */}
         <div className="mt-12 text-center">
-          <div className="bg-gradient-to-r from-green-500 to-blue-500 dark:from-green-600 dark:to-blue-600 rounded-2xl p-8 shadow-xl">
+          <div className="bg-gradient-to-r from-primary/90 to-secondary/90 dark:from-primary/20 dark:to-secondary/20 rounded-2xl p-8 shadow-xl">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Ready to Make an Impact?
             </h3>
@@ -244,7 +244,7 @@ const ImpactStatistics = () => {
               Join our growing network of restaurants and charities working together to end food waste and hunger
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-3 bg-white text-green-600 dark:text-green-700 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg">
+              <button className="px-8 py-3 bg-white text-primary dark:text-primary rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg">
                 Become a Partner Restaurant
               </button>
               <button className="px-8 py-3 bg-white/10 backdrop-blur text-white rounded-lg font-semibold hover:bg-white/20 transition-colors duration-300 border-2 border-white/30">
