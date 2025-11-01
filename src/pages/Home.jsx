@@ -5,6 +5,7 @@ import LatestCharityRequests from '../component/home/LatestCharityRequests';
 import TopContributors from '../component/home/TopContributors';
 import DonationTips from '../component/home/DonationTips';
 import HowItWorks from './Home/components/HowItWorks';
+import ImpactStatistics from './Home/components/ImpactStatistics';
 
 const Home = () => {
     return (
@@ -13,6 +14,7 @@ const Home = () => {
                 <Banner></Banner>
             </div>
             <HowItWorks></HowItWorks>
+            <ImpactStatistics></ImpactStatistics>
             <div className="">
                 <FeaturedDonationsSection></FeaturedDonationsSection>
             </div>
