@@ -56,37 +56,37 @@ const MyReviews = () => {
 
   return (
     <section className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-4xl font-bold text-center mb-10">My Reviews</h1>
+      <h1 className="text-4xl font-bold text-center mb-10 dark:text-white">My Reviews</h1>
 
       {isLoading ? (
         <div className="flex justify-center items-center h-40">
-          <span className="loading loading-spinner loading-lg text-primary" />
+          <span className="loading loading-spinner loading-lg text-primary dark:text-primary-300" />
         </div>
       ) : myReviews.length === 0 ? (
-        <div className="text-center text-gray-500">You haven’t submitted any reviews yet.</div>
+        <div className="text-center text-gray-500 dark:text-gray-400">You haven't submitted any reviews yet.</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {myReviews.map((review) => (
             <div
               key={review._id}
-              className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="card bg-base-100 dark:bg-gray-800 border border-base-300 dark:border-gray-700 shadow-sm hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow duration-300"
             >
               <div className="card-body space-y-2">
-                <h2 className="card-title text-lg font-semibold text-primary">
+                <h2 className="card-title text-lg font-semibold text-primary dark:text-primary-300">
                   {review.donation?.title || "Unknown Donation"}
                 </h2>
-                <p className="text-sm text-gray-600">
-                  <strong>Restaurant:</strong> {review.donation?.restaurantName || "Unknown"}
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <strong className="dark:text-gray-300">Restaurant:</strong> {review.donation?.restaurantName || "Unknown"}
                 </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Reviewed:</strong> {new Date(review.createdAt).toLocaleString()}
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <strong className="dark:text-gray-300">Reviewed:</strong> {new Date(review.createdAt).toLocaleString()}
                 </p>
-                <p className="text-sm">{review.description}</p>
+                <p className="text-sm dark:text-gray-300">{review.description}</p>
 
                 <div className="card-actions justify-end">
                   <button
                     onClick={() => handleDelete(review._id)}
-                    className="btn btn-sm btn-error"
+                    className="btn btn-sm btn-error dark:bg-red-700 dark:border-red-600 dark:hover:bg-red-600"
                   >
                     Delete
                   </button>
