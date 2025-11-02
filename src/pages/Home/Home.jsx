@@ -7,6 +7,7 @@ import DonationTips from '../../component/home/DonationTips';
 import HowItWorks from './components/HowItWorks';
 import ImpactStatistics from './components/ImpactStatistics';
 import TestimonialsSection from './components/TestimonialsSection';
+import UserTypeSection from './components/UserTypeSection';
 
 const Home = () => {
     return (
@@ -17,6 +18,7 @@ const Home = () => {
             <HowItWorks></HowItWorks>
             <ImpactStatistics></ImpactStatistics>
             <TestimonialsSection></TestimonialsSection>
+            <UserTypeSection></UserTypeSection>
             <div className="">
                 <FeaturedDonationsSection></FeaturedDonationsSection>
             </div>
