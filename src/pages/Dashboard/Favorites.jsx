@@ -48,14 +48,14 @@ const Favorites = () => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
-      <h1 className="text-4xl font-bold text-center mb-10">Your Favorite Donations</h1>
+      <h1 className="text-4xl font-bold text-center mb-10 dark:text-white">Your Favorite Donations</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {favorites.map(({ _id, donation }) => {
           if (!donation) return null;
 
           return (
-            <div key={_id} className="card bg-base-100 border border-base-300 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div key={_id} className="card bg-base-100 dark:bg-gray-800 border border-base-300 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow duration-300">
               {donation.image && (
                 <figure className="h-48 overflow-hidden rounded-t-xl">
                   <img
@@ -66,29 +66,29 @@ const Favorites = () => {
                 </figure>
               )}
               <div className="card-body space-y-3">
-                <h2 className="card-title text-xl font-semibold text-primary">
+                <h2 className="card-title text-xl font-semibold text-primary dark:text-primary-300">
                   {donation.title}
                 </h2>
 
-                <div className="text-sm text-gray-600 space-y-1">
-                  <p><strong>Restaurant:</strong> {donation.restaurantName}</p>
-                  <p><strong>Location:</strong> {donation.location}</p>
+                <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <p><strong className="dark:text-gray-300">Restaurant:</strong> {donation.restaurantName}</p>
+                  <p><strong className="dark:text-gray-300">Location:</strong> {donation.location}</p>
                   <p>
-                    <strong>Status:</strong>{' '}
+                    <strong className="dark:text-gray-300">Status:</strong>{' '}
                     <span className={`badge text-white ${donation.status === 'Available' ? 'badge-success' : 'badge-warning'}`}>
                       {donation.status}
                     </span>
                   </p>
-                  <p><strong>Quantity:</strong> {donation.quantity} {donation.quantityUnit}</p>
+                  <p><strong className="dark:text-gray-300">Quantity:</strong> {donation.quantity} {donation.quantityUnit}</p>
                 </div>
 
                 <div className="card-actions mt-4 flex gap-2">
-                  <Link to={`/donationDetails/${donation._id}`} className="btn btn-sm btn-primary flex-1">
+                  <Link to={`/donationDetails/${donation._id}`} className="btn btn-sm btn-primary flex-1 dark:primary dark:border-primary/70 dark:hover:bg-primary/70">
                     View Details
                   </Link>
                   <button
                     onClick={() => removeFavorite.mutate(_id)}
-                    className="btn btn-sm btn-outline btn-error flex-1 hover:text-white"
+                    className="btn btn-sm btn-outline btn-error flex-1 hover:text-white dark:border-red-600 dark:text-red-400 dark:hover:bg-red-600"
                   >
                     Remove
                   </button>
