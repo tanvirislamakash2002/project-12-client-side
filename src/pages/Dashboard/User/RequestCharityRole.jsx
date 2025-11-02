@@ -111,10 +111,10 @@ const RequestCharityRole = () => {
 
   if (hasPendingRequest) {
     return (
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow text-center">
-        <h2 className="text-2xl font-bold mb-4">Charity Role Request</h2>
-        <p className="text-gray-600 mb-6">You already have a pending or approved request.</p>
-        <button onClick={() => navigate('/dashboard')} className="btn btn-primary w-full">
+<div className="max-w-md mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow dark:shadow-gray-900/50 text-center">
+        <h2 className="text-2xl font-bold mb-4 dark:text-white">Charity Role Request</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">You already have a pending or approved request.</p>
+        <button onClick={() => navigate('/dashboard')} className="btn btn-primary w-full dark:bg-primary dark:border-primary/60 dark:hover:bg-primary/60">
           Go to Dashboard
         </button>
       </div>
