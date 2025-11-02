@@ -3,12 +3,12 @@ import Banner from '../../component/home/Banner';
 import FeaturedDonationsSection from '../../component/home/FeaturedDonationsSection';
 import LatestCharityRequests from '../../component/home/LatestCharityRequests';
 import TopContributors from '../../component/home/TopContributors';
-import DonationTips from '../../component/home/DonationTips';
 import HowItWorks from './components/HowItWorks';
 import ImpactStatistics from './components/ImpactStatistics';
 import TestimonialsSection from './components/TestimonialsSection';
 import UserTypeSection from './components/UserTypeSection';
 import PartnersSection from './components/PartnersSection';
+import FAQSection from './components/FAQSection';
 
 const Home = () => {
     return (
@@ -21,6 +21,7 @@ const Home = () => {
             <TestimonialsSection></TestimonialsSection>
             <UserTypeSection></UserTypeSection>
             <PartnersSection></PartnersSection>
+            <FAQSection></FAQSection>
             <div className="">
                 <FeaturedDonationsSection></FeaturedDonationsSection>
             </div>
@@ -30,9 +31,7 @@ const Home = () => {
             <div className="">
                 <TopContributors></TopContributors>
             </div>
-            <div className="">
-                <DonationTips></DonationTips>
-            </div>
+
         </div>
     );
 };
