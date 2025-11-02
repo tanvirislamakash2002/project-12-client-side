@@ -8,6 +8,7 @@ import HowItWorks from './components/HowItWorks';
 import ImpactStatistics from './components/ImpactStatistics';
 import TestimonialsSection from './components/TestimonialsSection';
 import UserTypeSection from './components/UserTypeSection';
+import PartnersSection from './components/PartnersSection';
 
 const Home = () => {
     return (
@@ -19,6 +20,7 @@ const Home = () => {
             <ImpactStatistics></ImpactStatistics>
             <TestimonialsSection></TestimonialsSection>
             <UserTypeSection></UserTypeSection>
+            <PartnersSection></PartnersSection>
             <div className="">
                 <FeaturedDonationsSection></FeaturedDonationsSection>
             </div>
