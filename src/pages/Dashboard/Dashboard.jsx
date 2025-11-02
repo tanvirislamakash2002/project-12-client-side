@@ -63,20 +63,20 @@ const mockData = {
 
 // Reusable Components
 const StatCard = ({ icon: Icon, title, value, subtitle, color = "primary", trend = null }) => (
-  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-200">
+<div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md dark:hover:shadow-gray-900/50 transition-all duration-200">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-lg bg-${color}/10`}>
-          <Icon className={`w-6 h-6 text-${color}`} />
+        <div className={`p-3 rounded-lg bg-${color}/10 dark:bg-${color}/20`}>
+          <Icon className={`w-6 h-6 text-${color} dark:text-${color}-300`} />
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+          {subtitle && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>}
         </div>
       </div>
       {trend && (
-        <div className={`flex items-center gap-1 text-sm ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
+        <div className={`flex items-center gap-1 text-sm ${trend > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
           {trend > 0 ? <FaArrowUp className="w-3 h-3" /> : <FaArrowDown className="w-3 h-3" />}
           <span>{Math.abs(trend)}%</span>
         </div>
@@ -86,17 +86,17 @@ const StatCard = ({ icon: Icon, title, value, subtitle, color = "primary", trend
 );
 
 const QuickActionCard = ({ icon: Icon, title, description, to, color = "primary" }) => (
-  <Link to={to} className="block group">
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md hover:border-primary/20 transition-all duration-200 group-hover:transform group-hover:-translate-y-1">
+<Link to={to} className="block group">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md dark:hover:shadow-gray-900/50 hover:border-primary/20 dark:hover:border-primary/30 transition-all duration-200 group-hover:transform group-hover:-translate-y-1">
       <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-lg bg-${color}/10 group-hover:bg-${color}/20 transition-colors duration-200`}>
-          <Icon className={`w-6 h-6 text-${color}`} />
+        <div className={`p-3 rounded-lg bg-${color}/10 dark:bg-${color}/20 group-hover:bg-${color}/20 dark:group-hover:bg-${color}/30 transition-colors duration-200`}>
+          <Icon className={`w-6 h-6 text-${color} dark:text-${color}-300`} />
         </div>
         <div>
-          <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors duration-200">
+          <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-300 transition-colors duration-200">
             {title}
           </h3>
-          <p className="text-sm text-gray-600">{description}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
         </div>
       </div>
     </div>
@@ -119,18 +119,18 @@ const ActivityItem = ({ activity, type = 'user' }) => {
   const Icon = getActivityIcon();
 
   return (
-    <div className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
-      <div className="p-2 rounded-lg bg-primary/10">
-        <Icon className="w-4 h-4 text-primary" />
+<div className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+      <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20">
+        <Icon className="w-4 h-4 text-primary dark:text-primary-300" />
       </div>
       <div className="flex-1">
-        <div className="text-sm font-medium text-gray-900">
+        <div className="text-sm font-medium text-gray-900 dark:text-white">
           {type === 'user' && activity.charity && `${activity.charity}`}
           {type === 'admin' && activity.user && `${activity.user}`}
           {type === 'charity' && activity.restaurant && `${activity.restaurant}`}
           {type === 'restaurant' && activity.charity && `${activity.charity}`}
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-gray-500 dark:text-gray-400">
           {activity.date} • {activity.status || activity.type}
         </div>
       </div>
@@ -143,12 +143,12 @@ const UserDashboard = ({ user, data }) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user?.displayName}!</h1>
-        <p className="text-gray-600 mt-2">Track your donations and discover new ways to help.</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, {user?.displayName}!</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">Track your donations and discover new ways to help.</p>
       </div>
       <div className="text-right">
-        <p className="text-sm text-gray-500">Member since</p>
-        <p className="font-semibold text-gray-900">January 2024</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Member since</p>
+        <p className="font-semibold text-gray-900 dark:text-white">January 2024</p>
       </div>
     </div>
 
@@ -179,8 +179,8 @@ const UserDashboard = ({ user, data }) => (
     </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
         <div className="space-y-3">
           <QuickActionCard 
             icon={FaUserCheck} 
@@ -206,14 +206,14 @@ const UserDashboard = ({ user, data }) => (
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Activity</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
         <div className="space-y-2">
           {data.recentActivity.map(activity => (
             <ActivityItem key={activity.id} activity={activity} type="user" />
           ))}
         </div>
-        <Link to="/dashboard/transactionHistory" className="block mt-4 text-center text-primary hover:text-primary-600 font-medium">
+        <Link to="/dashboard/transactionHistory" className="block mt-4 text-center text-primary hover:text-primary-600 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
           View All History →
         </Link>
       </div>
