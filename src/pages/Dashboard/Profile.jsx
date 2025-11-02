@@ -203,28 +203,28 @@ const Profile = () => {
   };
 
   const InfoCard = ({ icon: Icon, title, value, description = null }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+<div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
       <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <Icon className="w-5 h-5 text-primary" />
+        <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20">
+          <Icon className="w-5 h-5 text-primary dark:text-primary-300" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-lg font-semibold text-gray-900">{value}</p>
-          {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+          <p className="text-lg font-semibold text-gray-900 dark:text-white">{value}</p>
+          {description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{description}</p>}
         </div>
       </div>
     </div>
   );
 
   const StatCard = ({ icon: Icon, title, value, subtitle }) => (
-    <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl p-4 border border-primary/10">
+<div className="bg-gradient-to-br from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10 rounded-xl p-4 border border-primary/10 dark:border-primary/20">
       <div className="flex items-center justify-between mb-2">
-        <Icon className="w-6 h-6 text-primary" />
-        <span className="text-2xl font-bold text-gray-900">{value}</span>
+        <Icon className="w-6 h-6 text-primary dark:text-primary-300" />
+        <span className="text-2xl font-bold text-gray-900 dark:text-white">{value}</span>
       </div>
-      <p className="text-sm font-medium text-gray-700">{title}</p>
-      {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+      <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{title}</p>
+      {subtitle && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>}
     </div>
   );
 
@@ -239,11 +239,11 @@ const Profile = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-primary/10 via-secondary/5 to-accent/10 rounded-2xl p-8">
+      <div className="bg-gradient-to-r from-primary/10 via-secondary/5 to-accent/10 dark:from-primary/20 dark:via-secondary/10 dark:to-accent/20 rounded-2xl p-8">
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
           {/* Profile Image */}
           <div className="relative">
-            <div className="w-32 h-32 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-100">
+            <div className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-800 shadow-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
               <img
                 src={isEditing ? hostedImageUrl : user?.photoURL}
                 alt="Profile"
@@ -275,28 +275,28 @@ const Profile = () => {
                   type="text"
                   value={editForm.displayName}
                   onChange={(e) => setEditForm(prev => ({ ...prev, displayName: e.target.value }))}
-                  className="input input-bordered text-2xl font-bold bg-white/80"
+                  className="input input-bordered text-2xl font-bold bg-white/80 dark:bg-gray-700 dark:text-white"
                   placeholder="Enter your name"
                 />
               ) : (
-                <h1 className="text-3xl font-bold text-gray-900">{user?.displayName || 'User'}</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{user?.displayName || 'User'}</h1>
               )}
               <div className={`badge ${getRoleBadgeColor(role)} badge-lg`}>
                 {getRoleDisplayName(role)}
               </div>
               {role === 'charity' && profileData.verified && (
-                <MdVerified className="w-6 h-6 text-blue-500" title="Verified Organization" />
+                <MdVerified className="w-6 h-6 text-blue-500 dark:text-blue-400" title="Verified Organization" />
               )}
             </div>
             
-            <div className="flex items-center gap-2 text-gray-600 mb-4">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-4">
               <FaEnvelope className="w-4 h-4" />
               <span>{user?.email}</span>
             </div>
 
             {/* Role-specific header info */}
             {role === 'charity' && (
-              <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+              <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-1">
                   <FaBuilding className="w-4 h-4" />
                   <span>{profileData.organizationName}</span>
@@ -309,20 +309,20 @@ const Profile = () => {
             )}
 
             {role === 'restaurant' && (
-              <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+              <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-1">
                   <FaUtensils className="w-4 h-4" />
                   <span>{profileData.businessName}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <FaStar className="w-4 h-4 text-yellow-500" />
+                  <FaStar className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
                   <span>{profileData.averageRating}/5.0</span>
                 </div>
               </div>
             )}
 
             {role === 'admin' && (
-              <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+              <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-1">
                   <FaShieldAlt className="w-4 h-4" />
                   <span>ID: {profileData.employeeId}</span>
@@ -353,7 +353,7 @@ const Profile = () => {
                 </button>
                 <button
                   onClick={handleEditToggle}
-                  className="btn btn-ghost gap-2"
+                  className="btn btn-ghost gap-2 dark:text-gray-300"
                 >
                   <FaTimes className="w-4 h-4" />
                   Cancel
@@ -412,9 +412,9 @@ const Profile = () => {
       {/* Detailed Information */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Contact & Basic Info */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <FaUser className="w-5 h-5 text-primary" />
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <FaUser className="w-5 h-5 text-primary dark:text-primary-300" />
             {role === 'charity' ? 'Organization Information' : 
              role === 'restaurant' ? 'Business Information' : 
              role === 'admin' ? 'Administrative Information' : 'Personal Information'}
@@ -425,9 +425,9 @@ const Profile = () => {
               <>
                 <InfoCard icon={FaCalendarAlt} title="Member Since" value={new Date(profileData.joinDate).toLocaleDateString()} />
                 <InfoCard icon={FaMapMarkerAlt} title="Location" value={profileData.location} />
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600 mb-2">Bio</p>
-                  <p className="text-gray-800">{profileData.bio}</p>
+                <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Bio</p>
+                  <p className="text-gray-800 dark:text-gray-300">{profileData.bio}</p>
                 </div>
               </>
             )}
@@ -438,9 +438,9 @@ const Profile = () => {
                 <InfoCard icon={FaPhone} title="Phone" value={profileData.phone} />
                 <InfoCard icon={FaMapMarkerAlt} title="Address" value={profileData.address} />
                 <InfoCard icon={FaGlobe} title="Website" value={profileData.website} />
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600 mb-2">Description</p>
-                  <p className="text-gray-800">{profileData.description}</p>
+                <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Description</p>
+                  <p className="text-gray-800 dark:text-gray-300">{profileData.description}</p>
                 </div>
               </>
             )}
@@ -452,9 +452,9 @@ const Profile = () => {
                 <InfoCard icon={FaMapMarkerAlt} title="Address" value={profileData.address} />
                 <InfoCard icon={FaGlobe} title="Website" value={profileData.website} />
                 <InfoCard icon={FaClock} title="Operating Hours" value={profileData.operatingHours} />
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600 mb-2">About Us</p>
-                  <p className="text-gray-800">{profileData.description}</p>
+                <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">About Us</p>
+                  <p className="text-gray-800 dark:text-gray-300">{profileData.description}</p>
                 </div>
               </>
             )}
@@ -471,9 +471,9 @@ const Profile = () => {
         </div>
 
         {/* Additional Details */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <FaAward className="w-5 h-5 text-primary" />
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <FaAward className="w-5 h-5 text-primary dark:text-primary-300" />
             {role === 'charity' ? 'Service Areas & Specializations' : 
              role === 'restaurant' ? 'Specialties & Features' : 
              role === 'admin' ? 'System Access & Permissions' : 'Achievements & Interests'}
@@ -482,7 +482,7 @@ const Profile = () => {
           {role === 'user' && (
             <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-3">Achievements</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">Achievements</p>
                 <div className="flex flex-wrap gap-2">
                   {profileData.achievements.map((achievement, index) => (
                     <span key={index} className="badge badge-primary badge-outline">
@@ -497,7 +497,7 @@ const Profile = () => {
           {role === 'charity' && (
             <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-3">Serving Areas</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">Serving Areas</p>
                 <div className="flex flex-wrap gap-2">
                   {profileData.servingAreas.map((area, index) => (
                     <span key={index} className="badge badge-success badge-outline">
@@ -507,7 +507,7 @@ const Profile = () => {
                 </div>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-3">Specializations</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">Specializations</p>
                 <div className="flex flex-wrap gap-2">
                   {profileData.specializations.map((spec, index) => (
                     <span key={index} className="badge badge-info badge-outline">
@@ -522,7 +522,7 @@ const Profile = () => {
           {role === 'restaurant' && (
             <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-3">Specialties</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">Specialties</p>
                 <div className="flex flex-wrap gap-2">
                   {profileData.specialties.map((specialty, index) => (
                     <span key={index} className="badge badge-warning badge-outline">
@@ -538,11 +538,11 @@ const Profile = () => {
           {role === 'admin' && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
-                <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
+                <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg border border-green-200 dark:border-green-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-green-700">Platform Status</p>
-                      <p className="text-lg font-bold text-green-900">Operational</p>
+                      <p className="text-sm font-medium text-green-700 dark:text-green-300">Platform Status</p>
+                      <p className="text-lg font-bold text-green-900 dark:text-green-100">Operational</p>
                     </div>
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   </div>
