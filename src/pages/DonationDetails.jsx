@@ -149,15 +149,15 @@ const DonationDetails = () => {
   if (!donation) return <p className="py-10 text-center text-lg">Donation not found.</p>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg dark:shadow-gray-800/25">
       
-      <h1 className="text-4xl font-extrabold text-center mb-8">{donation.title}</h1>
+      <h1 className="text-4xl font-extrabold text-center mb-8 dark:text-white">{donation.title}</h1>
 
       {/* layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left section */}
         {donation.image && (
-          <div className="rounded-lg overflow-hidden shadow-md">
+          <div className="rounded-lg overflow-hidden shadow-md dark:shadow-gray-800/25">
             <img
               src={donation.image}
               alt={donation.title}
@@ -170,29 +170,29 @@ const DonationDetails = () => {
         {/* Right section */}
         <div className="md:col-span-2 space-y-6">
           
-          <section className="border rounded-lg p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Donation Details</h2>
-            <p><strong>Food Type:</strong> <span className="text-gray-700">{donation.foodType}</span></p>
-            <p><strong>Quantity:</strong> <span className="text-gray-700">{donation.quantity} {donation.quantityUnit}</span></p>
-            <p><strong>Pickup Time Window:</strong> <span className="text-gray-700">{donation.pickupStart} - {donation.pickupEnd}</span></p>
-            <p><strong>Pickup Location:</strong> <span className="text-gray-700">{donation.location}</span></p>
+          <section className="border rounded-lg p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-800/25">
+            <h2 className="text-2xl font-semibold mb-4 border-b pb-2 dark:text-white dark:border-gray-600">Donation Details</h2>
+            <p className="dark:text-gray-300"><strong className="dark:text-white">Food Type:</strong> <span className="text-gray-700 dark:text-gray-300">{donation.foodType}</span></p>
+            <p className="dark:text-gray-300"><strong className="dark:text-white">Quantity:</strong> <span className="text-gray-700 dark:text-gray-300">{donation.quantity} {donation.quantityUnit}</span></p>
+            <p className="dark:text-gray-300"><strong className="dark:text-white">Pickup Time Window:</strong> <span className="text-gray-700 dark:text-gray-300">{donation.pickupStart} - {donation.pickupEnd}</span></p>
+            <p className="dark:text-gray-300"><strong className="dark:text-white">Pickup Location:</strong> <span className="text-gray-700 dark:text-gray-300">{donation.location}</span></p>
           </section>
 
           
-          <section className="border rounded-lg p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Restaurant Information</h2>
-            <p><strong>Name:</strong> <span className="text-gray-700">{donation.restaurantName}</span></p>
-            <p><strong>Email:</strong> <span className="text-primary hover:underline">{donation.restaurantEmail}</span></p>
+          <section className="border rounded-lg p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-800/25">
+            <h2 className="text-2xl font-semibold mb-4 border-b pb-2 dark:text-white dark:border-gray-600">Restaurant Information</h2>
+            <p className="dark:text-gray-300"><strong className="dark:text-white">Name:</strong> <span className="text-gray-700 dark:text-gray-300">{donation.restaurantName}</span></p>
+            <p className="dark:text-gray-300"><strong className="dark:text-white">Email:</strong> <span className="text-primary hover:underline dark:text-blue-400">{donation.restaurantEmail}</span></p>
           </section>
 
-          <section className="border rounded-lg p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Status</h2>
+          <section className="border rounded-lg p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-800/25">
+            <h2 className="text-2xl font-semibold mb-4 border-b pb-2 dark:text-white dark:border-gray-600">Status</h2>
             <span
               className={`inline-block px-4 py-2 rounded-full text-white font-semibold
-                ${donation.status === 'Verified' ? 'bg-green-600' :
-                  donation.status === 'Picked Up' ? 'bg-blue-600' :
-                    donation.status === 'Rejected' ? 'bg-red-600' :
-                      'bg-gray-500'
+                ${donation.status === 'Verified' ? 'bg-green-600 dark:bg-green-700' :
+                  donation.status === 'Picked Up' ? 'bg-blue-600 dark:bg-blue-700' :
+                    donation.status === 'Rejected' ? 'bg-red-600 dark:bg-red-700' :
+                      'bg-gray-500 dark:bg-gray-600'
                 }`}
             >
               {donation.status === "Verified" ? 'Available' : donation.status}
@@ -205,14 +205,14 @@ const DonationDetails = () => {
                 {/* Add to Favorites */}
                 <button
                   onClick={toggleFavorite}
-                  className={`btn btn-outline ${isFavorite ? 'btn-success' : ''} flex-grow md:flex-grow-0`}
+                  className={`btn btn-outline dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 ${isFavorite ? 'btn-success dark:bg-green-800 dark:border-green-700' : ''} flex-grow md:flex-grow-0`}
                 >
                   {isFavorite ? 'Remove from Favorites' : 'Save to Favorites'}
                 </button>
 
                 {/* Add Review */}
                 <button
-                  className="btn btn-secondary flex-grow md:flex-grow-0"
+                  className="btn btn-secondary flex-grow md:flex-grow-0 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600"
                   onClick={() => setReviewModalOpen(true)}
                 >
                   Add Review
@@ -225,7 +225,7 @@ const DonationDetails = () => {
                       <>
                         {checkRequest?.request?.status !== 'Accepted' && (
                           <button
-                            className={`btn btn-primary flex-grow md:flex-grow-0 ${checkRequest?.request?.status === 'Pending' ? 'btn-disabled cursor-not-allowed' : ''}`}
+                            className={`btn btn-primary flex-grow md:flex-grow-0 dark:bg-blue-700 dark:border-blue-600 dark:text-white dark:hover:bg-blue-600 ${checkRequest?.request?.status === 'Pending' ? 'btn-disabled cursor-not-allowed dark:bg-gray-600 dark:border-gray-500' : ''}`}
                             onClick={() => {
                               if (checkRequest?.request?.status !== 'Pending') {
                                 setRequestModalOpen(true);
@@ -239,7 +239,7 @@ const DonationDetails = () => {
 
                         {checkRequest?.request?.status === 'Accepted' && (
                           <button
-                            className="btn btn-info text-white flex-grow md:flex-grow-0"
+                            className="btn btn-info text-white flex-grow md:flex-grow-0 dark:bg-cyan-700 dark:border-cyan-600 dark:hover:bg-cyan-600"
                             onClick={confirmPickup}
                           >
                             Confirm Pickup
@@ -260,22 +260,22 @@ const DonationDetails = () => {
 
       {/* Reviews Section */}
       <section className="mt-12">
-        <h2 className="text-3xl font-bold mb-6 border-b pb-3">Reviews</h2>
+        <h2 className="text-3xl font-bold mb-6 border-b pb-3 dark:text-white dark:border-gray-600">Reviews</h2>
         {reviews.length === 0 ? (
-          <p className="italic text-gray-500">No reviews yet.</p>
+          <p className="italic text-gray-500 dark:text-gray-400">No reviews yet.</p>
         ) : (
           <div className="space-y-6">
             {reviews.map(review => (
               <article
                 key={review._id}
-                className="border rounded-lg p-5 shadow-sm bg-gray-50"
+                className="border rounded-lg p-5 shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-800/25"
                 aria-label={`Review by ${review.reviewerName}`}
               >
                 <header className="mb-2 flex justify-between items-center">
-                  <h3 className="text-lg font-semibold">{review.reviewerName}</h3>
-                  <span className="text-yellow-500 font-bold">Rating: {review.rating} / 5</span>
+                  <h3 className="text-lg font-semibold dark:text-white">{review.reviewerName}</h3>
+                  <span className="text-yellow-500 font-bold dark:text-yellow-400">Rating: {review.rating} / 5</span>
                 </header>
-                <p className="text-gray-700 whitespace-pre-wrap">{review.description}</p>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{review.description}</p>
               </article>
             ))}
           </div>
@@ -285,77 +285,77 @@ const DonationDetails = () => {
       {/* Request Donation Modal */}
       {isRequestModalOpen && (
         <Modal onClose={() => setRequestModalOpen(false)}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 p-5 max-w-md">
-            <h3 className="text-2xl font-bold mb-4 text-center">Request Donation</h3>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 p-5 max-w-md dark:bg-gray-800 dark:text-white">
+            <h3 className="text-2xl font-bold mb-4 text-center dark:text-white">Request Donation</h3>
 
             <div>
-              <label className="label font-semibold">Donation Title</label>
+              <label className="label font-semibold dark:text-gray-300">Donation Title</label>
               <input
                 type="text"
                 value={donation.title}
                 readOnly
-                className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                className="input input-bordered w-full bg-gray-100 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
               />
             </div>
 
             <div>
-              <label className="label font-semibold">Restaurant Name</label>
+              <label className="label font-semibold dark:text-gray-300">Restaurant Name</label>
               <input
                 type="text"
                 value={donation.restaurantName}
                 readOnly
-                className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                className="input input-bordered w-full bg-gray-100 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
               />
             </div>
 
             <div>
-              <label className="label font-semibold">Charity Name</label>
+              <label className="label font-semibold dark:text-gray-300">Charity Name</label>
               <input
                 type="text"
                 value={user.displayName}
                 readOnly
-                className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                className="input input-bordered w-full bg-gray-100 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
               />
             </div>
 
             <div>
-              <label className="label font-semibold">Charity Email</label>
+              <label className="label font-semibold dark:text-gray-300">Charity Email</label>
               <input
                 type="email"
                 value={user.email}
                 readOnly
-                className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                className="input input-bordered w-full bg-gray-100 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
               />
             </div>
 
             <div>
-              <label className="label font-semibold">Request Description</label>
+              <label className="label font-semibold dark:text-gray-300">Request Description</label>
               <textarea
                 {...register('requestDescription', { required: true })}
                 rows={4}
                 placeholder="Describe your request and pickup details"
-                className="textarea textarea-bordered w-full"
+                className="textarea textarea-bordered w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               {errors.requestDescription && (
-                <p className="text-red-500 text-sm mt-1">This field is required</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">This field is required</p>
               )}
             </div>
 
             <div>
-              <label className="label font-semibold">Pickup Time</label>
+              <label className="label font-semibold dark:text-gray-300">Pickup Time</label>
 
               <input
                 type="time"
                 {...register("pickupTime", { required: true })}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
 
               />
               {errors.pickupTime && (
-                <p className="text-red-500 text-sm mt-1">This field is required</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">This field is required</p>
               )}
             </div>
 
-            <button type="submit" className="btn btn-primary w-full mt-3">
+            <button type="submit" className="btn btn-primary w-full mt-3 dark:bg-blue-700 dark:border-blue-600 dark:hover:bg-blue-600">
               Submit Request
             </button>
           </form>
@@ -374,25 +374,25 @@ const DonationDetails = () => {
               });
               resetReview(); // clear the form after submit
             })}
-            className="space-y-4"
+            className="space-y-4 dark:bg-gray-800 dark:text-white"
           >
-            <h3 className="text-lg font-semibold mb-2">Leave a Review <span className='text-primary underline text-sm'>{user?.displayName}</span></h3>
+            <h3 className="text-lg font-semibold mb-2 dark:text-white">Leave a Review <span className='text-primary underline text-sm dark:text-blue-400'>{user?.displayName}</span></h3>
 
             <div>
-              <label className="label font-semibold">Description</label>
+              <label className="label font-semibold dark:text-gray-300">Description</label>
               <textarea
                 {...registerReview('description', { required: 'Description is required' })}
                 rows="4"
                 placeholder="Write your feedback"
-                className="textarea textarea-bordered w-full"
+                className="textarea textarea-bordered w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               {reviewErrors.description && (
-                <p className="text-red-500 text-sm mt-1">{reviewErrors.description.message}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">{reviewErrors.description.message}</p>
               )}
             </div>
 
             <div>
-              <label className="label font-semibold">Rating (1 to 5)</label>
+              <label className="label font-semibold dark:text-gray-300">Rating (1 to 5)</label>
               <input
                 type="number"
                 step="0.1"
@@ -404,14 +404,14 @@ const DonationDetails = () => {
                   max: { value: 5, message: 'Max rating is 5' },
                 })}
                 placeholder="e.g., 4.5"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               {reviewErrors.rating && (
-                <p className="text-red-500 text-sm mt-1">{reviewErrors.rating.message}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">{reviewErrors.rating.message}</p>
               )}
             </div>
 
-            <button type="submit" className="btn btn-primary w-full">
+            <button type="submit" className="btn btn-primary w-full dark:bg-blue-700 dark:border-blue-600 dark:hover:bg-blue-600">
               Submit Review
             </button>
           </form>
