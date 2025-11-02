@@ -174,7 +174,7 @@ const PartnersSection = () => {
           </div>
         </div>
 
-        {/* Restaurant Partners */}
+        {/* Restaurant Partners - Marquee */}
         <div className="mb-16">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -192,14 +192,31 @@ const PartnersSection = () => {
             </button>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {restaurantPartners.map((partner, idx) => (
-              <PartnerCard key={idx} partner={partner} type="restaurant" />
-            ))}
+          <div className="relative overflow-hidden">
+            <style>{`
+              @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+              }
+              .animate-marquee {
+                animation: marquee 30s linear infinite;
+              }
+              .animate-marquee:hover {
+                animation-play-state: paused;
+              }
+            `}</style>
+            
+            <div className="flex animate-marquee">
+              {[...restaurantPartners, ...restaurantPartners].map((partner, idx) => (
+                <div key={idx} className="flex-shrink-0 w-48 mx-2">
+                  <PartnerCard partner={partner} type="restaurant" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Charity Partners */}
+        {/* Charity Partners - Marquee (Reverse Direction) */}
         <div className="mb-16">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -217,10 +234,27 @@ const PartnersSection = () => {
             </button>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {charityPartners.map((partner, idx) => (
-              <PartnerCard key={idx} partner={partner} type="charity" />
-            ))}
+          <div className="relative overflow-hidden">
+            <style>{`
+              @keyframes marquee-reverse {
+                0% { transform: translateX(-50%); }
+                100% { transform: translateX(0); }
+              }
+              .animate-marquee-reverse {
+                animation: marquee-reverse 30s linear infinite;
+              }
+              .animate-marquee-reverse:hover {
+                animation-play-state: paused;
+              }
+            `}</style>
+            
+            <div className="flex animate-marquee-reverse">
+              {[...charityPartners, ...charityPartners].map((partner, idx) => (
+                <div key={idx} className="flex-shrink-0 w-48 mx-2">
+                  <PartnerCard partner={partner} type="charity" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
