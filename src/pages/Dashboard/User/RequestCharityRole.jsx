@@ -122,61 +122,61 @@ const RequestCharityRole = () => {
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-xl shadow space-y-6">
-      <h2 className="text-2xl font-bold text-center">Request Charity Role</h2>
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow dark:shadow-gray-900/50 space-y-6">
+      <h2 className="text-2xl font-bold text-center dark:text-white">Request Charity Role</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="label">Your Name</label>
+            <label className="label dark:text-gray-300">Your Name</label>
             <input
               type="text"
               value={user?.displayName || ''}
               readOnly
-              className="input input-bordered w-full bg-gray-100"
+              className="input input-bordered w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed"
             />
           </div>
           <div>
-            <label className="label">Email Address</label>
+            <label className="label dark:text-gray-300">Email Address</label>
             <input
               type="email"
               value={user?.email || ''}
               readOnly
-              className="input input-bordered w-full bg-gray-100"
+              className="input input-bordered w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="label">Organization Name *</label>
+            <label className="label dark:text-gray-300">Organization Name *</label>
             <input
               type="text"
               name="organizationName"
               value={formData.organizationName}
               onChange={handleInputChange}
               required
-              className="input input-bordered w-full"
+              className="input input-bordered w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
             />
           </div>
           <div>
-            <label className="label">Mission Statement *</label>
+            <label className="label dark:text-gray-300">Mission Statement *</label>
             <textarea
               name="missionStatement"
               value={formData.missionStatement}
               onChange={handleInputChange}
               required
               rows={4}
-              className="textarea textarea-bordered w-full"
+              className="textarea textarea-bordered w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
             />
           </div>
         </div>
 
         <div className="mt-6">
-          <div className="mb-2 text-sm text-gray-700 font-medium">
+          <div className="mb-2 text-sm text-gray-700 dark:text-gray-300 font-medium">
             Payment: ${CHARITY_FEE}
           </div>
-          <div className="border rounded-lg p-3 shadow-sm bg-gray-50">
+          <div className="border rounded-lg p-3 shadow-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
             <CardElement
               options={{
                 style: {
@@ -195,7 +195,7 @@ const RequestCharityRole = () => {
         <button
           type="submit"
           disabled={!stripe || submitting}
-          className="btn btn-primary w-full"
+          className="btn btn-primary w-full dark:bg-primary dark:border-primary dark:hover:bg-primary/80"
         >
           {submitting ? 'Processing...' : `Pay $${CHARITY_FEE} & Submit Request`}
         </button>
