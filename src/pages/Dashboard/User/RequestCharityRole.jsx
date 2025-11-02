@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const RequestCharityRole = () => {
-  const { user } = useAuth();
+  const { user, darkMode } = useAuth();
   const stripe = useStripe();
   const elements = useElements();
   const axiosSecure = useAxiosSecure();
@@ -182,7 +182,7 @@ const RequestCharityRole = () => {
                 style: {
                   base: {
                     fontSize: '16px',
-                    color: '#374151',
+                    color: darkMode?'#9CA3AF':'#374151',
                     '::placeholder': { color: '#9CA3AF' },
                   },
                   invalid: { color: '#DC2626' }

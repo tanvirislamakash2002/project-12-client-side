@@ -25,18 +25,18 @@ const TransactionHistory = () => {
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
-      <h2 className="text-4xl font-bold text-center mb-10">Transaction History</h2>
+      <h2 className="text-4xl font-bold text-center mb-10 dark:text-white">Transaction History</h2>
 
       {isLoading ? (
         <div className="flex justify-center items-center h-40">
-          <span className="loading loading-spinner loading-lg text-primary" />
+          <span className="loading loading-spinner loading-lg text-primary dark:text-primary-300" />
         </div>
       ) : transactions.length === 0 ? (
-        <div className="text-center text-gray-500">No transactions found.</div>
+        <div className="text-center text-gray-500 dark:text-gray-400">No transactions found.</div>
       ) : (
-        <div className="overflow-x-auto bg-white shadow rounded-lg">
+        <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow rounded-lg">
           <table className="table w-full">
-            <thead className="bg-base-200 text-base-content">
+            <thead className="bg-base-200 dark:bg-gray-700 text-base-content dark:text-gray-300">
               <tr>
                 <th>Transaction ID</th>
                 <th>Amount</th>
@@ -46,10 +46,10 @@ const TransactionHistory = () => {
             </thead>
             <tbody>
               {transactions.map((tx) => (
-                <tr key={tx._id} className="hover:bg-base-100">
-                  <td className="whitespace-nowrap">{tx.paymentId}</td>
-                  <td className="text-green-600 font-semibold">${tx.amount}</td>
-                  <td>{formatDate(tx.createdAt)}</td>
+                <tr key={tx._id} className="hover:bg-base-100 dark:hover:bg-gray-700">
+                  <td className="whitespace-nowrap dark:text-gray-300">{tx.paymentId}</td>
+                  <td className="text-green-600 dark:text-green-400 font-semibold">${tx.amount}</td>
+                  <td className="dark:text-gray-300">{formatDate(tx.createdAt)}</td>
                   <td>
                     <span
                       className={`badge text-white ${
