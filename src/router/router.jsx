@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router";
 import App from "../App";
 import RootLayout from "../layout/RootLayout";
 import AuthLayout from "../layout/AuthLayout";
-import Home from "../pages/Home";
 import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
 import AddDonation from "../pages/Dashboard/Restaurant/AddDonation";
@@ -37,6 +36,7 @@ import UserRoute from "../routes/UserRoute";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import Home from "../pages/Home/Home";
 
 export const router = createBrowserRouter([
     {
