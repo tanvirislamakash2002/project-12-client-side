@@ -8,6 +8,7 @@ import UserTypeSection from './components/UserTypeSection';
 import PartnersSection from './components/PartnersSection';
 import FAQSection from './components/FAQSection';
 import MapSection from './components/MapSection';
+import BlogSection from './components/BlogSection';
 
 const Home = () => {
     return (
@@ -25,6 +26,7 @@ const Home = () => {
             <PartnersSection></PartnersSection>
             <FAQSection></FAQSection>
             <MapSection></MapSection>
+            <BlogSection></BlogSection>
 
 
         </div>
