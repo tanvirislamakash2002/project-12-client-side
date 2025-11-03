@@ -1,40 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { Building2, Heart, Shield, Award, CheckCircle, Lock, BarChart3, Leaf, ChevronLeft, ChevronRight, Star, MapPin, TrendingUp } from 'lucide-react';
+import restaurantLogo1 from '../../../assets/partnersLogo/restaurant/1.jpg'
+import restaurantLogo2 from '../../../assets/partnersLogo/restaurant/2.webp'
+import restaurantLogo3 from '../../../assets/partnersLogo/restaurant/3.jpg'
+import restaurantLogo4 from '../../../assets/partnersLogo/restaurant/4.jpg'
+import restaurantLogo5 from '../../../assets/partnersLogo/restaurant/5.jpg'
+import restaurantLogo6 from '../../../assets/partnersLogo/restaurant/6.avif'
+import restaurantLogo7 from '../../../assets/partnersLogo/restaurant/7.png'
+import restaurantLogo8 from '../../../assets/partnersLogo/restaurant/8.avif'
+import restaurantLogo9 from '../../../assets/partnersLogo/restaurant/9.avif'
+import restaurantLogo10 from '../../../assets/partnersLogo/restaurant/10.avif'
+import restaurantLogo11 from '../../../assets/partnersLogo/restaurant/11.jpg'
+import restaurantLogo12 from '../../../assets/partnersLogo/restaurant/12.avif'
 
+import charityLogo1 from '../../../assets/partnersLogo/charity/1.avif'
+import charityLogo2 from '../../../assets/partnersLogo/charity/2.png'
+import charityLogo3 from '../../../assets/partnersLogo/charity/3.avif'
+import charityLogo4 from '../../../assets/partnersLogo/charity/4.jpg'
+import charityLogo5 from '../../../assets/partnersLogo/charity/5.webp'
+import charityLogo6 from '../../../assets/partnersLogo/charity/6.jpg'
+import charityLogo7 from '../../../assets/partnersLogo/charity/7.webp'
+import charityLogo8 from '../../../assets/partnersLogo/charity/8.webp'
+import charityLogo9 from '../../../assets/partnersLogo/charity/9.webp'
+import charityLogo10 from '../../../assets/partnersLogo/charity/10.jpg'
+import charityLogo11 from '../../../assets/partnersLogo/charity/11.jpg'
+import charityLogo12 from '../../../assets/partnersLogo/charity/12.jpg'
 const PartnersSection = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [currentLogoIndex, setCurrentLogoIndex] = useState(0);
 
   // Restaurant Partners
   const restaurantPartners = [
-    { name: 'Bella Italia', type: 'Fine Dining', tier: 'platinum', logo: '🍝' },
-    { name: 'Sunset Bistro', type: 'Casual Dining', tier: 'gold', logo: '🌅' },
-    { name: 'Urban Kitchen', type: 'Contemporary', tier: 'gold', logo: '🍳' },
-    { name: 'Green Leaf Cafe', type: 'Cafe & Bakery', tier: 'community', logo: '🥗' },
-    { name: 'Golden Dragon', type: 'Asian Fusion', tier: 'platinum', logo: '🐉' },
-    { name: 'The French Corner', type: 'Fine Dining', tier: 'gold', logo: '🥐' },
-    { name: 'Pizza Paradise', type: 'Casual Dining', tier: 'community', logo: '🍕' },
-    { name: 'Ocean Breeze', type: 'Seafood', tier: 'gold', logo: '🦞' },
-    { name: 'Mountain View Hotel', type: 'Hotel Kitchen', tier: 'platinum', logo: '🏨' },
-    { name: 'Tech Hub Cafeteria', type: 'Corporate', tier: 'gold', logo: '💼' },
-    { name: 'Sweet Dreams Bakery', type: 'Cafe & Bakery', tier: 'community', logo: '🧁' },
-    { name: 'Spice Route', type: 'Indian Cuisine', tier: 'gold', logo: '🌶️' }
+    { name: 'Bella Italia', type: 'Fine Dining', tier: 'platinum', logo: restaurantLogo1 },
+    { name: 'Sunset Bistro', type: 'Casual Dining', tier: 'gold', logo: restaurantLogo2 },
+    { name: 'Urban Kitchen', type: 'Contemporary', tier: 'gold', logo: restaurantLogo3 },
+    { name: 'Green Leaf Cafe', type: 'Cafe & Bakery', tier: 'community', logo: restaurantLogo4 },
+    { name: 'Golden Dragon', type: 'Asian Fusion', tier: 'platinum', logo: restaurantLogo5 },
+    { name: 'The French Corner', type: 'Fine Dining', tier: 'gold', logo: restaurantLogo6 },
+    { name: 'Pizza Paradise', type: 'Casual Dining', tier: 'community', logo: restaurantLogo7 },
+    { name: 'Ocean Breeze', type: 'Seafood', tier: 'gold', logo: restaurantLogo8 },
+    { name: 'Mountain View Hotel', type: 'Hotel Kitchen', tier: 'platinum', logo: restaurantLogo9 },
+    { name: 'Tech Hub Cafeteria', type: 'Corporate', tier: 'gold', logo: restaurantLogo10 },
+    { name: 'Sweet Dreams Bakery', type: 'Cafe & Bakery', tier: 'community', logo: restaurantLogo11 },
+    { name: 'Spice Route', type: 'Indian Cuisine', tier: 'gold', logo: restaurantLogo12 }
+
   ];
 
   // Charity Partners
   const charityPartners = [
-    { name: 'Hope Community Shelter', type: 'Homeless Shelter', verified: true, logo: '🏠' },
-    { name: 'City Food Bank', type: 'Food Bank', verified: true, logo: '🍱' },
-    { name: 'Meals on Wheels Network', type: 'Senior Services', verified: true, logo: '🚗' },
-    { name: 'Youth Opportunity Center', type: 'Youth Organization', verified: true, logo: '👨‍👩‍👧‍👦' },
-    { name: 'Family Support Services', type: 'Community Center', verified: true, logo: '❤️' },
-    { name: 'Golden Years Foundation', type: 'Senior Care', verified: true, logo: '👵' },
-    { name: 'Community Pantry Network', type: 'Food Pantry', verified: true, logo: '🥫' },
-    { name: 'Helping Hands Mission', type: 'Homeless Shelter', verified: true, logo: '🤝' },
-    { name: 'Kids First Foundation', type: 'Youth Organization', verified: true, logo: '🎒' },
-    { name: 'Downtown Community Hub', type: 'Community Center', verified: true, logo: '🏘️' },
-    { name: 'Sunrise Senior Living', type: 'Senior Care', verified: true, logo: '🌄' },
-    { name: 'Second Harvest Network', type: 'Food Bank', verified: true, logo: '🌾' }
+    { name: 'Hope Community Shelter', type: 'Homeless Shelter', verified: true, logo: charityLogo1 },
+    { name: 'City Food Bank', type: 'Food Bank', verified: true, logo: charityLogo2 },
+    { name: 'Meals on Wheels Network', type: 'Senior Services', verified: true, logo: charityLogo3 },
+    { name: 'Youth Opportunity Center', type: 'Youth Organization', verified: true, logo: charityLogo4 },
+    { name: 'Family Support Services', type: 'Community Center', verified: true, logo: charityLogo5 },
+    { name: 'Golden Years Foundation', type: 'Senior Care', verified: true, logo: charityLogo6 },
+    { name: 'Community Pantry Network', type: 'Food Pantry', verified: true, logo: charityLogo7 },
+    { name: 'Helping Hands Mission', type: 'Homeless Shelter', verified: true, logo: charityLogo8 },
+    { name: 'Kids First Foundation', type: 'Youth Organization', verified: true, logo: charityLogo9 },
+    { name: 'Downtown Community Hub', type: 'Community Center', verified: true, logo: charityLogo10 },
+    { name: 'Sunrise Senior Living', type: 'Senior Care', verified: true, logo: charityLogo11 },
+    { name: 'Second Harvest Network', type: 'Food Bank', verified: true, logo: charityLogo12 }
+
   ];
 
   // Trust Statistics
@@ -85,7 +111,7 @@ const PartnersSection = () => {
 
   const PartnerCard = ({ partner, type }) => {
     const [isHovered, setIsHovered] = useState(false);
-    
+
     return (
       <div
         onMouseEnter={() => setIsHovered(true)}
@@ -94,12 +120,19 @@ const PartnersSection = () => {
       >
         {/* Partner Logo/Icon */}
         <div className="flex flex-col items-center text-center">
-          <div className={`w-20 h-20 flex items-center justify-center text-4xl mb-3 rounded-xl transition-transform duration-300 ${
-            type === 'restaurant' ? 'bg-primary/10 dark:bg-primary/20' : 'bg-secondary/10 dark:bg-secondary/20'
-          } ${isHovered ? 'scale-110' : ''}`}>
+          {/* <div className={`w-20 h-20 flex items-center justify-center text-4xl mb-3 rounded-xl transition-transform duration-300 ${type === 'restaurant' ? 'bg-primary/10 dark:bg-primary/20' : 'bg-secondary/10 dark:bg-secondary/20'
+            } ${isHovered ? 'scale-110' : ''}`}>
             {partner.logo}
+          </div> */}
+          <div className={`w-20 h-20 flex items-center justify-center text-4xl mb-3 rounded-xl transition-transform duration-300 ${type === 'restaurant' ? 'bg-primary/10 dark:bg-primary/20' : 'bg-secondary/10 dark:bg-secondary/20'
+            } ${isHovered ? 'scale-110' : ''}`}>
+            {/* Replace with actual image */}
+            <img
+              src={partner.logo} // Assuming partner.logo contains the image URL
+              alt={`${partner.name} logo`}
+              className="w-full h-full object-cover rounded-xl"
+            />
           </div>
-          
           <h4 className="font-bold text-base-content dark:text-base-content mb-1 line-clamp-1">
             {partner.name}
           </h4>
@@ -113,7 +146,7 @@ const PartnersSection = () => {
               {getTierBadge(partner.tier).label}
             </span>
           )}
-          
+
           {type === 'charity' && partner.verified && (
             <div className="flex items-center gap-1 bg-success/10 dark:bg-success/20 text-success dark:text-success px-2 py-1 rounded-full text-xs font-semibold">
               <CheckCircle className="w-3 h-3" />
@@ -191,7 +224,7 @@ const PartnersSection = () => {
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-          
+
           <div className="relative overflow-hidden">
             <style>{`
               @keyframes marquee {
@@ -205,7 +238,7 @@ const PartnersSection = () => {
                 animation-play-state: paused;
               }
             `}</style>
-            
+
             <div className="flex animate-marquee">
               {[...restaurantPartners, ...restaurantPartners].map((partner, idx) => (
                 <div key={idx} className="flex-shrink-0 w-48 mx-2">
@@ -233,7 +266,7 @@ const PartnersSection = () => {
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-          
+
           <div className="relative overflow-hidden">
             <style>{`
               @keyframes marquee-reverse {
@@ -247,7 +280,7 @@ const PartnersSection = () => {
                 animation-play-state: paused;
               }
             `}</style>
-            
+
             <div className="flex animate-marquee-reverse">
               {[...charityPartners, ...charityPartners].map((partner, idx) => (
                 <div key={idx} className="flex-shrink-0 w-48 mx-2">
