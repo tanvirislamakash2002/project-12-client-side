@@ -310,7 +310,7 @@ const FAQSection = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="bg-gradient-to-r from-primary to-secondary dark:from-primary dark:to-secondary rounded-2xl p-8 text-center shadow-xl">
+        {/* <div className="bg-gradient-to-r from-primary to-secondary dark:from-primary dark:to-secondary rounded-2xl p-8 text-center shadow-xl">
           <h3 className="text-2xl md:text-3xl font-bold text-primary-content mb-3">
             Ready to Get Started?
           </h3>
@@ -325,7 +325,7 @@ const FAQSection = () => {
               Learn More
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <style>{`

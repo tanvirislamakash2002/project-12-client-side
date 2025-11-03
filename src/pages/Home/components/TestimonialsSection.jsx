@@ -363,7 +363,7 @@ const TestimonialsSection = () => {
     </div>
 
     {/* Call to Action */}
-    <div className="mt-12 bg-base-100 dark:bg-base-200 rounded-2xl p-8 shadow-lg border border-base-300 dark:border-base-300 text-center">
+    {/* <div className="mt-12 bg-base-100 dark:bg-base-200 rounded-2xl p-8 shadow-lg border border-base-300 dark:border-base-300 text-center">
       <h3 className="text-2xl md:text-3xl font-bold text-base-content dark:text-base-content mb-4">
         Ready to Share Your Success Story?
       </h3>
@@ -378,7 +378,7 @@ const TestimonialsSection = () => {
           See Available Food
         </button>
       </div>
-    </div>
+    </div> */}
   </div>
 </section>
   );

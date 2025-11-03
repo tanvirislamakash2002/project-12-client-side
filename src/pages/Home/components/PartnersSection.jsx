@@ -339,7 +339,7 @@ const PartnersSection = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center bg-gradient-to-r from-primary to-secondary dark:from-primary dark:to-secondary rounded-2xl p-10 shadow-2xl">
+        {/* <div className="text-center bg-gradient-to-r from-primary to-secondary dark:from-primary dark:to-secondary rounded-2xl p-10 shadow-2xl">
           <h3 className="text-3xl font-bold text-primary-content mb-4">
             Ready to Join Our Partner Network?
           </h3>
@@ -354,7 +354,7 @@ const PartnersSection = () => {
               Join as Charity Organization
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

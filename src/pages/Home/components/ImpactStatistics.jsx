@@ -235,7 +235,7 @@ const ImpactStatistics = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="mt-12 text-center">
+        {/* <div className="mt-12 text-center">
           <div className="bg-gradient-to-r from-primary/90 to-secondary/90 dark:from-primary/20 dark:to-secondary/20 rounded-2xl p-8 shadow-xl">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Ready to Make an Impact?
@@ -252,7 +252,7 @@ const ImpactStatistics = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Trust Indicators */}
         <div className="mt-12 text-center">
