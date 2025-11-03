@@ -1,23 +1,153 @@
 import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
 import { MapPin, Navigation, Filter, Clock, Building2, Heart, UtensilsCrossed, Search, Download, Share2, X, Star, CheckCircle, TrendingUp, Leaf, Users, ChevronRight } from 'lucide-react';
+import 'leaflet/dist/leaflet.css';
+
+// Fix Leaflet default marker icon issue
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Custom marker icons with colors
+const createCustomIcon = (color, iconSvg) => {
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `
+      <div style="position: relative;">
+        <div style="
+          background-color: ${color};
+          width: 40px;
+          height: 40px;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          border: 3px solid white;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <div style="transform: rotate(45deg); color: white; font-size: 18px;">
+            ${iconSvg}
+          </div>
+        </div>
+      </div>
+    `,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+  });
+};
+
+const donationIcon = createCustomIcon('#38A169', '🍽️');
+const charityIcon = createCustomIcon('#3B82F6', '❤️');
+const restaurantIcon = createCustomIcon('#F97316', '🏪');
 
 const MapSection = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedRadius, setSelectedRadius] = useState(10);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [mapCenter, setMapCenter] = useState([40.7128, -74.0060]); // New York City default
+  const [mapZoom, setMapZoom] = useState(12);
 
   // Mock data for map markers
   const markers = [
-    { id: 1, type: 'donation', name: 'Urban Bistro', food: 'Italian meals', quantity: 15, distance: 2.3, time: '8:00 PM', rating: 4.8, lat: 40, lng: -74, verified: true },
-    { id: 2, type: 'donation', name: 'Green Leaf Cafe', food: 'Fresh salads', quantity: 20, distance: 1.5, time: '7:30 PM', rating: 4.9, lat: 40.1, lng: -73.9, verified: true },
-    { id: 3, type: 'charity', name: 'Hope Community Shelter', served: 200, area: 'Downtown', lat: 40.05, lng: -74.05, verified: true },
-    { id: 4, type: 'charity', name: 'City Food Bank', served: 500, area: 'Midtown', lat: 40.15, lng: -73.85, verified: true },
-    { id: 5, type: 'restaurant', name: 'Bella Italia', donations: 45, rating: 4.7, lat: 39.95, lng: -74.1, verified: true },
-    { id: 6, type: 'restaurant', name: 'Ocean Breeze', donations: 32, rating: 4.8, lat: 40.2, lng: -73.8, verified: true },
-    { id: 7, type: 'donation', name: 'Sweet Dreams Bakery', food: 'Bakery items', quantity: 30, distance: 3.1, time: '9:00 PM', rating: 4.6, lat: 39.9, lng: -74.15, verified: true },
-    { id: 8, type: 'donation', name: 'Spice Route', food: 'Prepared meals', quantity: 25, distance: 4.2, time: '8:30 PM', rating: 4.9, lat: 40.25, lng: -73.75, verified: true }
+    { 
+      id: 1, 
+      type: 'donation', 
+      name: 'Urban Bistro', 
+      food: 'Italian meals', 
+      quantity: 15, 
+      distance: 2.3, 
+      time: '8:00 PM', 
+      rating: 4.8, 
+      lat: 40.7489, 
+      lng: -73.9680, 
+      verified: true 
+    },
+    { 
+      id: 2, 
+      type: 'donation', 
+      name: 'Green Leaf Cafe', 
+      food: 'Fresh salads', 
+      quantity: 20, 
+      distance: 1.5, 
+      time: '7:30 PM', 
+      rating: 4.9, 
+      lat: 40.7589, 
+      lng: -73.9850, 
+      verified: true 
+    },
+    { 
+      id: 3, 
+      type: 'charity', 
+      name: 'Hope Community Shelter', 
+      served: 200, 
+      area: 'Downtown', 
+      lat: 40.7289, 
+      lng: -73.9950, 
+      verified: true 
+    },
+    { 
+      id: 4, 
+      type: 'charity', 
+      name: 'City Food Bank', 
+      served: 500, 
+      area: 'Midtown', 
+      lat: 40.7589, 
+      lng: -74.0050, 
+      verified: true 
+    },
+    { 
+      id: 5, 
+      type: 'restaurant', 
+      name: 'Bella Italia', 
+      donations: 45, 
+      rating: 4.7, 
+      lat: 40.7189, 
+      lng: -73.9580, 
+      verified: true 
+    },
+    { 
+      id: 6, 
+      type: 'restaurant', 
+      name: 'Ocean Breeze', 
+      donations: 32, 
+      rating: 4.8, 
+      lat: 40.7389, 
+      lng: -74.0150, 
+      verified: true 
+    },
+    { 
+      id: 7, 
+      type: 'donation', 
+      name: 'Sweet Dreams Bakery', 
+      food: 'Bakery items', 
+      quantity: 30, 
+      distance: 3.1, 
+      time: '9:00 PM', 
+      rating: 4.6, 
+      lat: 40.7089, 
+      lng: -73.9780, 
+      verified: true 
+    },
+    { 
+      id: 8, 
+      type: 'donation', 
+      name: 'Spice Route', 
+      food: 'Prepared meals', 
+      quantity: 25, 
+      distance: 4.2, 
+      time: '8:30 PM', 
+      rating: 4.9, 
+      lat: 40.7689, 
+      lng: -73.9580, 
+      verified: true 
+    }
   ];
 
   const recentActivity = [
@@ -49,52 +179,31 @@ const MapSection = () => {
     ? markers 
     : markers.filter(m => m.type === activeFilter);
 
-  // Update last update time
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setLastUpdate(new Date());
-    }, 60000); // Update every minute
-    return () => clearInterval(timer);
-  }, []);
-
-  const getMarkerColor = (type) => {
-    switch(type) {
-      case 'donation': return 'bg-success';
-      case 'charity': return 'bg-info';
-      case 'restaurant': return 'bg-secondary';
-      default: return 'bg-primary';
-    }
-  };
-
   const getMarkerIcon = (type) => {
     switch(type) {
-      case 'donation': return <UtensilsCrossed className="w-4 h-4" />;
-      case 'charity': return <Heart className="w-4 h-4" />;
-      case 'restaurant': return <Building2 className="w-4 h-4" />;
-      default: return <MapPin className="w-4 h-4" />;
+      case 'donation': return donationIcon;
+      case 'charity': return charityIcon;
+      case 'restaurant': return restaurantIcon;
+      default: return donationIcon;
     }
   };
 
-  const MarkerPin = ({ marker }) => (
-    <button
-      onClick={() => setSelectedMarker(marker)}
-      className={`absolute transform -translate-x-1/2 -translate-y-full transition-all duration-300 hover:scale-125 ${
-        selectedMarker?.id === marker.id ? 'scale-125 z-50' : 'z-10'
-      }`}
-      style={{ 
-        left: `${((marker.lng + 74) * 10)}%`, 
-        top: `${(40.25 - marker.lat) * 50}%` 
-      }}
-    >
-      <div className={`${getMarkerColor(marker.type)} text-white rounded-full p-3 shadow-lg relative`}>
-        {getMarkerIcon(marker.type)}
-        {selectedMarker?.id === marker.id && (
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-warning rounded-full animate-ping"></div>
-        )}
-      </div>
-      <div className={`w-0.5 h-4 ${getMarkerColor(marker.type)} mx-auto`}></div>
-    </button>
-  );
+  const handleUseMyLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setMapCenter([position.coords.latitude, position.coords.longitude]);
+          setMapZoom(13);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          alert("Unable to retrieve your location");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser");
+    }
+  };
 
   return (
     <section className="py-20 px-4 bg-base-200 dark:bg-base-200 transition-colors duration-300">
@@ -130,7 +239,10 @@ const MapSection = () => {
                   className="w-full pl-12 pr-4 py-4 bg-base-100 dark:bg-base-100 border-2 border-base-300 dark:border-base-300 rounded-xl text-base-content dark:text-base-content placeholder-base-content/40 dark:placeholder-base-content/40 focus:outline-none focus:border-primary dark:focus:border-primary transition-colors"
                 />
               </div>
-              <button className="px-6 py-4 bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 text-primary-content rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap">
+              <button 
+                onClick={handleUseMyLocation}
+                className="px-6 py-4 bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 text-primary-content rounded-xl font-semibold transition-colors flex items-center gap-2 whitespace-nowrap"
+              >
                 <Navigation className="w-5 h-5" />
                 Use My Location
               </button>
@@ -178,21 +290,62 @@ const MapSection = () => {
           {/* Main Map Area */}
           <div className="lg:col-span-2">
             <div className="bg-base-100 dark:bg-base-100 rounded-2xl shadow-xl border border-base-300 dark:border-base-300 overflow-hidden">
-              {/* Map Container */}
-              <div className="relative h-[500px] bg-gradient-to-br from-base-200 to-base-300 dark:from-base-200 dark:to-base-300">
-                {/* Map Background Pattern */}
-                <div className="absolute inset-0 opacity-10" style={{
-                  backgroundImage: `repeating-linear-gradient(0deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 20px),
-                                   repeating-linear-gradient(90deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 20px)`
-                }}></div>
-
-                {/* Map Markers */}
-                {filteredMarkers.map((marker) => (
-                  <MarkerPin key={marker.id} marker={marker} />
-                ))}
+              {/* Leaflet Map Container */}
+              <div className="relative h-[500px]">
+                <MapContainer 
+                  center={mapCenter} 
+                  zoom={mapZoom} 
+                  style={{ height: '100%', width: '100%' }}
+                  className="z-0"
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  
+                  {filteredMarkers.map((marker) => (
+                    <Marker 
+                      key={marker.id} 
+                      position={[marker.lat, marker.lng]}
+                      icon={getMarkerIcon(marker.type)}
+                      eventHandlers={{
+                        click: () => setSelectedMarker(marker)
+                      }}
+                    >
+                      <Popup>
+                        <div className="p-2">
+                          <h3 className="font-bold text-lg mb-2">{marker.name}</h3>
+                          {marker.type === 'donation' && (
+                            <div className="space-y-1">
+                              <p><strong>Food:</strong> {marker.food}</p>
+                              <p><strong>Quantity:</strong> {marker.quantity} servings</p>
+                              <p><strong>Pickup by:</strong> {marker.time}</p>
+                              <p><strong>Distance:</strong> {marker.distance} miles</p>
+                            </div>
+                          )}
+                          {marker.type === 'charity' && (
+                            <div className="space-y-1">
+                              <p><strong>People served:</strong> {marker.served}</p>
+                              <p><strong>Area:</strong> {marker.area}</p>
+                            </div>
+                          )}
+                          {marker.type === 'restaurant' && (
+                            <div className="space-y-1">
+                              <p><strong>Total donations:</strong> {marker.donations}</p>
+                              <p><strong>Rating:</strong> ⭐ {marker.rating}</p>
+                            </div>
+                          )}
+                          {marker.verified && (
+                            <p className="text-green-600 font-semibold mt-2">✓ Verified</p>
+                          )}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
 
                 {/* Map Legend */}
-                <div className="absolute top-4 left-4 bg-base-100/95 dark:bg-base-100/95 backdrop-blur rounded-xl p-4 shadow-lg">
+                <div className="absolute top-4 left-4 bg-base-100/95 dark:bg-base-100/95 backdrop-blur rounded-xl p-4 shadow-lg z-[1000]">
                   <h4 className="text-sm font-bold text-base-content dark:text-base-content mb-3">Legend</h4>
                   <div className="space-y-2 text-xs">
                     <div className="flex items-center gap-2">
@@ -211,7 +364,7 @@ const MapSection = () => {
                 </div>
 
                 {/* Map Controls */}
-                <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+                <div className="absolute bottom-4 right-4 flex flex-col gap-2 z-[1000]">
                   <button className="p-3 bg-base-100 dark:bg-base-100 hover:bg-base-200 dark:hover:bg-base-200 rounded-lg shadow-lg transition-colors">
                     <Share2 className="w-5 h-5 text-base-content dark:text-base-content" />
                   </button>
@@ -226,8 +379,8 @@ const MapSection = () => {
                 <div className="p-6 border-t border-base-300 dark:border-base-300 bg-base-200 dark:bg-base-200">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-start gap-4">
-                      <div className={`${getMarkerColor(selectedMarker.type)} text-white rounded-xl p-3`}>
-                        {getMarkerIcon(selectedMarker.type)}
+                      <div className={`${selectedMarker.type === 'donation' ? 'bg-success' : selectedMarker.type === 'charity' ? 'bg-info' : 'bg-secondary'} text-white rounded-xl p-3`}>
+                        {selectedMarker.type === 'donation' ? <UtensilsCrossed className="w-6 h-6" /> : selectedMarker.type === 'charity' ? <Heart className="w-6 h-6" /> : <Building2 className="w-6 h-6" />}
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
@@ -397,6 +550,26 @@ const MapSection = () => {
         }
         .animate-pulse {
           animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        /* Leaflet dark mode adjustments */
+        .dark .leaflet-container {
+          background: #1F2937;
+        }
+        
+        .dark .leaflet-popup-content-wrapper {
+          background: #374151;
+          color: #F3F4F6;
+        }
+        
+        .dark .leaflet-popup-tip {
+          background: #374151;
+        }
+        
+        /* Custom marker styles */
+        .custom-marker {
+          background: transparent;
+          border: none;
         }
       `}</style>
     </section>
